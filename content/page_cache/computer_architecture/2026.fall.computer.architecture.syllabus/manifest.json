@@ -1,0 +1,38 @@
+{
+  "course": "computer_architecture",
+  "source_pdf": "2026.fall.computer.architecture.syllabus.pdf",
+  "source_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/2026.fall.computer.architecture.syllabus.pdf",
+  "source_sha256": "b6df3e7650c8f578f7e28e8d2723d5a1ecf72138d71aae073b9fcbff3dfba2db",
+  "generated_at": "2026-09-01T06:28:57Z",
+  "total_pages": 4,
+  "pages": [
+    {
+      "pdf_page": 1,
+      "markdown": "content/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-001.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-001",
+      "png": "static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-001.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-001.png"
+    },
+    {
+      "pdf_page": 2,
+      "markdown": "content/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-002.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-002",
+      "png": "static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-002.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-002.png"
+    },
+    {
+      "pdf_page": 3,
+      "markdown": "content/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-003.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-003",
+      "png": "static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-003.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-003.png"
+    },
+    {
+      "pdf_page": 4,
+      "markdown": "content/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-004.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-004",
+      "png": "static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-004.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/page-004.png"
+    }
+  ]
+}

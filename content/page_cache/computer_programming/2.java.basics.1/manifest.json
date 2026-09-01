@@ -1,0 +1,535 @@
+{
+  "course": "computer_programming",
+  "source_pdf": "2.java.basics.1.pdf",
+  "source_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/2.java.basics.1.pdf",
+  "source_sha256": "6c1f868b3ec0e7adcff08995196b1fd636f203c7a6b2fc82b1b0a8f0844ecf3e",
+  "generated_at": "2026-09-01T06:30:14Z",
+  "total_pages": 75,
+  "pages": [
+    {
+      "pdf_page": 1,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-001.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-001",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-001.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-001.png"
+    },
+    {
+      "pdf_page": 2,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-002.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-002",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-002.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-002.png"
+    },
+    {
+      "pdf_page": 3,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-003.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-003",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-003.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-003.png"
+    },
+    {
+      "pdf_page": 4,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-004.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-004",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-004.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-004.png"
+    },
+    {
+      "pdf_page": 5,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-005.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-005",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-005.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-005.png"
+    },
+    {
+      "pdf_page": 6,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-006.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-006",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-006.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-006.png"
+    },
+    {
+      "pdf_page": 7,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-007.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-007",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-007.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-007.png"
+    },
+    {
+      "pdf_page": 8,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-008.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-008",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-008.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-008.png"
+    },
+    {
+      "pdf_page": 9,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-009.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-009",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-009.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-009.png"
+    },
+    {
+      "pdf_page": 10,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-010.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-010",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-010.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-010.png"
+    },
+    {
+      "pdf_page": 11,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-011.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-011",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-011.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-011.png"
+    },
+    {
+      "pdf_page": 12,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-012.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-012",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-012.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-012.png"
+    },
+    {
+      "pdf_page": 13,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-013.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-013",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-013.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-013.png"
+    },
+    {
+      "pdf_page": 14,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-014.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-014",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-014.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-014.png"
+    },
+    {
+      "pdf_page": 15,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-015.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-015",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-015.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-015.png"
+    },
+    {
+      "pdf_page": 16,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-016.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-016",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-016.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-016.png"
+    },
+    {
+      "pdf_page": 17,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-017.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-017",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-017.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-017.png"
+    },
+    {
+      "pdf_page": 18,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-018.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-018",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-018.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-018.png"
+    },
+    {
+      "pdf_page": 19,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-019.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-019",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-019.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-019.png"
+    },
+    {
+      "pdf_page": 20,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-020.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-020",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-020.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-020.png"
+    },
+    {
+      "pdf_page": 21,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-021.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-021",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-021.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-021.png"
+    },
+    {
+      "pdf_page": 22,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-022.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-022",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-022.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-022.png"
+    },
+    {
+      "pdf_page": 23,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-023.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-023",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-023.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-023.png"
+    },
+    {
+      "pdf_page": 24,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-024.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-024",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-024.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-024.png"
+    },
+    {
+      "pdf_page": 25,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-025.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-025",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-025.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-025.png"
+    },
+    {
+      "pdf_page": 26,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-026.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-026",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-026.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-026.png"
+    },
+    {
+      "pdf_page": 27,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-027.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-027",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-027.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-027.png"
+    },
+    {
+      "pdf_page": 28,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-028.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-028",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-028.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-028.png"
+    },
+    {
+      "pdf_page": 29,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-029.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-029",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-029.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-029.png"
+    },
+    {
+      "pdf_page": 30,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-030.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-030",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-030.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-030.png"
+    },
+    {
+      "pdf_page": 31,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-031.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-031",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-031.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-031.png"
+    },
+    {
+      "pdf_page": 32,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-032.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-032",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-032.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-032.png"
+    },
+    {
+      "pdf_page": 33,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-033.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-033",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-033.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-033.png"
+    },
+    {
+      "pdf_page": 34,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-034.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-034",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-034.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-034.png"
+    },
+    {
+      "pdf_page": 35,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-035.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-035",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-035.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-035.png"
+    },
+    {
+      "pdf_page": 36,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-036.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-036",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-036.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-036.png"
+    },
+    {
+      "pdf_page": 37,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-037.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-037",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-037.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-037.png"
+    },
+    {
+      "pdf_page": 38,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-038.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-038",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-038.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-038.png"
+    },
+    {
+      "pdf_page": 39,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-039.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-039",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-039.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-039.png"
+    },
+    {
+      "pdf_page": 40,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-040.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-040",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-040.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-040.png"
+    },
+    {
+      "pdf_page": 41,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-041.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-041",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-041.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-041.png"
+    },
+    {
+      "pdf_page": 42,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-042.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-042",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-042.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-042.png"
+    },
+    {
+      "pdf_page": 43,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-043.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-043",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-043.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-043.png"
+    },
+    {
+      "pdf_page": 44,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-044.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-044",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-044.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-044.png"
+    },
+    {
+      "pdf_page": 45,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-045.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-045",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-045.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-045.png"
+    },
+    {
+      "pdf_page": 46,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-046.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-046",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-046.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-046.png"
+    },
+    {
+      "pdf_page": 47,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-047.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-047",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-047.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-047.png"
+    },
+    {
+      "pdf_page": 48,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-048.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-048",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-048.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-048.png"
+    },
+    {
+      "pdf_page": 49,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-049.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-049",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-049.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-049.png"
+    },
+    {
+      "pdf_page": 50,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-050.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-050",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-050.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-050.png"
+    },
+    {
+      "pdf_page": 51,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-051.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-051",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-051.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-051.png"
+    },
+    {
+      "pdf_page": 52,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-052.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-052",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-052.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-052.png"
+    },
+    {
+      "pdf_page": 53,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-053.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-053",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-053.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-053.png"
+    },
+    {
+      "pdf_page": 54,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-054.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-054",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-054.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-054.png"
+    },
+    {
+      "pdf_page": 55,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-055.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-055",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-055.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-055.png"
+    },
+    {
+      "pdf_page": 56,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-056.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-056",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-056.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-056.png"
+    },
+    {
+      "pdf_page": 57,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-057.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-057",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-057.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-057.png"
+    },
+    {
+      "pdf_page": 58,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-058.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-058",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-058.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-058.png"
+    },
+    {
+      "pdf_page": 59,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-059.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-059",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-059.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-059.png"
+    },
+    {
+      "pdf_page": 60,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-060.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-060",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-060.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-060.png"
+    },
+    {
+      "pdf_page": 61,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-061.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-061",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-061.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-061.png"
+    },
+    {
+      "pdf_page": 62,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-062.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-062",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-062.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-062.png"
+    },
+    {
+      "pdf_page": 63,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-063.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-063",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-063.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-063.png"
+    },
+    {
+      "pdf_page": 64,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-064.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-064",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-064.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-064.png"
+    },
+    {
+      "pdf_page": 65,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-065.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-065",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-065.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-065.png"
+    },
+    {
+      "pdf_page": 66,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-066.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-066",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-066.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-066.png"
+    },
+    {
+      "pdf_page": 67,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-067.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-067",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-067.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-067.png"
+    },
+    {
+      "pdf_page": 68,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-068.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-068",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-068.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-068.png"
+    },
+    {
+      "pdf_page": 69,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-069.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-069",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-069.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-069.png"
+    },
+    {
+      "pdf_page": 70,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-070.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-070",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-070.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-070.png"
+    },
+    {
+      "pdf_page": 71,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-071.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-071",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-071.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-071.png"
+    },
+    {
+      "pdf_page": 72,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-072.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-072",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-072.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-072.png"
+    },
+    {
+      "pdf_page": 73,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-073.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-073",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-073.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-073.png"
+    },
+    {
+      "pdf_page": 74,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-074.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-074",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-074.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-074.png"
+    },
+    {
+      "pdf_page": 75,
+      "markdown": "content/page_cache/computer_programming/2.java.basics.1/page-075.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/page-075",
+      "png": "static/page_cache/computer_programming/2.java.basics.1/page-075.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/2.java.basics.1/page-075.png"
+    }
+  ]
+}

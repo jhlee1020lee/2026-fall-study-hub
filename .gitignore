@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 __pycache__/
+tmp/
 public
 prof
 tsconfig.tsbuildinfo

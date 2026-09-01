@@ -15,5 +15,5 @@ review_status: approved
 
 ## 파일
 
-- [`2 java basics 1.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/2.java.basics.1.pdf) · 2.0 MiB
-- [`1 intro.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/1.intro.pdf) · 0.8 MiB
+- [`2 java basics 1.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/2.java.basics.1.pdf) · 2.0 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/manifest.json)
+- [`1 intro.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/1.intro.pdf) · 0.8 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/manifest.json)

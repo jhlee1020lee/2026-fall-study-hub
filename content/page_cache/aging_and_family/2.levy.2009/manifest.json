@@ -1,0 +1,45 @@
+{
+  "course": "aging_and_family",
+  "source_pdf": "2.Levy.2009.pdf",
+  "source_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/materials/aging_and_family/2.Levy.2009.pdf",
+  "source_sha256": "8970090ea0b09289a9cb5fe92dfe12af8888a288fa59aeb9430293ea257f230b",
+  "generated_at": "2026-09-01T06:28:28Z",
+  "total_pages": 5,
+  "pages": [
+    {
+      "pdf_page": 1,
+      "markdown": "content/page_cache/aging_and_family/2.levy.2009/page-001.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/aging_and_family/2.levy.2009/page-001",
+      "png": "static/page_cache/aging_and_family/2.levy.2009/page-001.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/aging_and_family/2.levy.2009/page-001.png"
+    },
+    {
+      "pdf_page": 2,
+      "markdown": "content/page_cache/aging_and_family/2.levy.2009/page-002.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/aging_and_family/2.levy.2009/page-002",
+      "png": "static/page_cache/aging_and_family/2.levy.2009/page-002.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/aging_and_family/2.levy.2009/page-002.png"
+    },
+    {
+      "pdf_page": 3,
+      "markdown": "content/page_cache/aging_and_family/2.levy.2009/page-003.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/aging_and_family/2.levy.2009/page-003",
+      "png": "static/page_cache/aging_and_family/2.levy.2009/page-003.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/aging_and_family/2.levy.2009/page-003.png"
+    },
+    {
+      "pdf_page": 4,
+      "markdown": "content/page_cache/aging_and_family/2.levy.2009/page-004.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/aging_and_family/2.levy.2009/page-004",
+      "png": "static/page_cache/aging_and_family/2.levy.2009/page-004.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/aging_and_family/2.levy.2009/page-004.png"
+    },
+    {
+      "pdf_page": 5,
+      "markdown": "content/page_cache/aging_and_family/2.levy.2009/page-005.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/aging_and_family/2.levy.2009/page-005",
+      "png": "static/page_cache/aging_and_family/2.levy.2009/page-005.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/aging_and_family/2.levy.2009/page-005.png"
+    }
+  ]
+}

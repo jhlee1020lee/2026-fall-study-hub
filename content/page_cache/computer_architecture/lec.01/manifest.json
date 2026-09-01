@@ -1,0 +1,269 @@
+{
+  "course": "computer_architecture",
+  "source_pdf": "lec.01.pdf",
+  "source_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.01.pdf",
+  "source_sha256": "bee387e63b6a74d5d6cf39b8b4bad696c54b45c1d839568a2bf7c10c38f9ab3c",
+  "generated_at": "2026-09-01T06:28:37Z",
+  "total_pages": 37,
+  "pages": [
+    {
+      "pdf_page": 1,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-001.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-001",
+      "png": "static/page_cache/computer_architecture/lec.01/page-001.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-001.png"
+    },
+    {
+      "pdf_page": 2,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-002.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-002",
+      "png": "static/page_cache/computer_architecture/lec.01/page-002.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-002.png"
+    },
+    {
+      "pdf_page": 3,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-003.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-003",
+      "png": "static/page_cache/computer_architecture/lec.01/page-003.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-003.png"
+    },
+    {
+      "pdf_page": 4,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-004.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-004",
+      "png": "static/page_cache/computer_architecture/lec.01/page-004.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-004.png"
+    },
+    {
+      "pdf_page": 5,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-005.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-005",
+      "png": "static/page_cache/computer_architecture/lec.01/page-005.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-005.png"
+    },
+    {
+      "pdf_page": 6,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-006.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-006",
+      "png": "static/page_cache/computer_architecture/lec.01/page-006.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-006.png"
+    },
+    {
+      "pdf_page": 7,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-007.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-007",
+      "png": "static/page_cache/computer_architecture/lec.01/page-007.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-007.png"
+    },
+    {
+      "pdf_page": 8,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-008.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-008",
+      "png": "static/page_cache/computer_architecture/lec.01/page-008.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-008.png"
+    },
+    {
+      "pdf_page": 9,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-009.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-009",
+      "png": "static/page_cache/computer_architecture/lec.01/page-009.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-009.png"
+    },
+    {
+      "pdf_page": 10,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-010.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-010",
+      "png": "static/page_cache/computer_architecture/lec.01/page-010.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-010.png"
+    },
+    {
+      "pdf_page": 11,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-011.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-011",
+      "png": "static/page_cache/computer_architecture/lec.01/page-011.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-011.png"
+    },
+    {
+      "pdf_page": 12,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-012.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-012",
+      "png": "static/page_cache/computer_architecture/lec.01/page-012.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-012.png"
+    },
+    {
+      "pdf_page": 13,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-013.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-013",
+      "png": "static/page_cache/computer_architecture/lec.01/page-013.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-013.png"
+    },
+    {
+      "pdf_page": 14,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-014.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-014",
+      "png": "static/page_cache/computer_architecture/lec.01/page-014.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-014.png"
+    },
+    {
+      "pdf_page": 15,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-015.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-015",
+      "png": "static/page_cache/computer_architecture/lec.01/page-015.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-015.png"
+    },
+    {
+      "pdf_page": 16,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-016.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-016",
+      "png": "static/page_cache/computer_architecture/lec.01/page-016.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-016.png"
+    },
+    {
+      "pdf_page": 17,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-017.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-017",
+      "png": "static/page_cache/computer_architecture/lec.01/page-017.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-017.png"
+    },
+    {
+      "pdf_page": 18,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-018.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-018",
+      "png": "static/page_cache/computer_architecture/lec.01/page-018.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-018.png"
+    },
+    {
+      "pdf_page": 19,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-019.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-019",
+      "png": "static/page_cache/computer_architecture/lec.01/page-019.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-019.png"
+    },
+    {
+      "pdf_page": 20,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-020.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-020",
+      "png": "static/page_cache/computer_architecture/lec.01/page-020.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-020.png"
+    },
+    {
+      "pdf_page": 21,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-021.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-021",
+      "png": "static/page_cache/computer_architecture/lec.01/page-021.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-021.png"
+    },
+    {
+      "pdf_page": 22,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-022.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-022",
+      "png": "static/page_cache/computer_architecture/lec.01/page-022.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-022.png"
+    },
+    {
+      "pdf_page": 23,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-023.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-023",
+      "png": "static/page_cache/computer_architecture/lec.01/page-023.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-023.png"
+    },
+    {
+      "pdf_page": 24,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-024.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-024",
+      "png": "static/page_cache/computer_architecture/lec.01/page-024.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-024.png"
+    },
+    {
+      "pdf_page": 25,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-025.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-025",
+      "png": "static/page_cache/computer_architecture/lec.01/page-025.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-025.png"
+    },
+    {
+      "pdf_page": 26,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-026.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-026",
+      "png": "static/page_cache/computer_architecture/lec.01/page-026.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-026.png"
+    },
+    {
+      "pdf_page": 27,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-027.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-027",
+      "png": "static/page_cache/computer_architecture/lec.01/page-027.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-027.png"
+    },
+    {
+      "pdf_page": 28,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-028.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-028",
+      "png": "static/page_cache/computer_architecture/lec.01/page-028.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-028.png"
+    },
+    {
+      "pdf_page": 29,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-029.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-029",
+      "png": "static/page_cache/computer_architecture/lec.01/page-029.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-029.png"
+    },
+    {
+      "pdf_page": 30,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-030.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-030",
+      "png": "static/page_cache/computer_architecture/lec.01/page-030.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-030.png"
+    },
+    {
+      "pdf_page": 31,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-031.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-031",
+      "png": "static/page_cache/computer_architecture/lec.01/page-031.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-031.png"
+    },
+    {
+      "pdf_page": 32,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-032.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-032",
+      "png": "static/page_cache/computer_architecture/lec.01/page-032.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-032.png"
+    },
+    {
+      "pdf_page": 33,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-033.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-033",
+      "png": "static/page_cache/computer_architecture/lec.01/page-033.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-033.png"
+    },
+    {
+      "pdf_page": 34,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-034.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-034",
+      "png": "static/page_cache/computer_architecture/lec.01/page-034.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-034.png"
+    },
+    {
+      "pdf_page": 35,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-035.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-035",
+      "png": "static/page_cache/computer_architecture/lec.01/page-035.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-035.png"
+    },
+    {
+      "pdf_page": 36,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-036.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-036",
+      "png": "static/page_cache/computer_architecture/lec.01/page-036.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-036.png"
+    },
+    {
+      "pdf_page": 37,
+      "markdown": "content/page_cache/computer_architecture/lec.01/page-037.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/page-037",
+      "png": "static/page_cache/computer_architecture/lec.01/page-037.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.01/page-037.png"
+    }
+  ]
+}

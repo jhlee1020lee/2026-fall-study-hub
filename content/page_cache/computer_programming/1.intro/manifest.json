@@ -1,0 +1,220 @@
+{
+  "course": "computer_programming",
+  "source_pdf": "1.intro.pdf",
+  "source_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/1.intro.pdf",
+  "source_sha256": "8aa4ac93bdb0670aabf4983e5f808e644e9ce00a5312f9838592b2d8fb0b322a",
+  "generated_at": "2026-09-01T06:29:27Z",
+  "total_pages": 30,
+  "pages": [
+    {
+      "pdf_page": 1,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-001.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-001",
+      "png": "static/page_cache/computer_programming/1.intro/page-001.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-001.png"
+    },
+    {
+      "pdf_page": 2,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-002.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-002",
+      "png": "static/page_cache/computer_programming/1.intro/page-002.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-002.png"
+    },
+    {
+      "pdf_page": 3,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-003.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-003",
+      "png": "static/page_cache/computer_programming/1.intro/page-003.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-003.png"
+    },
+    {
+      "pdf_page": 4,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-004.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-004",
+      "png": "static/page_cache/computer_programming/1.intro/page-004.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-004.png"
+    },
+    {
+      "pdf_page": 5,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-005.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-005",
+      "png": "static/page_cache/computer_programming/1.intro/page-005.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-005.png"
+    },
+    {
+      "pdf_page": 6,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-006.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-006",
+      "png": "static/page_cache/computer_programming/1.intro/page-006.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-006.png"
+    },
+    {
+      "pdf_page": 7,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-007.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-007",
+      "png": "static/page_cache/computer_programming/1.intro/page-007.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-007.png"
+    },
+    {
+      "pdf_page": 8,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-008.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-008",
+      "png": "static/page_cache/computer_programming/1.intro/page-008.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-008.png"
+    },
+    {
+      "pdf_page": 9,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-009.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-009",
+      "png": "static/page_cache/computer_programming/1.intro/page-009.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-009.png"
+    },
+    {
+      "pdf_page": 10,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-010.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-010",
+      "png": "static/page_cache/computer_programming/1.intro/page-010.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-010.png"
+    },
+    {
+      "pdf_page": 11,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-011.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-011",
+      "png": "static/page_cache/computer_programming/1.intro/page-011.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-011.png"
+    },
+    {
+      "pdf_page": 12,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-012.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-012",
+      "png": "static/page_cache/computer_programming/1.intro/page-012.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-012.png"
+    },
+    {
+      "pdf_page": 13,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-013.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-013",
+      "png": "static/page_cache/computer_programming/1.intro/page-013.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-013.png"
+    },
+    {
+      "pdf_page": 14,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-014.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-014",
+      "png": "static/page_cache/computer_programming/1.intro/page-014.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-014.png"
+    },
+    {
+      "pdf_page": 15,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-015.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-015",
+      "png": "static/page_cache/computer_programming/1.intro/page-015.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-015.png"
+    },
+    {
+      "pdf_page": 16,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-016.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-016",
+      "png": "static/page_cache/computer_programming/1.intro/page-016.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-016.png"
+    },
+    {
+      "pdf_page": 17,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-017.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-017",
+      "png": "static/page_cache/computer_programming/1.intro/page-017.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-017.png"
+    },
+    {
+      "pdf_page": 18,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-018.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-018",
+      "png": "static/page_cache/computer_programming/1.intro/page-018.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-018.png"
+    },
+    {
+      "pdf_page": 19,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-019.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-019",
+      "png": "static/page_cache/computer_programming/1.intro/page-019.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-019.png"
+    },
+    {
+      "pdf_page": 20,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-020.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-020",
+      "png": "static/page_cache/computer_programming/1.intro/page-020.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-020.png"
+    },
+    {
+      "pdf_page": 21,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-021.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-021",
+      "png": "static/page_cache/computer_programming/1.intro/page-021.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-021.png"
+    },
+    {
+      "pdf_page": 22,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-022.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-022",
+      "png": "static/page_cache/computer_programming/1.intro/page-022.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-022.png"
+    },
+    {
+      "pdf_page": 23,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-023.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-023",
+      "png": "static/page_cache/computer_programming/1.intro/page-023.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-023.png"
+    },
+    {
+      "pdf_page": 24,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-024.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-024",
+      "png": "static/page_cache/computer_programming/1.intro/page-024.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-024.png"
+    },
+    {
+      "pdf_page": 25,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-025.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-025",
+      "png": "static/page_cache/computer_programming/1.intro/page-025.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-025.png"
+    },
+    {
+      "pdf_page": 26,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-026.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-026",
+      "png": "static/page_cache/computer_programming/1.intro/page-026.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-026.png"
+    },
+    {
+      "pdf_page": 27,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-027.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-027",
+      "png": "static/page_cache/computer_programming/1.intro/page-027.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-027.png"
+    },
+    {
+      "pdf_page": 28,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-028.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-028",
+      "png": "static/page_cache/computer_programming/1.intro/page-028.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-028.png"
+    },
+    {
+      "pdf_page": 29,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-029.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-029",
+      "png": "static/page_cache/computer_programming/1.intro/page-029.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-029.png"
+    },
+    {
+      "pdf_page": 30,
+      "markdown": "content/page_cache/computer_programming/1.intro/page-030.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/page-030",
+      "png": "static/page_cache/computer_programming/1.intro/page-030.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_programming/1.intro/page-030.png"
+    }
+  ]
+}

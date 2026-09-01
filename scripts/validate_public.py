@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import re
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -54,6 +55,13 @@ REQUIRED_LECTURE_HEADINGS = {
     "## 능동회상 문제",
     "## 출처와 검증 상태",
 }
+REQUIRED_PAGE_CACHE_FRONTMATTER = {
+    "course": re.compile(r"(?m)^course:\s*.+$"),
+    "source_pdf": re.compile(r"(?m)^source_pdf:\s*.+$"),
+    "pdf_page": re.compile(r"(?m)^pdf_page:\s*\d+\s*$"),
+    "source_url": re.compile(r"(?m)^source_url:\s*.+$"),
+    "generated_at": re.compile(r"(?m)^generated_at:\s*.+$"),
+}
 
 
 def repository_files() -> list[Path]:
@@ -93,7 +101,8 @@ def validate() -> list[str]:
         except (OSError, UnicodeDecodeError):
             continue
 
-        if relative.parts and relative.parts[0] == "content":
+        is_pdf_page_cache = len(relative.parts) >= 2 and relative.parts[:2] == ("content", "page_cache")
+        if relative.parts and relative.parts[0] == "content" and not is_pdf_page_cache:
             for label, pattern in TEXT_PATTERNS.items():
                 if pattern.search(text):
                     errors.append(f"{label} found in {relative}")
@@ -113,6 +122,35 @@ def validate() -> list[str]:
             for heading in sorted(REQUIRED_LECTURE_HEADINGS):
                 if heading not in text:
                     errors.append(f"missing '{heading}' in {relative}")
+
+        if is_pdf_page_cache and path.name.startswith("page-") and path.suffix.lower() == ".md":
+            for field, pattern in REQUIRED_PAGE_CACHE_FRONTMATTER.items():
+                if not pattern.search(text):
+                    errors.append(f"page cache is missing '{field}': {relative}")
+
+    page_cache_root = CONTENT / "page_cache"
+    for manifest_path in page_cache_root.glob("*/*/manifest.json") if page_cache_root.exists() else []:
+        relative_manifest = manifest_path.relative_to(ROOT)
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            errors.append(f"invalid page-cache manifest: {relative_manifest}")
+            continue
+        pages = manifest.get("pages")
+        total_pages = manifest.get("total_pages")
+        if not isinstance(total_pages, int) or total_pages < 1 or not isinstance(pages, list):
+            errors.append(f"invalid page count in {relative_manifest}")
+            continue
+        if len(pages) != total_pages:
+            errors.append(f"manifest page count mismatch: {relative_manifest}")
+        for expected_page, page in enumerate(pages, start=1):
+            if not isinstance(page, dict) or page.get("pdf_page") != expected_page:
+                errors.append(f"manifest page sequence mismatch: {relative_manifest} page {expected_page}")
+                continue
+            for field in ("markdown", "png"):
+                cache_path = page.get(field)
+                if not isinstance(cache_path, str) or not (ROOT / cache_path).is_file():
+                    errors.append(f"missing {field} for {relative_manifest} page {expected_page}")
 
     return sorted(set(errors))
 

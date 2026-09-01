@@ -38,6 +38,8 @@ jobs:
         run: npx quartz plugin install
       - name: Build Quartz
         run: npx quartz build
+      - name: Stage committed page-cache manifests and PNGs
+        run: python scripts/stage_page_cache_for_pages.py --public public
       - name: Mirror public release assets into Pages
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

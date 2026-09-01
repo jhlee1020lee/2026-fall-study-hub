@@ -1,0 +1,77 @@
+name: Refresh PDF page cache
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 18 * * *"
+  release:
+    types: [published, edited, released, deleted]
+  push:
+    branches: [v5]
+    paths:
+      - "content/courses/**/materials.md"
+      - "scripts/refresh_page_cache.py"
+      - "scripts/download_release_assets.py"
+      - ".github/workflows/refresh-page-cache.yml"
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: pdf-page-cache
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: v5
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install Poppler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+      - name: Run page-cache unit tests
+        run: python -m unittest discover -s scripts -p "test_*.py"
+      - name: Download public release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/download_release_assets.py --output tmp/page-cache-releases
+      - name: Regenerate changed PDF caches
+        run: |
+          repository_name="${GITHUB_REPOSITORY#*/}"
+          site_base="https://${GITHUB_REPOSITORY_OWNER}.github.io/${repository_name}"
+          python scripts/refresh_page_cache.py \
+            --pdf-root tmp/page-cache-releases \
+            --materials-root content/courses \
+            --content-root content/page_cache \
+            --static-root static/page_cache \
+            --work-root tmp/pdfs \
+            --site-base "${site_base}"
+      - name: Validate public repository content
+        run: python scripts/validate_public.py
+      - name: Commit cache changes
+        id: commit
+        run: |
+          git add -- content/page_cache static/page_cache content/courses
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "cache: refresh PDF pages"
+          git pull --rebase origin v5
+          git push origin HEAD:v5
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Deploy refreshed cache
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref v5

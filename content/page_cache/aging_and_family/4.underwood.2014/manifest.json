@@ -1,0 +1,38 @@
+{
+  "course": "aging_and_family",
+  "source_pdf": "4.Underwood.2014.pdf",
+  "source_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/materials/aging_and_family/4.Underwood.2014.pdf",
+  "source_sha256": "84fa4f988ff2a6a7710e586617b6a7b908cd9048f09db9af128bba866e5047a0",
+  "generated_at": "2026-09-01T06:27:51Z",
+  "total_pages": 4,
+  "pages": [
+    {
+      "pdf_page": 1,
+      "markdown": "content/page_cache/aging_and_family/4.underwood.2014/page-001.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/aging_and_family/4.underwood.2014/page-001",
+      "png": "static/page_cache/aging_and_family/4.underwood.2014/page-001.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/aging_and_family/4.underwood.2014/page-001.png"
+    },
+    {
+      "pdf_page": 2,
+      "markdown": "content/page_cache/aging_and_family/4.underwood.2014/page-002.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/aging_and_family/4.underwood.2014/page-002",
+      "png": "static/page_cache/aging_and_family/4.underwood.2014/page-002.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/aging_and_family/4.underwood.2014/page-002.png"
+    },
+    {
+      "pdf_page": 3,
+      "markdown": "content/page_cache/aging_and_family/4.underwood.2014/page-003.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/aging_and_family/4.underwood.2014/page-003",
+      "png": "static/page_cache/aging_and_family/4.underwood.2014/page-003.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/aging_and_family/4.underwood.2014/page-003.png"
+    },
+    {
+      "pdf_page": 4,
+      "markdown": "content/page_cache/aging_and_family/4.underwood.2014/page-004.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/aging_and_family/4.underwood.2014/page-004",
+      "png": "static/page_cache/aging_and_family/4.underwood.2014/page-004.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/aging_and_family/4.underwood.2014/page-004.png"
+    }
+  ]
+}

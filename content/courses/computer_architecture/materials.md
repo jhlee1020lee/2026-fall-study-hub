@@ -15,6 +15,6 @@ review_status: approved
 
 ## 파일
 
-- `lec 01.pdf` · 8.4 MiB
-- `2026 fall computer architecture syllabus.pdf` · 0.1 MiB
-- `2026 fall computer architecture syllabus Gukmun.pdf` · 0.1 MiB
+- `lec 01.pdf` · 8.4 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/manifest.json)
+- `2026 fall computer architecture syllabus.pdf` · 0.1 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/manifest.json)
+- `2026 fall computer architecture syllabus Gukmun.pdf` · 0.1 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/manifest.json)

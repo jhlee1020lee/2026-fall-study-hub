@@ -1,0 +1,31 @@
+{
+  "course": "computer_architecture",
+  "source_pdf": "2026.fall.computer.architecture.syllabus.Gukmun.pdf",
+  "source_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/2026.fall.computer.architecture.syllabus.Gukmun.pdf",
+  "source_sha256": "852a533647c3468448cf3cace8ffbeccd4573324dd9d85f6562833a3c965b9bb",
+  "generated_at": "2026-09-01T06:28:59Z",
+  "total_pages": 3,
+  "pages": [
+    {
+      "pdf_page": 1,
+      "markdown": "content/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-001.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-001",
+      "png": "static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-001.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-001.png"
+    },
+    {
+      "pdf_page": 2,
+      "markdown": "content/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-002.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-002",
+      "png": "static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-002.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-002.png"
+    },
+    {
+      "pdf_page": 3,
+      "markdown": "content/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-003.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-003",
+      "png": "static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-003.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/page-003.png"
+    }
+  ]
+}

@@ -15,6 +15,6 @@ review_status: approved
 
 ## 파일
 
-- `DRL 01 1 course overview.pdf` · 2.4 MiB
-- `Topics in New Computer Technology 2026.2.pdf` · 0.1 MiB
-- `Syllabus Keompyutisingisulteukgang 2026.2.pdf` · 0.1 MiB
+- `DRL 01 1 course overview.pdf` · 2.4 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/topics_in_new_computer_technology/drl.01.1.course.overview/manifest.json)
+- `Topics in New Computer Technology 2026.2.pdf` · 0.1 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/topics_in_new_computer_technology/topics.in.new.computer.technology.2026.2/manifest.json)
+- `Syllabus Keompyutisingisulteukgang 2026.2.pdf` · 0.1 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/topics_in_new_computer_technology/syllabus.keompyutisingisulteukgang.2026.2/manifest.json)
