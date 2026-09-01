@@ -1,0 +1,38 @@
+{
+  "course": "operating_systems",
+  "source_pdf": "OSSyllabus.Yeongmun.pdf",
+  "source_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/materials/operating_systems/OSSyllabus.Yeongmun.pdf",
+  "source_sha256": "d67862b634ac30df8d5070f04170a5f7e2137f0210094c5b07b4b6a8423a2601",
+  "generated_at": "2026-09-01T09:11:51Z",
+  "total_pages": 4,
+  "pages": [
+    {
+      "pdf_page": 1,
+      "markdown": "content/page_cache/operating_systems/ossyllabus.yeongmun/page-001.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/operating_systems/ossyllabus.yeongmun/page-001",
+      "png": "static/page_cache/operating_systems/ossyllabus.yeongmun/page-001.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/operating_systems/ossyllabus.yeongmun/page-001.png"
+    },
+    {
+      "pdf_page": 2,
+      "markdown": "content/page_cache/operating_systems/ossyllabus.yeongmun/page-002.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/operating_systems/ossyllabus.yeongmun/page-002",
+      "png": "static/page_cache/operating_systems/ossyllabus.yeongmun/page-002.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/operating_systems/ossyllabus.yeongmun/page-002.png"
+    },
+    {
+      "pdf_page": 3,
+      "markdown": "content/page_cache/operating_systems/ossyllabus.yeongmun/page-003.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/operating_systems/ossyllabus.yeongmun/page-003",
+      "png": "static/page_cache/operating_systems/ossyllabus.yeongmun/page-003.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/operating_systems/ossyllabus.yeongmun/page-003.png"
+    },
+    {
+      "pdf_page": 4,
+      "markdown": "content/page_cache/operating_systems/ossyllabus.yeongmun/page-004.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/operating_systems/ossyllabus.yeongmun/page-004",
+      "png": "static/page_cache/operating_systems/ossyllabus.yeongmun/page-004.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/operating_systems/ossyllabus.yeongmun/page-004.png"
+    }
+  ]
+}
