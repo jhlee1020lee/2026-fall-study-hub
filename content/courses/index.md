@@ -16,7 +16,3 @@ tags:
 - [[computer_programming/index|Computer Programming]]
 - [[system_programming/index|System Programming]]
 - [[operating_systems/index|운영체제 (Operating Systems)]]
-
-## 드랍 과목 기록
-
-- [[topics_in_new_computer_technology/index|Topics in New Computer Technology]] - 2026-09-01 수강 후 드랍

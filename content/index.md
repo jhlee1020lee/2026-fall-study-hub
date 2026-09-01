@@ -20,10 +20,6 @@ tags:
 - [[courses/system_programming/index|System Programming]]
 - [[courses/operating_systems/index|운영체제 (Operating Systems)]]
 
-## 드랍 과목 기록
-
-- [[courses/topics_in_new_computer_technology/index|Topics in New Computer Technology]] - 2026-09-01 수강 후 드랍, 기존 노트와 자료만 보존
-
 ## 개념 연결
 
 - [[concepts/index|전체 개념 지도]]
