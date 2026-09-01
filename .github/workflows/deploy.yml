@@ -1,5 +1,7 @@
 name: Validate and deploy study hub
 
+# Public deployment is allowed only after the repository safety validator passes.
+
 on:
   push:
     branches: [v5]
