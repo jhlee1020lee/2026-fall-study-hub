@@ -3,10 +3,15 @@ title: "Topics in New Computer Technology 강의자료"
 tags:
   - course-materials
   - topics_in_new_computer_technology
+  - dropped-course
 review_status: approved
+semester_status: dropped
 ---
 
 # Topics in New Computer Technology 강의자료
+
+> [!warning]
+> 이 과목은 2026-09-01 수강 후 드랍했습니다. 아래 자료는 기존 학습 기록 보존용입니다.
 
 전체 다운로드: [GitHub Release 열기](https://github.com/jhlee1020lee/2026-fall-study-hub/releases/tag/2026-fall__topics_in_new_computer_technology__materials)
 

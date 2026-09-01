@@ -10,7 +10,7 @@ tags:
 
 수업별 흐름과 과목 전체의 개념 연결을 함께 보는 학습 공간입니다. 각 강의 페이지 맨 위에는 **수업 직후 10분 복습**이 있고, 아래에는 교재급 상세 해설과 능동회상 문제가 이어집니다.
 
-## 과목
+## 현재 수강 과목
 
 - [[courses/discrete_mathematics/index|이산수학]]
 - [[courses/principles_of_programming/index|프로그래밍의 원리]]
@@ -18,7 +18,11 @@ tags:
 - [[courses/computer_architecture/index|Computer Architecture]]
 - [[courses/computer_programming/index|Computer Programming]]
 - [[courses/system_programming/index|System Programming]]
-- [[courses/topics_in_new_computer_technology/index|Topics in New Computer Technology]]
+- [[courses/operating_systems/index|운영체제 (Operating Systems)]]
+
+## 드랍 과목 기록
+
+- [[courses/topics_in_new_computer_technology/index|Topics in New Computer Technology]] - 2026-09-01 수강 후 드랍, 기존 노트와 자료만 보존
 
 ## 개념 연결
 
