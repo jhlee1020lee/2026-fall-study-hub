@@ -18,7 +18,11 @@ tags:
 
 
 
-
+- [[formal-verification|형식 검증]]
+- [[abstraction-level|추상화 수준]]
+- [[proof-checking|증명 검사]]
+- [[runtime-monitor|실시간 모니터]]
+- [[specification|명세]]
 - [[sequential-decision-making|sequential decision-making problem]]
 - [[reinforcement-learning|reinforcement learning]]
 - [[imitation-learning|imitation learning]]
@@ -32,4 +36,3 @@ tags:
 - [[instruction-set-architecture|ISA]]
 - [[dennard-scaling|Dennard scaling]]
 승인된 강의노트에서 발견한 핵심 개념이 이 폴더에 누적됩니다. 각 개념 페이지는 관련 강의와 선수·후속 개념을 연결합니다.
-

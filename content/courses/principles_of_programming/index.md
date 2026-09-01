@@ -8,11 +8,15 @@ tags: [course, principles-of-programming]
 
 ## 강의노트
 
-아직 승인된 강의노트가 없습니다.
+- [[courses/principles_of_programming/lectures/2026-09-01-lecture-01|2026-09-01 · 1강]]
 
 ## 개념 지도
 
-강의가 추가되면 관련 개념이 자동으로 연결됩니다.
+- [[concepts/formal-verification|형식 검증]]
+- [[concepts/abstraction-level|추상화 수준]]
+- [[concepts/proof-checking|증명 검사]]
+- [[concepts/runtime-monitor|실시간 모니터]]
+- [[concepts/specification|명세]]
 
 ## 강의자료
 
