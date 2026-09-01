@@ -8,10 +8,19 @@ tags: [course, computer-programming]
 
 ## 강의노트
 
-아직 승인된 강의노트가 없습니다.
 
+
+- [[lectures/2026-09-01-lecture-01|2026-09-01 · 1강]]
 ## 개념 지도
 
+
+
+
+
+- [[concepts/string-pool|String pool]]
+- [[concepts/primitive-and-reference-types|primitive vs reference]]
+- [[concepts/object-oriented-programming|OOP]]
+- [[concepts/java-virtual-machine|JVM]]
 강의가 추가되면 관련 개념이 자동으로 연결됩니다.
 
 ## 강의자료

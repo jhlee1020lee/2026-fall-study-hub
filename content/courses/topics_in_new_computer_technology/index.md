@@ -8,10 +8,17 @@ tags: [course, topics-in-new-computer-technology]
 
 ## 강의노트
 
-아직 승인된 강의노트가 없습니다.
 
+
+- [[lectures/2026-09-01-lecture-01|2026-09-01 · 1강]]
 ## 개념 지도
 
+
+
+
+- [[concepts/sequential-decision-making|sequential decision-making problem]]
+- [[concepts/reinforcement-learning|reinforcement learning]]
+- [[concepts/imitation-learning|imitation learning]]
 강의가 추가되면 관련 개념이 자동으로 연결됩니다.
 
 ## 강의자료
