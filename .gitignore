@@ -1,5 +1,4 @@
 .DS_Store
-.gitignore
 node_modules
 public
 prof
@@ -7,6 +6,8 @@ tsconfig.tsbuildinfo
 .obsidian
 .quartz-cache
 private/
+content/_drafts/
+.study-preview/
 .replit
 replit.nix
 .quartz/
