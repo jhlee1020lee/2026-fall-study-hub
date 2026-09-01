@@ -15,8 +15,7 @@ semester_status: dropped
 
 
 
-- [[courses/topics_in_new_computer_technology/lectures/en/2026-09-01-lecture-01|2026-09-01 · 1강 · English]]
-- [[courses/topics_in_new_computer_technology/lectures/2026-09-01-lecture-01|2026-09-01 · 1강]]
+- 2026-09-01 · 1강 · [[courses/topics_in_new_computer_technology/lectures/2026-09-01-lecture-01|한국어]] · [[courses/topics_in_new_computer_technology/lectures/en/2026-09-01-lecture-01|English]]
 ## 개념 지도
 
 

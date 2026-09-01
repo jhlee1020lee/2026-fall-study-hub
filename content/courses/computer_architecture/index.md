@@ -11,8 +11,7 @@ tags: [course, computer-architecture]
 
 
 
-- [[courses/computer_architecture/lectures/en/2026-09-01-lecture-01|2026-09-01 · 1강 · English]]
-- [[courses/computer_architecture/lectures/2026-09-01-lecture-01|2026-09-01 · 1강]]
+- 2026-09-01 · 1강 · [[courses/computer_architecture/lectures/2026-09-01-lecture-01|한국어]] · [[courses/computer_architecture/lectures/en/2026-09-01-lecture-01|English]]
 ## 개념 지도
 
 
