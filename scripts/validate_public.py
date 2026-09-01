@@ -55,6 +55,13 @@ REQUIRED_LECTURE_HEADINGS = {
     "## 능동회상 문제",
     "## 출처와 검증 상태",
 }
+REQUIRED_ENGLISH_LECTURE_HEADINGS = {
+    "## 10-Minute Review",
+    "## Connection to the Previous Lecture",
+    "## Detailed Explanation",
+    "## Active Recall",
+    "## Sources and Verification",
+}
 REQUIRED_PAGE_CACHE_FRONTMATTER = {
     "course": re.compile(r"(?m)^course:\s*.+$"),
     "source_pdf": re.compile(r"(?m)^source_pdf:\s*.+$"),
@@ -119,7 +126,15 @@ def validate() -> list[str]:
                 errors.append(f"lecture is not approved: {relative}")
             if re.search(r"(?m)^draft:\s*true\s*$", text):
                 errors.append(f"draft lecture is publishable: {relative}")
-            for heading in sorted(REQUIRED_LECTURE_HEADINGS):
+            is_english_lecture = len(relative.parts) >= 6 and relative.parts[4] == "en"
+            if is_english_lecture and not re.search(r"(?m)^lang:\s*en\s*$", text):
+                errors.append(f"English lecture is missing lang: en: {relative}")
+            required_headings = (
+                REQUIRED_ENGLISH_LECTURE_HEADINGS
+                if is_english_lecture
+                else REQUIRED_LECTURE_HEADINGS
+            )
+            for heading in sorted(required_headings):
                 if heading not in text:
                     errors.append(f"missing '{heading}' in {relative}")
 
