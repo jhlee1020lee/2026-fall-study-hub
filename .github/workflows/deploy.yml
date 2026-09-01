@@ -38,6 +38,10 @@ jobs:
         run: npx quartz plugin install
       - name: Build Quartz
         run: npx quartz build
+      - name: Mirror public release assets into Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/download_release_assets.py --output public/materials
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public

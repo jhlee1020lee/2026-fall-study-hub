@@ -15,5 +15,5 @@ review_status: approved
 
 ## 파일
 
-- [`2 java basics 1.pdf`](https://github.com/jhlee1020lee/2026-fall-study-hub/releases/download/2026-fall__computer_programming__materials/2.java.basics.1.pdf) · 2.0 MiB
-- [`1 intro.pdf`](https://github.com/jhlee1020lee/2026-fall-study-hub/releases/download/2026-fall__computer_programming__materials/1.intro.pdf) · 0.8 MiB
+- [`2 java basics 1.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/2.java.basics.1.pdf) · 2.0 MiB
+- [`1 intro.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/1.intro.pdf) · 0.8 MiB
