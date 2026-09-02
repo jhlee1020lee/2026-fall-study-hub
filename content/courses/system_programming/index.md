@@ -16,4 +16,6 @@ tags: [course, system-programming]
 
 ## 강의자료
 
-공개한 교수 제공 자료가 생기면 GitHub Release 링크가 여기에 추가됩니다.
+
+
+- [[materials|교수 제공 자료 목록과 다운로드]]
