@@ -8,7 +8,7 @@ tags: [course, system-programming]
 
 ## 강의노트
 
-아직 승인된 강의노트가 없습니다.
+- 2026-09-02 · 1강 · [[courses/system_programming/lectures/2026-09-02-lecture-01|한국어]]
 
 ## 개념 지도
 

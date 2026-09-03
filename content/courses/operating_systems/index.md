@@ -11,7 +11,7 @@ semester_status: active
 
 ## 강의노트
 
-아직 승인된 강의노트가 없습니다.
+- 2026-09-03 · 1강 · [[courses/operating_systems/lectures/2026-09-03-lecture-01|한국어]]
 
 ## 개념 지도
 
