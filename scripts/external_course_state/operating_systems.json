@@ -1,0 +1,20 @@
+{
+  "course": "operating_systems",
+  "source_page": "https://csl.snu.ac.kr/courses/4190.307/2026-2/",
+  "managed_assets": [
+    {
+      "filename": "0-overview.pdf",
+      "label": "Course overview",
+      "source_url": "https://csl.snu.ac.kr/courses/4190.307/2026-2/0-overview.pdf",
+      "sha256": "92f95f8083002c96c5099e74b654c900b11a0f4b653bb3ddd78ae44fe982b658",
+      "size": 1890743
+    },
+    {
+      "filename": "1-intro.pdf",
+      "label": "Introduction to operating systems",
+      "source_url": "https://csl.snu.ac.kr/courses/4190.307/2026-2/1-intro.pdf",
+      "sha256": "e89c43c29d231e33d556f2993965ef87f8561eca62e403b2d22b1cfb5048a57a",
+      "size": 859208
+    }
+  ]
+}
