@@ -37,6 +37,15 @@ npx quartz build --serve
 python scripts/refresh_page_cache.py --pdf-root tmp/page-cache-releases --site-base https://jhlee1020lee.github.io/2026-fall-study-hub
 ```
 
+## 운영체제 공개 강의자료 동기화
+
+`Sync Operating Systems materials` Action은 교수 강의 사이트의 Schedule 표에서 Topic 열에 연결된 PDF만 수집합니다. 외부 교재 링크는 제외하며, 새 파일·변경 파일·이름이 바뀌거나 삭제된 파일을 운영체제 GitHub Release와 맞춘 뒤 위 PDF page cache 갱신을 실행합니다.
+
+- 자동 확인: 매일 12:40, 18:10 KST
+- 수동 확인: Actions → `Sync Operating Systems materials` → `Run workflow`
+- 원본 설정: `scripts/external_course_sources/operating_systems.json`
+- 동기화 상태: `scripts/external_course_state/operating_systems.json`
+
 ## Sponsors
 
 <p align="center">

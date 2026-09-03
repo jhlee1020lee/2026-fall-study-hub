@@ -22,4 +22,4 @@ semester_status: active
 
 - [[materials|교수 제공 자료 목록과 다운로드]]
 
-현재 공개 자료는 영문 강의계획서 1건입니다. 새 강의자료가 eTL에 게시되면 같은 Release와 페이지 캐시를 갱신합니다.
+영문 강의계획서와 [SNU CSL 운영체제 강의 페이지](https://csl.snu.ac.kr/courses/4190.307/2026-2/)의 교수 제공 슬라이드를 같은 Release에 모읍니다. 강의 사이트의 새 PDF와 변경된 PDF는 자동으로 감지해 자료 목록과 페이지 캐시를 갱신합니다.

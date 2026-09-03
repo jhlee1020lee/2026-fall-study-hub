@@ -1,0 +1,65 @@
+name: Sync Operating Systems materials
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 12:40 and 18:10 KST every day. Tuesday/Thursday lectures end at 12:15 KST.
+    - cron: "40 3 * * *"
+    - cron: "10 9 * * *"
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: operating-systems-material-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: v5
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Run synchronization unit tests
+        run: python -m unittest discover -s scripts -p "test_sync_external_course_materials.py"
+      - name: Mirror professor-hosted PDFs into the course release
+        id: sync
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          repository_name="${GITHUB_REPOSITORY#*/}"
+          site_base="https://${GITHUB_REPOSITORY_OWNER}.github.io/${repository_name}"
+          python scripts/sync_external_course_materials.py \
+            --config scripts/external_course_sources/operating_systems.json \
+            --state scripts/external_course_state/operating_systems.json \
+            --materials-file content/courses/operating_systems/materials.md \
+            --download-dir tmp/external-course-materials/operating_systems \
+            --site-base "${site_base}" \
+            --repository "${GITHUB_REPOSITORY}" \
+            --summary tmp/external-sync-result.json \
+            --execute
+          changed="$(python -c 'import json; print(str(json.load(open("tmp/external-sync-result.json", encoding="utf-8"))["changed"]).lower())')"
+          echo "changed=${changed}" >> "$GITHUB_OUTPUT"
+      - name: Commit source state and material index
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          git add -- scripts/external_course_state/operating_systems.json content/courses/operating_systems/materials.md
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "materials: sync operating systems course site"
+          git pull --rebase origin v5
+          git push origin HEAD:v5
+      - name: Refresh PDF page cache
+        if: steps.sync.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run refresh-page-cache.yml --repo "$GITHUB_REPOSITORY" --ref v5

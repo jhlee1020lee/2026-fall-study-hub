@@ -1,0 +1,10 @@
+{
+  "course": "operating_systems",
+  "course_title": "운영체제 (Operating Systems)",
+  "source_page": "https://csl.snu.ac.kr/courses/4190.307/2026-2/",
+  "schedule_section_id": "schedule",
+  "minimum_materials": 1,
+  "release_tag": "2026-fall__operating_systems__materials",
+  "release_title": "운영체제 (Operating Systems) · 2026_Fall 강의자료",
+  "target_branch": "v5"
+}
