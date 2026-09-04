@@ -32,10 +32,16 @@ jobs:
           python-version: "3.13"
       - name: Reject private or unreviewed content
         run: python scripts/validate_public.py
+      - name: Test publication safeguards
+        run: python -m unittest discover -s scripts -p "test_*.py"
       - name: Install dependencies
         run: npm ci
       - name: Install locked Quartz plugins
         run: npx quartz plugin install
+      - name: Check TypeScript and test Quartz
+        run: |
+          npx tsc --noEmit --incremental false
+          npm test
       - name: Build Quartz
         run: npx quartz build
       - name: Stage committed page-cache manifests and PNGs
@@ -44,6 +50,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/download_release_assets.py --output public/materials
+      - name: Check generated internal links and assets
+        run: |
+          python scripts/validate_links.py --public public \
+            --site-base "https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public

@@ -93,6 +93,8 @@ describe("symlinkOrCopySync", () => {
 
   test("falls back to copy when both symlink and junction fail on Windows", () => {
     const target = makeTarget(tmpDir)
+    fs.mkdirSync(path.join(target, "한글 하위 폴더"))
+    fs.writeFileSync(path.join(target, "한글 하위 폴더", "내용.txt"), "nested content")
     const linkPath = path.join(tmpDir, "link")
 
     const originalPlatform = Object.getOwnPropertyDescriptor(process, "platform")
@@ -113,6 +115,10 @@ describe("symlinkOrCopySync", () => {
       const stat = fs.lstatSync(linkPath)
       assert.ok(stat.isDirectory(), "fallback should produce a real directory, not a symlink")
       assert.strictEqual(fs.readFileSync(path.join(linkPath, "marker.txt"), "utf-8"), "hello")
+      assert.strictEqual(
+        fs.readFileSync(path.join(linkPath, "한글 하위 폴더", "내용.txt"), "utf-8"),
+        "nested content",
+      )
     } finally {
       fs.symlinkSync.mock.restore()
       if (originalPlatform) {

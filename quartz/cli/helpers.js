@@ -75,7 +75,10 @@ export function symlinkOrCopySync(target, linkPath) {
         return
       } catch {
         const resolvedTarget = path.resolve(path.dirname(linkPath), target)
-        fs.cpSync(resolvedTarget, linkPath, { recursive: true })
+        // Node 24's native Windows directory-copy fast path can terminate the
+        // process with a non-ASCII path. A filter keeps the copy in Node's JS
+        // traversal while preserving the same recursive-copy semantics.
+        fs.cpSync(resolvedTarget, linkPath, { recursive: true, filter: () => true })
         return
       }
     }

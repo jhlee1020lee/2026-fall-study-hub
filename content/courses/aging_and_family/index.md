@@ -18,4 +18,4 @@ tags: [course, aging-and-family]
 
 
 
-- [[materials|교수 제공 자료 목록과 다운로드]]
+- [[courses/aging_and_family/materials|교수 제공 자료 목록과 다운로드]]

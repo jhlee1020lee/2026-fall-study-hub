@@ -18,4 +18,4 @@ tags: [course, system-programming]
 
 
 
-- [[materials|교수 제공 자료 목록과 다운로드]]
+- [[courses/system_programming/materials|교수 제공 자료 목록과 다운로드]]

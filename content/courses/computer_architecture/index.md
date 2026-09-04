@@ -30,4 +30,4 @@ tags: [course, computer-architecture]
 
 
 
-- [[materials|교수 제공 자료 목록과 다운로드]]
+- [[courses/computer_architecture/materials|교수 제공 자료 목록과 다운로드]]

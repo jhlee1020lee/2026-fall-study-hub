@@ -49,4 +49,4 @@ tags: [course, discrete-mathematics]
 
 ## 강의자료
 
-- [[materials|교수 제공 자료 목록과 다운로드]]
+- [[courses/discrete_mathematics/materials|교수 제공 자료 목록과 다운로드]]

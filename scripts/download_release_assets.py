@@ -32,6 +32,7 @@ def main() -> int:
         text=True,
     )
     releases = json.loads(result.stdout or "[]")
+    output_root = args.output.resolve()
     mirrored = 0
     for release in releases:
         if not isinstance(release, dict) or release.get("isDraft"):
@@ -42,7 +43,6 @@ def main() -> int:
             continue
         course = match.group("course")
         target = (args.output / course).resolve()
-        output_root = args.output.resolve()
         target.relative_to(output_root)
         target.mkdir(parents=True, exist_ok=True)
         subprocess.run(

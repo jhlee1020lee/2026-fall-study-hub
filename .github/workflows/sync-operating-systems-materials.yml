@@ -2,10 +2,8 @@ name: Sync Operating Systems materials
 
 on:
   workflow_dispatch:
-  schedule:
-    # 12:40 and 18:10 KST every day. Tuesday/Thursday lectures end at 12:15 KST.
-    - cron: "40 3 * * *"
-    - cron: "10 9 * * *"
+  # Automatic sync disabled on 2026-09-05: the user plans to drop this course.
+  # Existing materials remain available; an explicit manual run is still possible.
 
 permissions:
   actions: write

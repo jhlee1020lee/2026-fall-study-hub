@@ -1,0 +1,20 @@
+{
+  "archived_courses": ["operating_systems"],
+  "legacy_link_exceptions": [
+    {
+      "source": "courses/operating_systems/index.html",
+      "target": "materials",
+      "reason": "Archived course retained unchanged at the user's request."
+    },
+    {
+      "source": "page_cache/operating_systems/0-overview/page-002.html",
+      "target": "../tags/301-203",
+      "reason": "Existing tag link in archived PDF extraction; preserve the source cache."
+    },
+    {
+      "source": "page_cache/operating_systems/0-overview/page-003.html",
+      "target": "../tags/301-504",
+      "reason": "Existing tag link in archived PDF extraction; preserve the source cache."
+    }
+  ]
+}

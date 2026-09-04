@@ -9,10 +9,10 @@ tags:
 
 ## 현재 수강 과목
 
-- [[discrete_mathematics/index|이산수학]]
-- [[principles_of_programming/index|프로그래밍의 원리]]
-- [[aging_and_family/index|Aging and Family]]
-- [[computer_architecture/index|Computer Architecture]]
-- [[computer_programming/index|Computer Programming]]
-- [[system_programming/index|System Programming]]
-- [[operating_systems/index|운영체제 (Operating Systems)]]
+- [[courses/discrete_mathematics/index|이산수학]]
+- [[courses/principles_of_programming/index|프로그래밍의 원리]]
+- [[courses/aging_and_family/index|Aging and Family]]
+- [[courses/computer_architecture/index|Computer Architecture]]
+- [[courses/computer_programming/index|Computer Programming]]
+- [[courses/system_programming/index|System Programming]]
+- [[courses/operating_systems/index|운영체제 (Operating Systems)]]
