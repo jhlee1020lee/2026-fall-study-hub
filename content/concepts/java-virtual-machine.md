@@ -15,6 +15,7 @@ JVM(Java Virtual Machine, 자바 가상 머신)은 Java bytecode(바이트코드
 ## 관련 강의
 
 - [[courses/computer_programming/lectures/2026-09-01-lecture-01|Computer Programming · 2026-09-01 · 1강]]
+- [[courses/computer_programming/lectures/2026-09-03-lecture-02|Computer Programming · 2026-09-03 · 2강]]
 
 ## 연결 개념
 
