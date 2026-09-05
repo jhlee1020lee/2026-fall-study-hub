@@ -372,6 +372,63 @@ def remove_stale_cache_dirs(root: Path, expected: set[Path]) -> int:
     return removed
 
 
+def preview_only_cache_dirs(content_root: Path, static_root: Path) -> tuple[set[Path], set[Path]]:
+    """Protect complete, explicitly published previews without a released PDF.
+
+    Fail before cleanup on an invalid marked manifest: silently treating a broken
+    preview as stale would delete a publication that cannot be regenerated here.
+    Unmarked released caches retain the existing stale-cleanup behavior.
+    """
+    content_dirs: set[Path] = set()
+    static_dirs: set[Path] = set()
+    for manifest_path in sorted(content_root.glob("*/*/manifest.json")):
+        raw_manifest = manifest_path.read_text(encoding="utf-8")
+        try:
+            manifest = json.loads(raw_manifest)
+        except ValueError as exc:
+            if re.search(r'"publication_mode"\s*:\s*"preview_only"', raw_manifest):
+                raise RuntimeError(f"Cannot safely inspect preview manifest: {manifest_path}") from exc
+            continue
+        if not isinstance(manifest, dict) or manifest.get("publication_mode") != "preview_only":
+            continue
+
+        def invalid(reason: str) -> None:
+            raise RuntimeError(f"Invalid preview-only cache {manifest_path}: {reason}")
+
+        course, slug = manifest_path.parent.parent.name, manifest_path.parent.name
+        content_dir = manifest_path.parent.resolve()
+        static_dir = (static_root / course / slug).resolve()
+        if not content_dir.is_relative_to(content_root.resolve()) or not static_dir.is_relative_to(static_root.resolve()):
+            invalid("cache directory escapes its root")
+        if manifest.get("source_pdf_public") is not False or manifest.get("course") != course:
+            invalid("explicit private-source marker and matching course are required")
+        for field in ("source_pdf", "source_url", "generated_at"):
+            if not isinstance(manifest.get(field), str) or not manifest[field].strip():
+                invalid(f"missing {field}")
+        if not re.fullmatch(r"[0-9a-f]{64}", str(manifest.get("source_sha256", ""))):
+            invalid("missing source SHA-256")
+        total = manifest.get("total_pages")
+        pages = manifest.get("pages")
+        if type(total) is not int or total < 1 or not isinstance(pages, list) or len(pages) != total:
+            invalid("page count does not match the complete manifest")
+        width = max(3, len(str(total)))
+        for number, page in enumerate(pages, 1):
+            if not isinstance(page, dict) or type(page.get("pdf_page")) is not int or page["pdf_page"] != number:
+                invalid("page numbers must be consecutive from one")
+            stem = f"page-{number:0{width}d}"
+            for key, prefix, directory, suffix in (
+                ("markdown", "content", content_dir, ".md"),
+                ("png", "static", static_dir, ".png"),
+            ):
+                expected = f"{prefix}/page_cache/{course}/{slug}/{stem}{suffix}"
+                path = directory / f"{stem}{suffix}"
+                if page.get(key) != expected or not path.resolve().is_relative_to(directory) or not path.is_file():
+                    invalid(f"missing or unsafe {key} for page {number}")
+        content_dirs.add(content_dir)
+        static_dirs.add(static_dir)
+    return content_dirs, static_dirs
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pdf-root", type=Path, required=True)
@@ -395,6 +452,9 @@ def main() -> int:
     sources, updated_materials = discover_sources(args.pdf_root, args.materials_root, site_base)
     expected_content = {(args.content_root / source.course / source.cache_slug).resolve() for source in sources}
     expected_static = {(args.static_root / source.course / source.cache_slug).resolve() for source in sources}
+    preview_content, preview_static = preview_only_cache_dirs(args.content_root, args.static_root)
+    expected_content.update(preview_content)
+    expected_static.update(preview_static)
     removed = remove_stale_cache_dirs(args.content_root, expected_content)
     removed += remove_stale_cache_dirs(args.static_root, expected_static)
 
