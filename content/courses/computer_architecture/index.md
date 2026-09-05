@@ -19,11 +19,11 @@ tags: [course, computer-architecture]
 
 
 
-- [[concepts/von-neumann-architecture|von Neumann architecture]]
-- [[concepts/moores-law|Moore's Law]]
-- [[concepts/microarchitecture|microarchitecture]]
-- [[concepts/instruction-set-architecture|ISA]]
-- [[concepts/dennard-scaling|Dennard scaling]]
+- [[concepts/von-neumann-architecture|von Neumann architecture(폰 노이만 구조)]]
+- [[concepts/moores-law|Moore's Law(무어의 법칙)]]
+- [[concepts/microarchitecture|Microarchitecture(마이크로아키텍처)]]
+- [[concepts/instruction-set-architecture|Instruction Set Architecture(ISA; 명령어 집합 구조)]]
+- [[concepts/dennard-scaling|Dennard scaling(데나드 스케일링)]]
 강의가 추가되면 관련 개념이 자동으로 연결됩니다.
 
 ## 강의자료

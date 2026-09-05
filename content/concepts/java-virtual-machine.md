@@ -10,7 +10,7 @@ review_status: approved
 
 ## 정의
 
-`javac HelloWorld.java`는 source를 platform-independent bytecode가 든 `HelloWorld.class`로 변환한다. JVM은 운영체제와 processor에 맞게 그 bytecode를 실행한다. source가 한 번 compile된 뒤 여러 platform의 JVM에서 실행될 수 있다는 점이 Java portability의 핵심이다. **JVM**은 “Java compiler의 다른 이름”이 아니라 bytecode execution environment다. [STT 38:01-41:36] [M02 p.6-9]
+JVM(Java Virtual Machine, 자바 가상 머신)은 Java bytecode(바이트코드)를 실행하는 환경이다. Compiler(컴파일러)인 `javac`는 source(소스 코드)를 compile(컴파일)해 `HelloWorld.class`를 만들고, JVM은 운영체제와 프로세서에 맞게 그 bytecode를 실행한다. Java의 platform-independent(플랫폼에 독립적인) 실행 구조는 같은 bytecode를 여러 환경의 JVM에서 실행할 수 있다는 뜻이다. Compiler가 bytecode를 만드는 단계와 JVM이 실행하는 단계를 구별한다. [STT 38:01-41:36] [M02 p.6-9]
 
 ## 관련 강의
 

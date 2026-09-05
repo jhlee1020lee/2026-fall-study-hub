@@ -18,10 +18,10 @@ tags: [course, computer-programming]
 
 
 
-- [[concepts/string-pool|String pool]]
-- [[concepts/primitive-and-reference-types|primitive vs reference]]
-- [[concepts/object-oriented-programming|OOP]]
-- [[concepts/java-virtual-machine|JVM]]
+- [[concepts/string-pool|String pool(문자열 풀)]]
+- [[concepts/primitive-and-reference-types|primitive type(기본형) vs reference type(참조형)]]
+- [[concepts/object-oriented-programming|Object-Oriented Programming(OOP; 객체지향 프로그래밍)]]
+- [[concepts/java-virtual-machine|Java Virtual Machine(JVM; 자바 가상 머신)]]
 강의가 추가되면 관련 개념이 자동으로 연결됩니다.
 
 ## 강의자료

@@ -12,11 +12,11 @@ tags: [course, principles-of-programming]
 
 ## 개념 지도
 
-- [[concepts/formal-verification|형식 검증]]
-- [[concepts/abstraction-level|추상화 수준]]
-- [[concepts/proof-checking|증명 검사]]
-- [[concepts/runtime-monitor|실시간 모니터]]
-- [[concepts/specification|명세]]
+- [[concepts/formal-verification|formal verification(형식 검증)]]
+- [[concepts/abstraction-level|abstraction level(추상화 수준)]]
+- [[concepts/proof-checking|proof checking(증명 검사)]]
+- [[concepts/runtime-monitor|runtime monitor(실시간 모니터)]]
+- [[concepts/specification|specification(명세)]]
 
 ## 강의자료
 

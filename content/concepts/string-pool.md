@@ -10,7 +10,9 @@ review_status: approved
 
 ## 정의
 
-동일한 literal은 String pool의 같은 immutable String을 참조할 수 있다. `new String("Apple")`은 명시적으로 새 String object를 만든다. `appleTwo = "Pear"`는 기존 "Apple" object의 문자를 바꾸는 것이 아니라 `appleTwo` reference가 "Pear"를 가리키도록 바꾸는 것이다. String의 value와 variable이 담은 reference를 분리해서 생각해야 한다. **String pool**은 literal 중복을 줄이는 메커니즘이다. [STT 01:11:45-01:15:24] [M02 p.43-49]
+String pool(문자열 풀)은 같은 String literal(문자열 리터럴)이 하나의 String object(문자열 객체)를 함께 가리킬 수 있게 하는 공간이다. String은 immutable(불변인) object이므로 생성된 내용이 바뀌지 않는다. `new String("Apple")`은 명시적으로 새 object를 만드는 반면, 동일한 literal을 사용하는 variable(변수)들은 같은 object를 가리킬 수 있다. [STT 01:11:45-01:15:24] [M02 p.43-49]
+
+`appleTwo = "Pear"`는 기존 "Apple" object의 문자를 수정하지 않는다. Variable이 담은 reference(참조)가 "Pear"를 가리키도록 바뀐다. 따라서 String의 내용과 variable의 reference를 분리해서 읽으면 immutability(불변성)와 assignment(대입)를 함께 설명할 수 있다. [STT 01:11:45-01:15:24] [M02 p.43-49]
 
 ## 관련 강의
 
