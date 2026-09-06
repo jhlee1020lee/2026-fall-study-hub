@@ -1,3 +1,89 @@
 @use "./variables.scss" as *;
 
-// put your custom CSS here!
+// Exam references remain ordinary internal links. Quartz supplies the hover
+// preview; click, Enter, touch, and browsers without popover support open the
+// complete question page. Keep these rules scoped away from other note links.
+a.internal[data-slug^="exam_questions/"] {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 0.2em;
+
+  &:hover {
+    text-decoration-style: solid;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 3px;
+  }
+}
+
+// Use `cssclasses: [exam-question]` on each standalone question page. These
+// classes survive Quartz's native .popover-hint extraction. Questions may be
+// transcribed text or reviewed, question-only images; do not embed source PDFs.
+article.exam-question {
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    border: 1px solid var(--lightgray);
+    background: #fff;
+    content-visibility: visible;
+  }
+
+  pre,
+  .table-container {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .exam-question-text {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    padding: 1rem;
+    line-height: 1.6;
+  }
+}
+
+// A whole exam question needs more reading space than the stock 30rem/20rem
+// note preview. The pathname selector works with both local and project-site
+// base paths and does not require :has(). Long questions scroll inside the
+// card; Quartz retains its existing mobile click-through behavior.
+.popover[id*="/exam_questions/"] {
+  & > .popover-inner {
+    box-sizing: border-box;
+    width: min(48rem, calc(100vw - 4rem));
+    max-height: min(75vh, 46rem);
+    padding: 1rem 1.25rem 1.25rem;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    user-select: text;
+  }
+
+  .breadcrumb-container,
+  .content-meta,
+  .note-properties {
+    display: none;
+  }
+
+  h1.article-title {
+    margin: 0 0 0.75rem;
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  article.exam-question > .markdown-preview-view > :first-child {
+    margin-top: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &.active-popover,
+    &:hover {
+      animation: none;
+      transition: none;
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}

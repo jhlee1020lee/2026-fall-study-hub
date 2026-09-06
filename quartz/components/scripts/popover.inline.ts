@@ -15,9 +15,15 @@ async function mouseEnterHandler(
   }
 
   async function setPosition(popoverElement: HTMLElement) {
+    // Long question cards can fit neither above nor below the hovered link.
+    // Flip first, then clamp both axes inside the viewport. Other note previews
+    // retain Quartz's existing positioning behavior.
+    const questionPreview = link.dataset.slug?.startsWith("exam_questions/") === true
     const { x, y } = await computePosition(link, popoverElement, {
       strategy: "fixed",
-      middleware: [inline({ x: clientX, y: clientY }), shift(), flip()],
+      middleware: questionPreview
+        ? [inline({ x: clientX, y: clientY }), flip(), shift({ padding: 8, crossAxis: true })]
+        : [inline({ x: clientX, y: clientY }), shift(), flip()],
     })
     Object.assign(popoverElement.style, {
       transform: `translate(${x.toFixed()}px, ${y.toFixed()}px)`,
