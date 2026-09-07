@@ -9,6 +9,7 @@ tags: [course, discrete-mathematics]
 ## 강의노트
 
 - [[courses/discrete_mathematics/lectures/2026-09-02-lecture-01|2026-09-02 · 1강]]
+- [[courses/discrete_mathematics/lectures/2026-09-07-lecture-02|2026-09-07 · 2강]]
 
 ## 개념 지도
 

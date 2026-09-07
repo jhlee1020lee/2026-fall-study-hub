@@ -8,11 +8,13 @@ tags: [course, aging-and-family]
 
 ## 강의노트
 
-아직 승인된 강의노트가 없습니다.
+- [[courses/aging_and_family/lectures/2026-09-07-lecture-01|2026-09-07 · 1강]]
 
 ## 개념 지도
 
-강의가 추가되면 관련 개념이 자동으로 연결됩니다.
+- [[concepts/ageism|Ageism(연령차별)]]
+- [[concepts/gerontology|Gerontology(노년학)]]
+- [[concepts/population-aging|Population aging(인구 고령화)]]
 
 ## 강의자료
 

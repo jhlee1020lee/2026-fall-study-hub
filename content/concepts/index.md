@@ -83,5 +83,8 @@ tags:
 - [[타입|Type(타입)]]
 - [[타입-클래스|Type Class(타입 클래스)]]
 - [[값과-식|Value and Expression(값과 식)]]
+- [[ageism|Ageism(연령차별)]]
+- [[gerontology|Gerontology(노년학)]]
+- [[population-aging|Population aging(인구 고령화)]]
 
 승인된 강의노트에서 발견한 핵심 개념이 이 폴더에 누적됩니다. 각 개념 페이지는 관련 강의와 선수·후속 개념을 연결합니다.
