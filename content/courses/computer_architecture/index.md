@@ -12,6 +12,8 @@ tags: [course, computer-architecture]
 
 
 - 2026-09-01 · 1강 · [[courses/computer_architecture/lectures/2026-09-01-lecture-01|한국어]] · [[courses/computer_architecture/lectures/en/2026-09-01-lecture-01|English]]
+- 2026-09-03 · 2강 · [[courses/computer_architecture/lectures/2026-09-03-lecture-02|한국어]] · [[courses/computer_architecture/lectures/en/2026-09-03-lecture-02|English]] · 강의자료 기반(녹음·STT 없음)
+
 ## 개념 지도
 
 

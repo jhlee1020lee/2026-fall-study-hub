@@ -1,0 +1,41 @@
+{
+  "schema": "selected_page_cache_v1",
+  "schema_version": 1,
+  "publication_mode": "selected_pages",
+  "source_pdf_public": false,
+  "course": "computer_architecture",
+  "source_pdf": "lec 02.pdf",
+  "source_sha256": "3550f8dfa1219ccc05e031946d3b11d5483f1ae4a4e2c38684bcaa62f3ac7ef7",
+  "source_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/courses/computer_architecture/lectures/2026-09-03-lecture-02#%EC%B6%9C%EC%B2%98%EC%99%80-%EA%B2%80%EC%A6%9D-%EC%83%81%ED%83%9C",
+  "source_url_kind": "lecture_source_description",
+  "generated_at": "2026-09-08T06:41:57Z",
+  "total_pages": 29,
+  "selected_pages": [
+    10,
+    22,
+    23
+  ],
+  "pages": [
+    {
+      "pdf_page": 10,
+      "markdown": "content/page_cache/computer_architecture/lec.02/page-010.md",
+      "markdown_sha256": "b0f35b8581955552af8c73483a2ecd6e35edd88d50e1db79f2770628b9866fb9",
+      "png": "static/page_cache/computer_architecture/lec.02/page-010.png",
+      "png_sha256": "b637303b38011c36ad86c7f3aa6adc6aae1f44adecdd31c1f37652f97abef14d"
+    },
+    {
+      "pdf_page": 22,
+      "markdown": "content/page_cache/computer_architecture/lec.02/page-022.md",
+      "markdown_sha256": "ae61490bf1a432b4bec60898f8e489c56a4c08f52703e2e94c839128e51a128a",
+      "png": "static/page_cache/computer_architecture/lec.02/page-022.png",
+      "png_sha256": "a27b51765274d4144d6b4188c3f73f8bf35315df54b51a6f62d26684bed5351a"
+    },
+    {
+      "pdf_page": 23,
+      "markdown": "content/page_cache/computer_architecture/lec.02/page-023.md",
+      "markdown_sha256": "8d131e63170af6966a70b035a004ef2390923a2d4241d61b9f470a0e0fd01609",
+      "png": "static/page_cache/computer_architecture/lec.02/page-023.png",
+      "png_sha256": "6057feadb66e1f7cdd37cba1f789dbbce6b15b6c2ff3b642a47b3aabbe833e6c"
+    }
+  ]
+}

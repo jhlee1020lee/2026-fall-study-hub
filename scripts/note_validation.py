@@ -12,6 +12,39 @@ REQUIRED_HEADINGS = {
     "ko": {"## 수업 직후 10분 복습", "## 이전 강의와의 연결", "## 상세 해설", "## 능동회상 문제", "## 출처와 검증 상태"},
     "en": {"## 10-Minute Review", "## Connection to the Previous Lecture", "## Detailed Explanation", "## Active Recall", "## Sources and Verification"},
 }
+CONTENT_FIRST_LAYOUT = "content_first_v1"
+CONTENT_FIRST_HEADINGS = {
+    "ko": ("강의 내용과 설명", "강의 흐름과 연결", "핵심 요약", "회상·연습문제", "출처와 검증 상태"),
+    "en": ("Lecture Content and Explanation", "Lecture Flow and Connections", "Key Takeaways", "Recall and Practice", "Sources and Verification"),
+}
+OLD_SPLIT_HEADINGS = {"핵심 개념", "상세 해설", "예시·수식·코드", "오개념과 STT 주의점",
+                      "Core Concepts", "Detailed Explanation", "Examples, Equations, and Code", "Misconceptions and STT Notes"}
+
+
+def markdown_prose(body: str) -> str:
+    """Ignore literal examples/comments when checking the actual document structure."""
+    body = re.sub(r"(?ms)^([`~]{3,})[^\n]*\n.*?^\1[ \t]*$", "", body)
+    return re.sub(r"(?s)<!--.*?-->", "", body)
+
+
+def validate_content_first_layout(body: str, language: str = "ko") -> list[str]:
+    """Strict new-generation layout; does not claim semantic integration/completeness."""
+    prose = markdown_prose(body)
+    actual = re.findall(r"(?m)^## ([^\n]+?)[ \t]*$", prose)
+    expected = CONTENT_FIRST_HEADINGS[language]
+    errors = []
+    if tuple(actual) != expected:
+        errors.append("content_first_v1 H2 headings must appear exactly once in the required order: " + " → ".join(expected))
+    first = re.search(r"(?ms)^## " + re.escape(expected[0]) + r"[ \t]*\n(.*?)(?=^## |\Z)", prose)
+    if first:
+        for heading in re.findall(r"(?m)^#{3,6} ([^\n]+?)[ \t]*$", first[1]):
+            # Promoting the old independent buckets to H3 is not a content-first rewrite.
+            normalized = re.sub(r"^\d+[.)]?\s*", "", heading).strip()
+            if normalized in OLD_SPLIT_HEADINGS:
+                errors.append("content-first content cannot contain an old split bucket: " + heading)
+    return errors
+
+
 MIN_DETAILED_CHARS = 8000
 MIN_SOURCE_CITATIONS = 12
 MIN_ACTIVE_RECALL = 8
@@ -99,23 +132,32 @@ def validate_lecture_note(text: str, language: str = "ko", require_page_links: b
     if language not in REQUIRED_HEADINGS:
         return [f"unsupported lecture language: {language}"]
     body = text
+    metadata = {}
     if text.removeprefix("\ufeff").startswith("---"):
         try:
-            _, body = parse_frontmatter(text)
+            metadata, body = parse_frontmatter(text)
         except ValueError as exc:
             return [str(exc)]
     # Literal examples must not satisfy publication gates.
-    prose = re.sub(r"(?ms)^([`~]{3,})[^\n]*\n.*?^\1[ \t]*$", "", body)
-    prose = re.sub(r"(?s)<!--.*?-->", "", prose)
+    prose = markdown_prose(body)
     headings = {line.strip() for line in prose.splitlines() if line.startswith("## ")}
-    for heading in sorted(REQUIRED_HEADINGS[language] - headings):
-        errors.append(f"missing '{heading}'")
+    layout = metadata.get("note_layout")
+    content_first = layout == CONTENT_FIRST_LAYOUT or any(
+        "## " + name in headings for name in CONTENT_FIRST_HEADINGS[language][:4])
+    if layout not in {None, CONTENT_FIRST_LAYOUT}:
+        errors.append("unsupported note_layout: " + str(layout))
+    if content_first:
+        errors.extend(validate_content_first_layout(body, language))
+    else:
+        # Untagged, historical public artifacts keep their historical schema.
+        for heading in sorted(REQUIRED_HEADINGS[language] - headings):
+            errors.append(f"missing '{heading}'")
     if len(text) < MIN_DETAILED_CHARS:
         errors.append(f"상세 노트가 너무 짧습니다: {len(text)} < {MIN_DETAILED_CHARS}자")
     citations = len(re.findall(r"\[(?:STT|M\d{2})[^\]]*\]", prose))
     if citations < MIN_SOURCE_CITATIONS:
         errors.append(f"근거 표시가 부족합니다: {citations} < {MIN_SOURCE_CITATIONS}")
-    recall_heading = "## Active Recall" if language == "en" else "## 능동회상 문제"
+    recall_heading = ("## " + CONTENT_FIRST_HEADINGS[language][3]) if content_first else ("## Active Recall" if language == "en" else "## 능동회상 문제")
     recall = re.search(r"(?ms)^" + re.escape(recall_heading) + r"[ \t]*\n(.*?)(?=^## |\Z)", prose)
     answer = "Answer" if language == "en" else "정답"
     recall_count = len(re.findall(r"<details>\s*<summary>" + answer + r"</summary>\s*.+?</details>", recall.group(1) if recall else "", re.S))

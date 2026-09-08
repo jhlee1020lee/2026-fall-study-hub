@@ -17,6 +17,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
+from selected_page_cache import selected_cache_dirs
+
 
 PDF_LABEL = re.compile(r"`(?P<name>[^`\r\n]+\.pdf)`", re.IGNORECASE)
 CACHE_LINK = re.compile(r"\s+·\s+\[페이지 캐시 manifest\]\([^)]+\)\s*$")
@@ -453,8 +455,11 @@ def main() -> int:
     expected_content = {(args.content_root / source.course / source.cache_slug).resolve() for source in sources}
     expected_static = {(args.static_root / source.course / source.cache_slug).resolve() for source in sources}
     preview_content, preview_static = preview_only_cache_dirs(args.content_root, args.static_root)
+    selected_content, selected_static = selected_cache_dirs(args.content_root, args.static_root)
     expected_content.update(preview_content)
     expected_static.update(preview_static)
+    expected_content.update(selected_content)
+    expected_static.update(selected_static)
     removed = remove_stale_cache_dirs(args.content_root, expected_content)
     removed += remove_stale_cache_dirs(args.static_root, expected_static)
 

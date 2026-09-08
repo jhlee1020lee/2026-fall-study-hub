@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 from note_validation import parse_frontmatter, validate_lecture_note
+from selected_page_cache import is_selected_manifest, read_safe_file, validate_selected_manifest
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -122,6 +123,14 @@ class Snapshot:
     def is_file(self, path: Path) -> bool:
         return path in self.blobs if self.blobs is not None else path.is_file()
 
+    def read_bytes(self, path: Path) -> bytes:
+        if self.blobs is None:
+            return read_safe_file(path, ROOT)
+        oid = self.blobs[path]
+        if oid not in self.texts:
+            self.texts[oid] = git("cat-file", "blob", oid)
+        return self.texts[oid]
+
 
 def validate(*, index: bool = False, revision: str | None = None) -> list[str]:
     errors: list[str] = []
@@ -225,6 +234,17 @@ def validate(*, index: bool = False, revision: str | None = None) -> list[str]:
                 raise ValueError("manifest must be an object")
         except (OSError, ValueError, KeyError):
             errors.append(f"invalid page-cache manifest: {relative_manifest}")
+            continue
+        if is_selected_manifest(manifest):
+            try:
+                snapshot.read_bytes(manifest_path)
+                validate_selected_manifest(
+                    manifest, relative_manifest.parts[2], relative_manifest.parts[3],
+                    lambda relative: snapshot.read_bytes(ROOT / relative),
+                    {path.relative_to(ROOT).as_posix() for path in snapshot.files},
+                )
+            except (RuntimeError, OSError, ValueError, KeyError, TypeError) as exc:
+                errors.append(f"invalid selected-page manifest {relative_manifest}: {exc}")
             continue
         pages = manifest.get("pages")
         total_pages = manifest.get("total_pages")
