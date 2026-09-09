@@ -42,6 +42,8 @@ jobs:
         run: |
           npx tsc --noEmit --incremental false
           npm test
+      - name: Treat PDF source extracts as literal text in this build only
+        run: python scripts/prepare_page_cache_build.py
       - name: Build Quartz
         run: npx quartz build
       - name: Stage committed page-cache manifests and PNGs
