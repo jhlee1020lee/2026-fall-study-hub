@@ -40,6 +40,8 @@ tags: [course, principles-of-programming]
 
 ## 강의자료
 
+- [[courses/principles_of_programming/materials|교수 제공 자료 목록과 다운로드]]
+
 - [[page_cache/principles_of_programming/lecture-part1/page-001|Part 1 페이지 미리보기]]
 
-현재 페이지 미리보기만 제공하며, PDF 원본 파일은 이 사이트에 별도로 업로드하지 않았습니다.
+PDF 원본은 위 자료 목록에서 내려받을 수 있습니다. 기존 페이지 미리보기도 유지합니다.
