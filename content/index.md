@@ -18,7 +18,8 @@ tags:
 - [[courses/computer_architecture/index|Computer Architecture]]
 - [[courses/computer_programming/index|Computer Programming]]
 - [[courses/system_programming/index|System Programming]]
-- [[courses/operating_systems/index|운영체제 (Operating Systems)]]
+
+- [[courses/exploring_computing/index|컴퓨팅 살펴보기]]
 
 ## 개념 연결
 
