@@ -10,6 +10,7 @@
 - [[courses/discrete_mathematics/transcripts/2026-09-02|2026-09-02 보정 STT]]
 - [[courses/discrete_mathematics/transcripts/2026-09-07|2026-09-07 보정 STT]]
 - [[courses/discrete_mathematics/transcripts/2026-09-09|2026-09-09 보정 STT]]
+- [[courses/discrete_mathematics/transcripts/2026-09-14|2026-09-14 보정 STT]]
 
 ## 프로그래밍의 원리
 
@@ -25,6 +26,7 @@
 
 - [[courses/aging_and_family/lectures/2026-09-07-lecture-01|2026-09-07-lecture-01 · 한국어]]
 - [[courses/aging_and_family/transcripts/2026-09-07|2026-09-07 보정 STT]]
+- [[courses/aging_and_family/transcripts/2026-09-14|2026-09-14 보정 STT]]
 
 ## Computer Architecture
 
@@ -66,6 +68,7 @@
 - [[courses/system_programming/transcripts/2026-09-02|2026-09-02 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-07|2026-09-07 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-09|2026-09-09 보정 STT]]
+- [[courses/system_programming/transcripts/2026-09-14|2026-09-14 보정 STT]]
 
 ## 컴퓨팅 살펴보기
 
