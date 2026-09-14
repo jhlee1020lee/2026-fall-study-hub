@@ -159,8 +159,10 @@ def validate_lecture_note(text: str, language: str = "ko", require_page_links: b
         errors.append(f"근거 표시가 부족합니다: {citations} < {MIN_SOURCE_CITATIONS}")
     recall_heading = ("## " + CONTENT_FIRST_HEADINGS[language][3]) if content_first else ("## Active Recall" if language == "en" else "## 능동회상 문제")
     recall = re.search(r"(?ms)^" + re.escape(recall_heading) + r"[ \t]*\n(.*?)(?=^## |\Z)", prose)
-    answer = "Answer" if language == "en" else "정답"
-    recall_count = len(re.findall(r"<details>\s*<summary>" + answer + r"</summary>\s*.+?</details>", recall.group(1) if recall else "", re.S))
+    answer = r"(?:Answer|Check your answer)" if language == "en" else r"(?:정답|확인 답안)"
+    recall_count = sum(bool(body.strip()) for body in re.findall(
+        r"<details>\s*<summary>" + answer + r"</summary>(.*?)</details>",
+        recall.group(1) if recall else "", re.S))
     if recall_count < MIN_ACTIVE_RECALL:
         errors.append(f"능동회상 문항이 부족합니다: {recall_count} < {MIN_ACTIVE_RECALL}")
     table = re.compile(r"(?m)^[ \t]*\|[^\r\n]+\|[ \t]*\r?\n[ \t]*\|(?:[ \t]*:?-{3,}:?[ \t]*\|)+[ \t]*$")

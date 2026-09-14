@@ -7,6 +7,12 @@ from note_validation import (CONTENT_FIRST_HEADINGS, parse_frontmatter,
 
 
 class FrontmatterTests(unittest.TestCase):
+    def test_equivalent_answer_labels_require_actual_answer_text(self):
+        for language, heading, label in (("ko", "회상·연습문제", "확인 답안"), ("en", "Recall and Practice", "Check your answer")):
+            body = "## " + heading + "\n" + ("<details><summary>" + label + "</summary>worked answer</details>\n") * 8
+            self.assertFalse(any("문항이 부족" in e for e in validate_lecture_note(body, language)))
+            self.assertTrue(any("0 < 8" in e for e in validate_lecture_note(body.replace("worked answer", "  \n"), language)))
+
     def test_reads_metadata_not_body(self):
         metadata, body = parse_frontmatter('---\nreview_status: pending\ndraft: false\nsource_assets:\n  - "lecture.pdf"\ntags: [course, "two words"]\n---\nreview_status: approved\n')
         self.assertEqual(metadata["review_status"], "pending")

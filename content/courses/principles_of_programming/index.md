@@ -45,3 +45,16 @@ tags: [course, principles-of-programming]
 - [[page_cache/principles_of_programming/lecture-part1/page-001|Part 1 페이지 미리보기]]
 
 PDF 원본은 위 자료 목록에서 내려받을 수 있습니다. 기존 페이지 미리보기도 유지합니다.
+
+## 추가 공개 강의노트
+
+- 2026-09-08 · [[courses/principles_of_programming/lectures/2026-09-08-lecture-03|한국어]]
+- 2026-09-10 · [[courses/principles_of_programming/lectures/2026-09-10-materials-blocks|한국어 · 자료 기반 복습]]
+
+## 보정 STT
+
+개인정보를 가린 공개용 사본이며 불명확한 발화는 표시를 유지합니다.
+
+- [[courses/principles_of_programming/transcripts/2026-09-01|2026-09-01 보정 STT]]
+- [[courses/principles_of_programming/transcripts/2026-09-03|2026-09-03 보정 STT]]
+- [[courses/principles_of_programming/transcripts/2026-09-08|2026-09-08 보정 STT]]

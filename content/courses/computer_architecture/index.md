@@ -33,3 +33,18 @@ tags: [course, computer-architecture]
 
 
 - [[courses/computer_architecture/materials|교수 제공 자료 목록과 다운로드]]
+
+## 추가 공개 강의노트
+
+- 2026-09-08 · [[courses/computer_architecture/lectures/2026-09-08-lecture-03|한국어]]
+- 2026-09-08 · [[courses/computer_architecture/lectures/en/2026-09-08-lecture-03|English]]
+- 2026-09-10 · [[courses/computer_architecture/lectures/2026-09-10-lecture-04|한국어]]
+- 2026-09-10 · [[courses/computer_architecture/lectures/en/2026-09-10-lecture-04|English]]
+
+## 보정 STT
+
+개인정보를 가린 공개용 사본이며 불명확한 발화는 표시를 유지합니다.
+
+- [[courses/computer_architecture/transcripts/2026-09-01|2026-09-01 보정 STT]]
+- [[courses/computer_architecture/transcripts/2026-09-08|2026-09-08 보정 STT]]
+- [[courses/computer_architecture/transcripts/2026-09-10|2026-09-10 보정 STT]]

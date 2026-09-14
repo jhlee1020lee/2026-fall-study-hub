@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -142,6 +143,12 @@ def validate(*, index: bool = False, revision: str | None = None) -> list[str]:
         if any(not isinstance(course, str) for course in policy.get("archived_courses", [])):
             raise ValueError("invalid archived course")
         archived = set(policy.get("archived_courses", []))
+        transcripts = policy.get("reviewed_transcripts", {})
+        if not isinstance(transcripts, dict) or any(
+            not isinstance(k, str) or not isinstance(v, str) or not re.fullmatch(r"[0-9a-f]{64}", v)
+            for k, v in transcripts.items()
+        ):
+            raise ValueError("invalid reviewed transcript hashes")
     except (RuntimeError, OSError, ValueError, KeyError, TypeError) as exc:
         return [f"Cannot inspect publication snapshot or validation policy: {type(exc).__name__}"]
     for path in snapshot.files:
@@ -195,13 +202,20 @@ def validate(*, index: bool = False, revision: str | None = None) -> list[str]:
             and path.suffix.lower() == ".md"
         )
         is_cache_page = is_pdf_page_cache and path.name.startswith("page-") and path.suffix.lower() == ".md"
+        is_transcript = "transcripts" in lowered_parts
+        if is_transcript:
+            if path.suffix.lower() != ".md" or transcripts.get(relative.as_posix()) != hashlib.sha256(snapshot.read_bytes(path)).hexdigest():
+                errors.append(f"transcript is unreviewed or changed: {relative}")
         metadata: dict[str, object] = {}
-        if is_lecture or is_cache_page:
+        if is_lecture or is_cache_page or is_transcript:
             try:
                 metadata, _ = parse_frontmatter(text)
             except ValueError as exc:
                 errors.append(f"{exc}: {relative}")
                 continue
+        if is_transcript:
+            if metadata.get("source_kind") != "corrected_transcript" or metadata.get("privacy_redacted") is not True or metadata.get("verbatim_complete") is not False:
+                errors.append(f"transcript must declare corrected, redacted, incomplete source status: {relative}")
         if is_lecture:
             if metadata.get("review_status") != "approved":
                 errors.append(f"lecture is not approved: {relative}")
@@ -214,8 +228,12 @@ def validate(*, index: bool = False, revision: str | None = None) -> list[str]:
             if not isinstance(assets, list) or any(not isinstance(asset, str) for asset in assets):
                 errors.append(f"source_assets must be a list of filenames: {relative}")
                 continue
+            private_assets = metadata.get("private_source_assets") or []
+            if not isinstance(private_assets, list) or any(not isinstance(asset, str) or asset not in assets for asset in private_assets):
+                errors.append(f"private_source_assets must be a subset of source_assets: {relative}")
+                continue
             if relative.parts[2] not in archived:
-                errors.extend(f"{error}: {relative}" for error in validate_lecture_note(text, "en" if is_english_lecture else "ko", any(asset.lower().endswith(".pdf") for asset in assets)))
+                errors.extend(f"{error}: {relative}" for error in validate_lecture_note(text, "en" if is_english_lecture else "ko", any(asset.lower().endswith(".pdf") and asset not in private_assets for asset in assets)))
 
         if is_cache_page:
             for field in ("course", "source_pdf", "source_url", "generated_at"):

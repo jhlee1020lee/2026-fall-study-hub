@@ -21,3 +21,9 @@ tags: [course, aging-and-family]
 
 
 - [[courses/aging_and_family/materials|교수 제공 자료 목록과 다운로드]]
+
+## 보정 STT
+
+개인정보를 가린 공개용 사본이며 불명확한 발화는 표시를 유지합니다.
+
+- [[courses/aging_and_family/transcripts/2026-09-07|2026-09-07 보정 STT]]

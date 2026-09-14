@@ -1,5 +1,7 @@
 {
-  "archived_courses": ["operating_systems"],
+  "archived_courses": [
+    "operating_systems"
+  ],
   "legacy_link_exceptions": [
     {
       "source": "courses/operating_systems/index.html",
@@ -16,5 +18,24 @@
       "target": "../tags/301-504",
       "reason": "Existing tag link in archived PDF extraction; preserve the source cache."
     }
-  ]
+  ],
+  "reviewed_transcripts": {
+    "content/courses/discrete_mathematics/transcripts/2026-09-02.md": "33fa0438ba8fdf9606c3ecafda2481234cec4770fab5100c517b018ac13f1e5f",
+    "content/courses/discrete_mathematics/transcripts/2026-09-07.md": "a8ae28b2eabe9dc21d29d3e61314a1e5c59af9b1962b5f1d511feb2e2d96e22e",
+    "content/courses/discrete_mathematics/transcripts/2026-09-09.md": "c9c69a2a331887bed766896a439fe819e2676ed676d3c2196e39782f2c621dda",
+    "content/courses/principles_of_programming/transcripts/2026-09-01.md": "3239d50149b20f60fbcd37dc4cb8eee7661d6b30d547f087a427b2849712392a",
+    "content/courses/principles_of_programming/transcripts/2026-09-03.md": "9d00cd5324a4a480cb23271770382d6d357966cff69cee1362e4c014deeca781",
+    "content/courses/principles_of_programming/transcripts/2026-09-08.md": "bd7e38d4904ed335c4dab6f7b24fa5f4d9ea15083451d5a54544c16657b9caae",
+    "content/courses/aging_and_family/transcripts/2026-09-07.md": "757c19d23835f12031f80d2af9077bc8431cf004b71bed5a00ee501b4e531044",
+    "content/courses/computer_architecture/transcripts/2026-09-01.md": "ee77344a32a8900c6d952515ab4c40549f5eecc307c87c96f2bc04069c0f1a13",
+    "content/courses/computer_architecture/transcripts/2026-09-08.md": "610232e98c087564edd2770a119556a9cf1e85eee358795fa53e00f36ded4d92",
+    "content/courses/computer_architecture/transcripts/2026-09-10.md": "d6d501a4f3825e659190e609231198201f438a1acc6b6f176acc7234b84288d9",
+    "content/courses/computer_programming/transcripts/2026-09-01.md": "148e76a30dccc8a8f1f8fcf32d3b34a87bea237c59d67723f8eefa9666131dce",
+    "content/courses/computer_programming/transcripts/2026-09-03.md": "5e8cadcd8326d3e5a7ba0ceea44d45a0c0e4e1ee82f93ce8fcaf2f2160f21949",
+    "content/courses/computer_programming/transcripts/2026-09-08.md": "d7d8aafe656582748d6b8a1371d7c4193b7daaafe3c439279d53127a049cc5b3",
+    "content/courses/computer_programming/transcripts/2026-09-10.md": "8d328da6b71995c321a4e58afc431153c9509f6ae959b1fb1c3f8cc40cf4c6ed",
+    "content/courses/system_programming/transcripts/2026-09-02.md": "7e52bda9a63ddcd94215e7a44ce53b9103a3af290233fdf9213ad28d84ebfb34",
+    "content/courses/system_programming/transcripts/2026-09-07.md": "10eee68d8f95487fcc5f1aac594467fd84e2133da127fdfa5cabcb90578f7efd",
+    "content/courses/system_programming/transcripts/2026-09-09.md": "965b7629f7d762e4aff26030b574db1d8f0503f5620c7d8f8f9d2adce2f7f229"
+  }
 }

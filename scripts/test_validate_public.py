@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import subprocess
 import tempfile
 import unittest
@@ -11,6 +12,27 @@ import validate_public as validator
 
 
 class PublicationTests(unittest.TestCase):
+    def test_transcript_requires_exact_reviewed_bytes_and_safe_metadata(self):
+        relative = "content/courses/example/transcripts/2026-09-14.md"
+        text = "---\nsource_kind: corrected_transcript\nprivacy_redacted: true\nverbatim_complete: false\n---\n00:00 Speaker 1\nLecture text.\n"
+        path = self.write(relative, text)
+        path.write_text(text, encoding="utf-8", newline="\n")
+        self.assertTrue(any("unreviewed" in e for e in validator.validate()))
+        policy = {"archived_courses": [], "reviewed_transcripts": {relative: hashlib.sha256(path.read_bytes()).hexdigest()}}
+        self.write("scripts/public_validation_policy.json", json.dumps(policy))
+        self.assertEqual(validator.validate(), [])
+        self.git("add", ".")
+        path.write_text(text + "Changed", encoding="utf-8")
+        self.assertTrue(any("changed" in e for e in validator.validate()))
+        self.assertEqual(validator.validate(index=True), [])
+        unsafe = text.replace("privacy_redacted: true", "privacy_redacted: false") + "student@example.test"
+        path.write_text(unsafe, encoding="utf-8")
+        policy["reviewed_transcripts"][relative] = hashlib.sha256(path.read_bytes()).hexdigest()
+        self.write("scripts/public_validation_policy.json", json.dumps(policy))
+        errors = validator.validate()
+        self.assertTrue(any("must declare" in e for e in errors))
+        self.assertTrue(any("email address" in e for e in errors))
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
