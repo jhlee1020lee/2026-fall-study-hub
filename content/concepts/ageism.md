@@ -16,6 +16,7 @@ Ageism은 연령차별을 가리킨다. 9월 7일 오리엔테이션에서는 �
 ## 관련 강의
 
 - [[courses/aging_and_family/lectures/2026-09-07-lecture-01|Aging and Family · 2026-09-07 · 1강]]
+- [[courses/aging_and_family/lectures/2026-09-14-lecture-02|2026-09-14 · aging_and_family · 한국어]]
 
 ## 연결 개념
 
