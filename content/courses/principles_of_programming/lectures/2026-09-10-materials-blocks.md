@@ -129,7 +129,7 @@ val r = { val t=10; val s=square(5); (t
 
 ## 강의 흐름과 연결
 
-[지난 노트의 함수 평가와 sqrt](./2026-09-08-lecture-03.md)에서 여러 보조 함수를 사용했다면, 이번 보충은 그 정의를 어디에 두고 어떤 이름을 읽는지 정리한다. 선택한 p.27–35가 9월 10일 실제 진도라는 뜻은 아니다.
+[[courses/principles_of_programming/lectures/2026-09-08-lecture-03|지난 노트의 함수 평가와 sqrt]]에서 여러 보조 함수를 사용했다면, 이번 보충은 그 정의를 어디에 두고 어떤 이름을 읽는지 정리한다. 선택한 p.27–35가 9월 10일 실제 진도라는 뜻은 아니다.
 
 `Block의 마지막 값 → 이름의 Scope → Function의 정의 Environment → def/val 경계 검사 → Environment별 실행 추적 → sqrt의 내부 정의`
 
