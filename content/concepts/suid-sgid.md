@@ -11,3 +11,4 @@ review_status: approved
 ## 관련 강의
 
 - [[courses/system_programming/lectures/2026-09-14-lecture-04|2026-09-14 · system_programming · 한국어]]
+- [[courses/system_programming/lectures/en/2026-09-14-lecture-04|2026-09-14 · system_programming · English]]

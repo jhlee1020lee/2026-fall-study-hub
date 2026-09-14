@@ -14,6 +14,7 @@ tags: [course, system-programming]
 - 2026-09-09 · [[courses/system_programming/lectures/2026-09-09-lecture-03|한국어]]
 - 2026-09-02 · [[courses/system_programming/lectures/en/2026-09-02-lecture-01|English]]
 - 2026-09-09 · [[courses/system_programming/lectures/en/2026-09-09-lecture-03|English]]
+- 2026-09-14 · [[courses/system_programming/lectures/en/2026-09-14-lecture-04|English]]
 
 
 ## 개념 지도

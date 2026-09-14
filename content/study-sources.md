@@ -68,6 +68,7 @@
 - [[courses/system_programming/lectures/en/2026-09-07-lecture-02|2026-09-07-lecture-02 · English]]
 - [[courses/system_programming/lectures/en/2026-09-09-lecture-03|2026-09-09-lecture-03 · English]]
 - 2026-09-14 · [[courses/system_programming/lectures/2026-09-14-lecture-04|한국어]]
+- 2026-09-14 · [[courses/system_programming/lectures/en/2026-09-14-lecture-04|English]]
 - [[courses/system_programming/transcripts/2026-09-02|2026-09-02 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-07|2026-09-07 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-09|2026-09-09 보정 STT]]
