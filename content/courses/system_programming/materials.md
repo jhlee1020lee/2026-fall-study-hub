@@ -20,6 +20,8 @@ review_status: approved
 - [`02.CPointers_24a7628c.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx) · 0.5 MiB
 - [`03.IO.Unix.Filesystem.Concepts.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/03.IO.Unix.Filesystem.Concepts.pptx) · 0.3 MiB
 - [`04.IO.Direct.and.Buffered.IO.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/04.IO.Direct.and.Buffered.IO.pptx) · 0.3 MiB
+- [`04.IO.Direct.and.Buffered.IO_8e725857.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/04.IO.Direct.and.Buffered.IO_8e725857.pptx) · 0.3 MiB
 - [`05.IO.Files.and.Directories.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/05.IO.Files.and.Directories.pptx) · 0.2 MiB
+- [`05.IO.Files.and.Directories_3d312c60.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/05.IO.Files.and.Directories_3d312c60.pptx) · 0.2 MiB
 - [`06.MM.Variable.and.Memory.Recap.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/06.MM.Variable.and.Memory.Recap.pptx) · 0.3 MiB
 - [`07.MM.Virtual.Memory.Recap.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/07.MM.Virtual.Memory.Recap.pptx) · 0.6 MiB
