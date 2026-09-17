@@ -10,6 +10,8 @@ tags: [course, principles-of-programming]
 
 - [[courses/principles_of_programming/lectures/2026-09-01-lecture-01|2026-09-01 · 1강]]
 - [[courses/principles_of_programming/lectures/2026-09-03-lecture-02|2026-09-03 · 2강]]
+- 2026-09-15 · [[courses/principles_of_programming/lectures/2026-09-15-lecture-04|한국어]]
+
 
 ## 개념 지도
 
@@ -37,6 +39,18 @@ tags: [course, principles-of-programming]
 - [[concepts/타입|Type(타입)]]
 - [[concepts/타입-클래스|Type Class(타입 클래스)]]
 - [[concepts/값과-식|Value and Expression(값과 식)]]
+- [[concepts/block|Block]]
+- [[concepts/call-by-name|Call-by-name]]
+- [[concepts/call-by-value|Call-by-value]]
+- [[concepts/call-stack|call stack]]
+- [[concepts/continuation|continuation]]
+- [[concepts/environment|environment]]
+- [[concepts/lazy-evaluation|Lazy call-by-value]]
+- [[concepts/mutual-recursion|Mutual Recursion]]
+- [[concepts/recursion|Recursion]]
+- [[concepts/stack-overflow|Stack overflow]]
+- [[concepts/tail-call|Tail call]]
+- [[concepts/tail-recursion|Tail recursion]]
 
 ## 강의자료
 
