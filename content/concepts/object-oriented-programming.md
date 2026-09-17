@@ -17,6 +17,8 @@ Java에서 class(클래스)는 object의 틀이고 method(메서드)는 class �
 ## 관련 강의
 
 - [[courses/computer_programming/lectures/2026-09-01-lecture-01|Computer Programming · 2026-09-01 · 1강]]
+- [[courses/computer_programming/lectures/2026-09-15-lecture-05|2026-09-15 · computer_programming · 한국어]]
+- [[courses/computer_programming/lectures/en/2026-09-15-lecture-05|2026-09-15 · computer_programming · English]]
 
 ## 연결 개념
 

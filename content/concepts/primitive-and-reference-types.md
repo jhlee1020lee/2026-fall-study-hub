@@ -17,6 +17,7 @@ Assignment(대입)에서도 이 차이가 유지된다. Primitive assignment는 
 ## 관련 강의
 
 - [[courses/computer_programming/lectures/2026-09-01-lecture-01|Computer Programming · 2026-09-01 · 1강]]
+- [[courses/computer_programming/lectures/2026-09-15-lecture-05|2026-09-15 · computer_programming · 한국어]]
 
 ## 연결 개념
 

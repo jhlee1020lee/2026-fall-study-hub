@@ -1,11 +1,12 @@
 ---
-title: "Abstraction"
+title: "Polymorphism"
 tags: [concept]
+review_status: approved
 ---
 
-이 개념의 설명과 예제는 아래 강의노트에서 확인할 수 있습니다.
+# Polymorphism
 
-- [[courses/principles_of_programming/lectures/2026-09-08-lecture-03|principles_of_programming · 2026-09-08-lecture-03]]
+강의별 설명과 예제를 아래에서 찾아볼 수 있습니다.
 
 ## 관련 강의
 
