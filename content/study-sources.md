@@ -22,6 +22,7 @@
 - [[courses/principles_of_programming/transcripts/2026-09-01|2026-09-01 보정 STT]]
 - [[courses/principles_of_programming/transcripts/2026-09-03|2026-09-03 보정 STT]]
 - [[courses/principles_of_programming/transcripts/2026-09-08|2026-09-08 보정 STT]]
+- [[courses/principles_of_programming/transcripts/2026-09-15|2026-09-15 보정 STT]]
 
 ## Aging and Family
 
@@ -43,6 +44,7 @@
 - [[courses/computer_architecture/transcripts/2026-09-01|2026-09-01 보정 STT]]
 - [[courses/computer_architecture/transcripts/2026-09-08|2026-09-08 보정 STT]]
 - [[courses/computer_architecture/transcripts/2026-09-10|2026-09-10 보정 STT]]
+- [[courses/computer_architecture/transcripts/2026-09-15|2026-09-15 보정 STT]]
 
 ## Computer Programming
 
@@ -58,6 +60,7 @@
 - [[courses/computer_programming/transcripts/2026-09-03|2026-09-03 보정 STT]]
 - [[courses/computer_programming/transcripts/2026-09-08|2026-09-08 보정 STT]]
 - [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 보정 STT]]
+- [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 보정 STT]]
 
 ## System Programming
 
