@@ -11,3 +11,4 @@ review_status: approved
 ## 관련 강의
 
 - [[courses/computer_architecture/lectures/2026-09-15-lecture-05|2026-09-15 · computer_architecture · 한국어]]
+- [[courses/computer_architecture/lectures/en/2026-09-15-lecture-05|2026-09-15 · computer_architecture · English]]

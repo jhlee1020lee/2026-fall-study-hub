@@ -14,6 +14,7 @@ tags: [course, computer-architecture]
 - 2026-09-01 · 1강 · [[courses/computer_architecture/lectures/2026-09-01-lecture-01|한국어]] · [[courses/computer_architecture/lectures/en/2026-09-01-lecture-01|English]]
 - 2026-09-03 · 2강 · [[courses/computer_architecture/lectures/2026-09-03-lecture-02|한국어]] · [[courses/computer_architecture/lectures/en/2026-09-03-lecture-02|English]] · 강의자료 기반(녹음·STT 없음)
 - 2026-09-15 · [[courses/computer_architecture/lectures/2026-09-15-lecture-05|한국어]]
+- 2026-09-15 · [[courses/computer_architecture/lectures/en/2026-09-15-lecture-05|English]]
 
 
 ## 개념 지도
@@ -28,6 +29,20 @@ tags: [course, computer-architecture]
 - [[concepts/cpi-ipc|CPI와 IPC]]
 - [[concepts/cpu-execution-time|CPU execution time]]
 - [[concepts/latency-throughput|Latency와 Throughput]]
+- [[concepts/arithmetic-mean|arithmetic mean]]
+- [[concepts/benchmark|Benchmark]]
+- [[concepts/cpi|CPI]]
+- [[concepts/geometric-mean|geometric mean]]
+- [[concepts/harmonic-mean|harmonic mean]]
+- [[concepts/instruction-mix|instruction mix]]
+- [[concepts/ipc|IPC]]
+- [[concepts/latency|Latency]]
+- [[concepts/relative-performance|Relative performance]]
+- [[concepts/single-cycle-processor|single-cycle processor]]
+- [[concepts/speedup|speedup]]
+- [[concepts/throughput|throughput]]
+- [[concepts/weighted-arithmetic-mean|weighted arithmetic mean]]
+- [[concepts/workload|Workload]]
 
 강의가 추가되면 관련 개념이 자동으로 연결됩니다.
 

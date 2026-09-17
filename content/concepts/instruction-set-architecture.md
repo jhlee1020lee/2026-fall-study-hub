@@ -27,6 +27,7 @@ transistors ── control로 켜고 끄는 switch
 ## 관련 강의
 
 - [[courses/computer_architecture/lectures/2026-09-01-lecture-01|Computer Architecture · 2026-09-01 · 1강]]
+- [[courses/computer_architecture/lectures/en/2026-09-15-lecture-05|2026-09-15 · computer_architecture · English]]
 
 ## 연결 개념
 
