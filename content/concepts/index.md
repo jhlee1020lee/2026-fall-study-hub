@@ -187,3 +187,8 @@ tags:
 - [[concepts/stack-overflow|Stack overflow]]
 - [[concepts/tail-call|Tail call]]
 - [[concepts/tail-recursion|Tail recursion]]
+- [[concepts/amdahls-law|Amdahl’s Law]]
+- [[concepts/benchmarking|Benchmark]]
+- [[concepts/cpi-ipc|CPI와 IPC]]
+- [[concepts/cpu-execution-time|CPU execution time]]
+- [[concepts/latency-throughput|Latency와 Throughput]]
