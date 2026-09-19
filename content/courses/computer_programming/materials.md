@@ -20,4 +20,4 @@ review_status: approved
 - [`5.encapsulation.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/5.encapsulation.pdf) · 2.4 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/manifest.json)
 - [`Lab01.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab01.pdf) · 4.1 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab01/manifest.json)
 - [`Lab01.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab01.pptx) · 8.5 MiB
-- [`Lab03.v2.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab03.v2.pdf) · 0.6 MiB
+- [`Lab03.v2.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab03.v2.pdf) · 0.6 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/manifest.json)
