@@ -12,6 +12,7 @@ tags: [course, computer-programming]
 - 2026-09-03 · 2강 · [[courses/computer_programming/lectures/2026-09-03-lecture-02|한국어]] · [[courses/computer_programming/lectures/en/2026-09-03-lecture-02|English]]
 - 2026-09-15 · [[courses/computer_programming/lectures/2026-09-15-lecture-05|한국어]]
 - 2026-09-15 · [[courses/computer_programming/lectures/en/2026-09-15-lecture-05|English]]
+- 2026-09-17 · [[courses/computer_programming/lectures/2026-09-17-lecture-06|한국어]]
 
 
 ## 개념 지도
@@ -65,6 +66,8 @@ tags: [course, computer-programming]
 - [[concepts/static-members|static Members]]
 - [[concepts/this-keyword|this]]
 - [[concepts/wrapper-class|Wrapper Class]]
+- [[concepts/call-by-value|Call-by-Value]]
+- [[concepts/object-reference|Object reference]]
 
 강의가 추가되면 관련 개념이 자동으로 연결됩니다.
 

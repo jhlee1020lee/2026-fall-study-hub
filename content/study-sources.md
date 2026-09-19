@@ -62,6 +62,7 @@
 - [[courses/computer_programming/lectures/en/2026-09-10-lecture-04|2026-09-10-lecture-04 · English]]
 - 2026-09-15 · [[courses/computer_programming/lectures/2026-09-15-lecture-05|한국어]]
 - 2026-09-15 · [[courses/computer_programming/lectures/en/2026-09-15-lecture-05|English]]
+- 2026-09-17 · [[courses/computer_programming/lectures/2026-09-17-lecture-06|한국어]]
 - [[courses/computer_programming/transcripts/2026-09-01|2026-09-01 보정 STT]]
 - [[courses/computer_programming/transcripts/2026-09-03|2026-09-03 보정 STT]]
 - [[courses/computer_programming/transcripts/2026-09-08|2026-09-08 보정 STT]]

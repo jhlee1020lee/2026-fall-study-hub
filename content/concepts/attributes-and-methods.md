@@ -11,3 +11,4 @@ review_status: approved
 ## 관련 강의
 
 - [[courses/computer_programming/lectures/2026-09-15-lecture-05|2026-09-15 · computer_programming · 한국어]]
+- [[courses/computer_programming/lectures/2026-09-17-lecture-06|2026-09-17 · computer_programming · 한국어]]
