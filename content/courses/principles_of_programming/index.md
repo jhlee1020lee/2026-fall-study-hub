@@ -73,3 +73,4 @@ PDF 원본은 위 자료 목록에서 내려받을 수 있습니다. 기존 페�
 - [[courses/principles_of_programming/transcripts/2026-09-03|2026-09-03 보정 STT]]
 - [[courses/principles_of_programming/transcripts/2026-09-08|2026-09-08 보정 STT]]
 - [[courses/principles_of_programming/transcripts/2026-09-15|2026-09-15 보정 STT]]
+- [[courses/principles_of_programming/transcripts/2026-09-17|2026-09-17 보정 STT]]
