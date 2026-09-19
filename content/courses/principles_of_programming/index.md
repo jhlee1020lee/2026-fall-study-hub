@@ -11,6 +11,7 @@ tags: [course, principles-of-programming]
 - [[courses/principles_of_programming/lectures/2026-09-01-lecture-01|2026-09-01 · 1강]]
 - [[courses/principles_of_programming/lectures/2026-09-03-lecture-02|2026-09-03 · 2강]]
 - 2026-09-15 · [[courses/principles_of_programming/lectures/2026-09-15-lecture-04|한국어]]
+- 2026-09-17 · [[courses/principles_of_programming/lectures/2026-09-17-lecture-05|한국어]]
 
 
 ## 개념 지도
@@ -51,6 +52,12 @@ tags: [course, principles-of-programming]
 - [[concepts/stack-overflow|Stack overflow]]
 - [[concepts/tail-call|Tail call]]
 - [[concepts/tail-recursion|Tail recursion]]
+- [[concepts/anonymous-functions|Anonymous function]]
+- [[concepts/closures|Closure]]
+- [[concepts/currying|Currying]]
+- [[concepts/environment-model|Environment model]]
+- [[concepts/higher-order-functions|Higher-order function]]
+- [[concepts/map-reduce|mapReduce]]
 
 ## 강의자료
 

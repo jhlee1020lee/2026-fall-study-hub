@@ -20,6 +20,7 @@
 - [[courses/principles_of_programming/lectures/2026-09-08-lecture-03|2026-09-08-lecture-03 · 한국어]]
 - [[courses/principles_of_programming/lectures/2026-09-10-materials-blocks|2026-09-10-materials-blocks · 한국어]]
 - 2026-09-15 · [[courses/principles_of_programming/lectures/2026-09-15-lecture-04|한국어]]
+- 2026-09-17 · [[courses/principles_of_programming/lectures/2026-09-17-lecture-05|한국어]]
 - [[courses/principles_of_programming/transcripts/2026-09-01|2026-09-01 보정 STT]]
 - [[courses/principles_of_programming/transcripts/2026-09-03|2026-09-03 보정 STT]]
 - [[courses/principles_of_programming/transcripts/2026-09-08|2026-09-08 보정 STT]]

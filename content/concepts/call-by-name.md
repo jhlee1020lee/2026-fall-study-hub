@@ -10,3 +10,4 @@ tags: [concept]
 ## 관련 강의
 
 - [[courses/principles_of_programming/lectures/2026-09-15-lecture-04|2026-09-15 · principles_of_programming · 한국어]]
+- [[courses/principles_of_programming/lectures/2026-09-17-lecture-05|2026-09-17 · principles_of_programming · 한국어]]
