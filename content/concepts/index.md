@@ -241,3 +241,5 @@ tags:
 - [[concepts/this-keyword|this]]
 - [[concepts/wrapper-class|Wrapper Class]]
 - [[concepts/object-reference|Object reference]]
+- [[concepts/object-references|Object references]]
+- [[concepts/predicates|predicates]]

@@ -13,3 +13,4 @@ review_status: approved
 - [[courses/computer_programming/lectures/2026-09-15-lecture-05|2026-09-15 · computer_programming · 한국어]]
 - [[courses/computer_programming/lectures/en/2026-09-15-lecture-05|2026-09-15 · computer_programming · English]]
 - [[courses/computer_programming/lectures/2026-09-17-lecture-06|2026-09-17 · computer_programming · 한국어]]
+- [[courses/computer_programming/lectures/en/2026-09-17-lecture-06|2026-09-17 · computer_programming · English]]
