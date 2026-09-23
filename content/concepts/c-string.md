@@ -11,3 +11,4 @@ review_status: approved
 ## 관련 강의
 
 - [[courses/system_programming/lectures/en/2026-09-21-lecture-05|2026-09-21 · system_programming · English]]
+- [[courses/system_programming/lectures/en/2026-09-16-materials-io-review|2026-09-16 · 추정 자료 복습 · English]]

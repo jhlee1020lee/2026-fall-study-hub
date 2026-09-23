@@ -29,7 +29,7 @@ This review connects M01 slides 12–47 with M02 slides 3–8; it is a materials
 
 ### Reading and writing: a request is different from a completed transfer
 
-[[Unix I/O]] exposes files through an integer [[File descriptor]]. Once a suitable descriptor is open, `read` transfers bytes from its input into application memory, while `write` transfers bytes from application memory to its output. The descriptor identifies the open resource; the buffer identifies the memory involved; `count` specifies the requested number of bytes. For an ordinary seekable file, the current [[File offset]] advances by the number of bytes actually transferred. [M01 p.12]
+[[concepts/unix-io|Unix I/O]] exposes files through an integer [[concepts/file-descriptor|File descriptor]]. Once a suitable descriptor is open, `read` transfers bytes from its input into application memory, while `write` transfers bytes from application memory to its output. The descriptor identifies the open resource; the buffer identifies the memory involved; `count` specifies the requested number of bytes. For an ordinary seekable file, the current [[concepts/file-offset|File offset]] advances by the number of bytes actually transferred. [M01 p.12]
 
 The interfaces are:
 
@@ -90,7 +90,7 @@ Despite the slide title, this particular string has **no exclamation mark**. It 
 
 The file-output example uses `"Hello, world!\n"`, which does contain an exclamation mark: its text length is 14 and its array size is 15. These are different source examples, so their lengths should not be silently treated as identical. [M01 p.16]
 
-[[C string|C strings]] use a terminating zero to mark their end; [[Binary I/O]] uses an independently known byte count. Consequently, `strlen` is appropriate for these terminated strings but is not a general file-buffer length function. An embedded zero would stop the count early, and a buffer without a terminator would not satisfy `strlen`’s input requirements. Similarly, `sizeof` measures the array only where the expression actually has array type; applying it to a pointer does not recover the allocation’s size. [M01 p.12; M01 p.15]
+[[concepts/c-string|C strings]] use a terminating zero to mark their end; [[concepts/binary-io|Binary I/O]] uses an independently known byte count. Consequently, `strlen` is appropriate for these terminated strings but is not a general file-buffer length function. An embedded zero would stop the count early, and a buffer without a terminator would not satisfy `strlen`’s input requirements. Similarly, `sizeof` measures the array only where the expression actually has array type; applying it to a pointer does not recover the allocation’s size. [M01 p.12; M01 p.15]
 
 The next example opens its own destination:
 
@@ -108,7 +108,7 @@ The example checks whether `open` returned `-1`, reports failure if necessary, t
 
 ### Seeking: changing a position without transferring data
 
-[[lseek]] changes the current offset of a seekable open file. It neither reads bytes into a buffer nor writes new contents. Its `whence` argument selects the reference point for the signed `offset`. [M01 p.17]
+[[concepts/lseek|lseek]] changes the current offset of a seekable open file. It neither reads bytes into a buffer nor writes new contents. Its `whence` argument selects the reference point for the signed `offset`. [M01 p.17]
 
 | `whence` | Reference point | New absolute position |
 |---|---|---|
@@ -129,7 +129,7 @@ if (lseek(fd, 100, SEEK_SET) < 0) {
 
 moves to byte offset 100 from the beginning. It does not mean “advance by 100 bytes,” which would require `SEEK_CUR`. The fragment presupposes a suitable descriptor; supporting `read` and `write` does not imply that a resource also supports seeking. [M01 p.18]
 
-Seeking beyond EOF is especially important for understanding a [[Sparse file]]. **Seeking alone does not enlarge the file.** A subsequent write beyond the previous EOF can extend the logical size and leave an intervening region that reads as zero bytes. Whether that region occupies physical storage blocks depends on the filesystem. [M01 p.17]
+Seeking beyond EOF is especially important for understanding a [[concepts/sparse-file|Sparse file]]. **Seeking alone does not enlarge the file.** A subsequent write beyond the previous EOF can extend the logical size and leave an intervening region that reads as zero bytes. Whether that region occupies physical storage blocks depends on the filesystem. [M01 p.17]
 
 For a new illustrative example, assume a regular file has size 1,024 bytes, supports seeking, and is opened without append mode. A successful seek to offset 8,192 leaves its size at 1,024. If a subsequent one-byte write succeeds there, the new size is 8,193 bytes. The intervening offsets 1,024 through 8,191 comprise 7,168 zero-reading bytes. The assumption about append mode matters: an append-mode write is directed to the file’s end rather than simply using an earlier arbitrary seek position. [M01 p.16; M01 p.17]
 
@@ -137,7 +137,7 @@ For a new illustrative example, assume a regular file has size 1,024 bytes, supp
 
 ### Short counts: preserving progress instead of assuming completion
 
-A [[Short count]] is a non-error transfer result smaller than the requested amount. The slide requests 512 bytes and reports 302. Those 302 bytes are real progress; the remaining 210 bytes have not been supplied by that call. A short count does not, by itself, tell the application whether another call will obtain more data. [M01 p.20]
+A [[concepts/short-count|Short count]] is a non-error transfer result smaller than the requested amount. The slide requests 512 bytes and reports 302. Those 302 bytes are real progress; the remaining 210 bytes have not been supplied by that call. A short count does not, by itself, tell the application whether another call will obtain more data. [M01 p.20]
 
 The material lists several situations in which partial transfers can arise: nearing EOF during a read, limited filesystem space during a write, terminal line input, communication through sockets or pipes, and interruption associated with signals. These situations do not all produce an identical result. For example, a transfer may make some progress before interruption, while an operation that reports `-1` has entered its error-reporting path. Interpret the returned count first, then inspect `errno` when the operation’s failure contract makes it relevant. A stale `errno` value cannot turn a positive result into an error. [M01 p.20]
 
@@ -183,9 +183,9 @@ After a positive result `n`, increase `done` by `n`. Restarting from the beginni
 
 ### Why Standard I/O adds buffering and formatting
 
-Character-oriented programs often want one character or one line at a time. Calling Unix `read` and `write` for each individual byte makes that convenient application granularity expensive at the system-call boundary. [[Standard I/O]] addresses this by allowing small application operations to share larger underlying transfers. [M01 p.23; M01 p.24; M01 p.25]
+Character-oriented programs often want one character or one line at a time. Calling Unix `read` and `write` for each individual byte makes that convenient application granularity expensive at the system-call boundary. [[concepts/standard-io|Standard I/O]] addresses this by allowing small application operations to share larger underlying transfers. [M01 p.23; M01 p.24; M01 p.25]
 
-The introductory code changes the interface from an integer descriptor to a [[FILE stream]]:
+The introductory code changes the interface from an integer descriptor to a [[concepts/file-stream|FILE stream]]:
 
 ```c
 FILE *f = fopen("standard.io", "r+");
@@ -214,7 +214,7 @@ The striking feature is the kernel-time component associated with repeated tiny 
 
 ### The library and kernel perform different parts of I/O
 
-The layer diagram appears as a miniature on slide 38 and in expanded form on slide 39. It places the application and the C standard library in [[User space]], above a boundary separating them from [[Kernel space]]. Its arrows show two application paths. [M01 p.38; M01 p.39]
+The layer diagram appears as a miniature on slide 38 and in expanded form on slide 39. It places the application and the C standard library in [[concepts/user-space|User space]], above a boundary separating them from [[concepts/kernel-space|Kernel space]]. Its arrows show two application paths. [M01 p.38; M01 p.39]
 
 Along the library path, the application calls functions such as `fopen`, `fread`, `fwrite`, `fseek`, `fflush`, or `fprintf`. The library maintains stream state and invokes underlying Unix I/O when necessary. Along the direct path, the application uses operations such as `open`, `read`, `write`, `lseek`, and `close` without the Standard I/O stream layer. Both paths reach the system-call interface, after which the kernel manages the resource and its interaction with storage. [M01 p.39]
 
@@ -232,7 +232,7 @@ Removing or flushing one layer’s buffer does not imply that all other layers h
 
 ### Read-ahead separates stream consumption from the kernel offset
 
-[[Read-ahead]] allows the library to fetch a block before the application has requested every individual byte in it. In slide 26, a Unix `read` has obtained bytes $B_0$ through $B_{k-1}$ into the stream’s user-space buffer. The kernel’s current file position is now at $B_k$, the next byte beyond that transferred block. [M01 p.26]
+[[concepts/read-ahead|Read-ahead]] allows the library to fetch a block before the application has requested every individual byte in it. In slide 26, a Unix `read` has obtained bytes $B_0$ through $B_{k-1}$ into the stream’s user-space buffer. The kernel’s current file position is now at $B_k$, the next byte beyond that transferred block. [M01 p.26]
 
 The application has consumed only part of the buffered block. Its next stream byte is $B_s$, with $s<k$. Thus the two position arrows in the figure refer to different events:
 
@@ -284,7 +284,7 @@ Position APIs also differ in their return contracts. `fseek` reports success or 
 
 ### Character, line, and formatted I/O solve different representation problems
 
-The next API table separates character or line handling from format-directed conversion. [[Formatted I/O]] interprets a format string; character and line interfaces primarily move characters or strings without that conversion step. [M01 p.28]
+The next API table separates character or line handling from format-directed conversion. [[concepts/formatted-io|Formatted I/O]] interprets a format string; character and line interfaces primarily move characters or strings without that conversion step. [M01 p.28]
 
 | Purpose | Representative operation | Related interfaces and distinctions |
 |---|---|---|
@@ -346,7 +346,7 @@ The example omits result checking for both output and closure. That matters espe
 
 ### Buffering modes determine when output leaves the stream
 
-[[Buffering]] combines operations, but the chosen mode changes the timing of that combination. The material distinguishes three modes and notes that defaults depend on the underlying destination. [M01 p.33]
+[[concepts/buffering|Buffering]] combines operations, but the chosen mode changes the timing of that combination. The material distinguishes three modes and notes that defaults depend on the underlying destination. [M01 p.33]
 
 | Mode | Constant | Core behavior | Typical situation in the slides |
 |---|---|---|---|
@@ -367,7 +367,7 @@ For line-buffered output, the slide lists newline, buffer exhaustion, input-rela
 - Normal termination that performs Standard I/O cleanup differs from abnormal termination or termination paths that bypass that cleanup.
 - A newline in a fully buffered file stream does not, by itself, impose line-buffered behavior. [M01 p.35]
 
-[[fflush]] moves pending output from the Standard I/O layer to the underlying output mechanism. The slide describes this informally as writing the buffer to disk, but **successful flushing is not a guarantee of durable physical storage**. The kernel and storage layers remain distinct from the user-space stream buffer. [M01 p.34; M01 p.39; M01 p.40]
+[[concepts/flushing|fflush]] moves pending output from the Standard I/O layer to the underlying output mechanism. The slide describes this informally as writing the buffer to disk, but **successful flushing is not a guarantee of durable physical storage**. The kernel and storage layers remain distinct from the user-space stream buffer. [M01 p.34; M01 p.39; M01 p.40]
 
 Unbuffered operation still uses the `FILE` interface and still permits formatting. The slide presents `stderr` as unbuffered in the illustrated Unix environment. “Immediate” here concerns avoiding stdio’s accumulation delay: it does not guarantee that the endpoint is a terminal, that the operation succeeds, or that lower layers have no buffering. [M01 p.36]
 
@@ -474,7 +474,7 @@ Unix I/O offers direct control over descriptors, transfers, positioning, and met
 
 Standard I/O provides useful buffering, formatted conversion, and handling of underlying partial transfers. Its automatic handling of short counts does not promise that every `fread` or `fwrite` request completes: EOF and errors remain observable at the stream interface, so results and status still matter. Standard I/O also does not itself provide the file-metadata interface introduced next. [M01 p.27; M01 p.46]
 
-The slides introduce [[Async-signal safety]] as an interface-selection constraint. Standard I/O functions are unsuitable for general use inside signal handlers, whereas appropriate async-signal-safe operations from the Unix interface can be used subject to their contracts. The broad slide wording must not be read as permission to treat every operating-system or library function as signal-safe. Detailed signal-handler design is a later prerequisite, not content established by this preview. [M01 p.45; M01 p.46; M01 p.47]
+The slides introduce [[concepts/async-signal-safety|Async-signal safety]] as an interface-selection constraint. Standard I/O functions are unsuitable for general use inside signal handlers, whereas appropriate async-signal-safe operations from the Unix interface can be used subject to their contracts. The broad slide wording must not be read as permission to treat every operating-system or library function as signal-safe. Detailed signal-handler design is a later prerequisite, not content established by this preview. [M01 p.45; M01 p.46; M01 p.47]
 
 The socket warning is also a qualified design recommendation. The material warns that stream restrictions interact poorly with socket use and refers onward for details. This does not mean that associating a stream with a socket is physically impossible, nor does the selected material supply a complete network-I/O programming model. [M01 p.46]
 
@@ -482,9 +482,9 @@ The stated selection principle is to use the highest-level interface that satisf
 
 ### File metadata describes a file without being its contents
 
-[[File metadata]] is information about a file: its type, size, ownership, permissions, and timestamps, among other attributes. Reading a file’s data bytes and asking about those attributes are different operations. A program can need the size or file type without wanting to interpret the file’s contents. [M02 p.4; M02 p.5]
+[[concepts/file-metadata|File metadata]] is information about a file: its type, size, ownership, permissions, and timestamps, among other attributes. Reading a file’s data bytes and asking about those attributes are different operations. A program can need the size or file type without wanting to interpret the file’s contents. [M02 p.4; M02 p.5]
 
-The directory–[[Inode]] distinction explains why file names should not be treated as an ordinary field inside the file’s content or inode. In the slides’ Unix filesystem model, the containing directory stores the filename association, while the inode holds the file’s principal attributes. The kernel manages these related structures. The slide’s “everything else” wording expresses this introductory model; it should not be expanded into a universal statement about every extended attribute and every filesystem implementation. [M02 p.4]
+The directory–[[concepts/inode|Inode]] distinction explains why file names should not be treated as an ordinary field inside the file’s content or inode. In the slides’ Unix filesystem model, the containing directory stores the filename association, while the inode holds the file’s principal attributes. The kernel manages these related structures. The slide’s “everything else” wording expresses this introductory model; it should not be expanded into a universal statement about every extended attribute and every filesystem implementation. [M02 p.4]
 
 This separation also explains why a metadata result need not contain a “filename” member. A pathname is one way to find the object whose metadata is requested; it is not the same thing as the object’s entire identity or attribute record. [M02 p.4; M02 p.5; M02 p.8]
 
@@ -492,7 +492,7 @@ This separation also explains why a metadata result need not contain a “filena
 
 ### Reading `struct stat` as several kinds of information
 
-The declaration on M02 slide 3 is substantive: it introduces the fields later explained on slide 5. The [[stat]] family obtains file metadata in a `struct stat`, whose members answer different questions. [M02 p.3; M02 p.5]
+The declaration on M02 slide 3 is substantive: it introduces the fields later explained on slide 5. The [[concepts/stat-family|stat]] family obtains file metadata in a `struct stat`, whose members answer different questions. [M02 p.3; M02 p.5]
 
 | Field | Meaning in the material | Distinction to preserve |
 |---|---|---|
@@ -516,7 +516,7 @@ The three size-related fields are especially easy to confuse. `st_size` tells ho
 
 The material shows `stat("filename", &sb)` as the means of obtaining a `struct stat` result. A concrete program must first establish that the call succeeded before interpreting `sb`; a failed call does not provide a valid fresh metadata result to inspect. [M02 p.6; M02 p.8]
 
-[[File mode]] combines type information and permission bits in `st_mode`. The following expressions therefore answer different questions:
+[[concepts/file-mode|File mode]] combines type information and permission bits in `st_mode`. The following expressions therefore answer different questions:
 
 ```c
 S_ISREG(sb.st_mode)
@@ -531,7 +531,7 @@ The owner and group fields are numerical IDs. The slide connects `st_uid` to `ge
 
 ### Sparse files separate logical extent from allocated storage
 
-A [[Sparse file]] can present a large logical byte sequence while allocating less storage for regions that read as zeros. The seek-beyond-EOF example provides the creation intuition; the `struct stat` fields provide a way to examine the difference. [M01 p.17; M02 p.6]
+A [[concepts/sparse-file|Sparse file]] can present a large logical byte sequence while allocating less storage for regions that read as zeros. The seek-beyond-EOF example provides the creation intuition; the `struct stat` fields provide a way to examine the difference. [M01 p.17; M02 p.6]
 
 The slide compares:
 
@@ -555,7 +555,7 @@ The inspected exam candidates do not provide a direct matched question for this 
 
 ### Access time, modification time, and status-change time identify different events
 
-[[File timestamps]] must be read by meaning rather than by guessing from their abbreviations. The materials distinguish:
+[[concepts/file-timestamps|File timestamps]] must be read by meaning rather than by guessing from their abbreviations. The materials distinguish:
 
 | Timestamp | Event represented |
 |---|---|
@@ -587,7 +587,7 @@ The metadata API table varies two things: how the target is identified and what 
 | `fstatat(dirfd, pathname, &sb, flags)` | A pathname interpreted with directory context and flags | Useful for directory-relative lookup and selected lookup behavior |
 | `statx(dirfd, pathname, flags, mask, &sx)` | Directory/path targeting plus requested extended fields | Returns extended status through `struct statx` |
 
-For [[Symbolic link]] handling, `stat` and `lstat` can answer different questions about the same pathname spelling. One asks about the resolved target; the other can ask about the link object at the final pathname component. The slide’s short “does not follow symbolic links” description should not be expanded into a claim that no symbolic link in any intermediate pathname component is ever traversed. [M02 p.8]
+For [[concepts/symbolic-link|Symbolic link]] handling, `stat` and `lstat` can answer different questions about the same pathname spelling. One asks about the resolved target; the other can ask about the link object at the final pathname component. The slide’s short “does not follow symbolic links” description should not be expanded into a claim that no symbolic link in any intermediate pathname component is ever traversed. [M02 p.8]
 
 `fstat` avoids replacing an existing descriptor with a fresh pathname lookup merely to obtain metadata. The descriptor and pathname forms therefore express different ways of selecting the object, even when they happen to refer to the same file in a simple example. [M02 p.8]
 
@@ -601,16 +601,16 @@ The selected materials develop three connected questions: **How much data actual
 
 | Objectives | Conceptual connection | Primary material |
 |---|---|---|
-| LO01–LO02 | [[Unix I/O]] connects a [[File descriptor]], a memory buffer, and an explicit byte request. The two string-output examples separate text length from array size and already-open output from an explicitly opened file. | [M01 p.12] [M01 p.13] [M01 p.14] [M01 p.15] [M01 p.16] |
-| LO03–LO05 | [[File offset]] reasoning explains seeking; [[Short count]] reasoning explains incomplete transfers. The one-byte loop and larger copy report make the difference between requested and completed work visible. | [M01 p.17] [M01 p.18] [M01 p.19] [M01 p.20] [M01 p.21] |
-| LO06, LO15 | [[Standard I/O]] adds buffering and formatting above the system-call interface. The timing example motivates the layer diagram: more application calls need not mean more kernel crossings. | [M01 p.22] [M01 p.23] [M01 p.24] [M01 p.25] [M01 p.38] [M01 p.39] |
-| LO07 | [[Read-ahead]] explains why the next application byte can precede the kernel’s current offset. Both position diagrams distinguish user-space stream state from kernel state and the disk block cache. | [M01 p.26] [M01 p.40] |
-| LO08–LO10 | A [[FILE stream]] has its own lifecycle, transfer units, status indicators, and formatting interfaces. The Standard I/O “Hello” examples retain explicit opening, closing, and failure concerns. | [M01 p.27] [M01 p.28] [M01 p.29] [M01 p.30] [M01 p.31] |
-| LO11–LO14 | [[Buffering]] modes determine when accumulated output is delivered. The character-buffer diagram and supplied `strace` example connect several library calls to fewer underlying writes. | [M01 p.32] [M01 p.33] [M01 p.34] [M01 p.35] [M01 p.36] [M01 p.37] |
+| LO01–LO02 | [[concepts/unix-io\|Unix I/O]] connects a [[concepts/file-descriptor\|File descriptor]], a memory buffer, and an explicit byte request. The two string-output examples separate text length from array size and already-open output from an explicitly opened file. | [M01 p.12] [M01 p.13] [M01 p.14] [M01 p.15] [M01 p.16] |
+| LO03–LO05 | [[concepts/file-offset\|File offset]] reasoning explains seeking; [[concepts/short-count\|Short count]] reasoning explains incomplete transfers. The one-byte loop and larger copy report make the difference between requested and completed work visible. | [M01 p.17] [M01 p.18] [M01 p.19] [M01 p.20] [M01 p.21] |
+| LO06, LO15 | [[concepts/standard-io\|Standard I/O]] adds buffering and formatting above the system-call interface. The timing example motivates the layer diagram: more application calls need not mean more kernel crossings. | [M01 p.22] [M01 p.23] [M01 p.24] [M01 p.25] [M01 p.38] [M01 p.39] |
+| LO07 | [[concepts/read-ahead\|Read-ahead]] explains why the next application byte can precede the kernel’s current offset. Both position diagrams distinguish user-space stream state from kernel state and the disk block cache. | [M01 p.26] [M01 p.40] |
+| LO08–LO10 | A [[concepts/file-stream\|FILE stream]] has its own lifecycle, transfer units, status indicators, and formatting interfaces. The Standard I/O “Hello” examples retain explicit opening, closing, and failure concerns. | [M01 p.27] [M01 p.28] [M01 p.29] [M01 p.30] [M01 p.31] |
+| LO11–LO14 | [[concepts/buffering\|Buffering]] modes determine when accumulated output is delivered. The character-buffer diagram and supplied `strace` example connect several library calls to fewer underlying writes. | [M01 p.32] [M01 p.33] [M01 p.34] [M01 p.35] [M01 p.36] [M01 p.37] |
 | LO16–LO18 | Stream pseudocode exposes allocation, refill, consumption, cleanup, and copying across buffer boundaries. Its educational state model must remain separate from a conforming library implementation. | [M01 p.41] [M01 p.42] [M01 p.43] |
 | LO19–LO21 | Interface selection combines convenience, transfer costs, metadata needs, and safety constraints. The signal and socket remarks introduce boundaries that need further study. | [M01 p.45] [M01 p.46] [M01 p.47] |
-| LO22–LO24 | [[File metadata]] separates directory naming from [[Inode]] attributes, then distinguishes identity, ownership, file type, permissions, logical size, and allocation. | [M02 p.3] [M02 p.4] [M02 p.5] [M02 p.6] |
-| LO25–LO27 | [[Sparse file]] reasoning reconnects allocation to seeking. [[File timestamps]] and the [[stat]] family then distinguish events, target selection, and availability of extended information. | [M01 p.17] [M02 p.6] [M02 p.7] [M02 p.8] |
+| LO22–LO24 | [[concepts/file-metadata\|File metadata]] separates directory naming from [[concepts/inode\|Inode]] attributes, then distinguishes identity, ownership, file type, permissions, logical size, and allocation. | [M02 p.3] [M02 p.4] [M02 p.5] [M02 p.6] |
+| LO25–LO27 | [[concepts/sparse-file\|Sparse file]] reasoning reconnects allocation to seeking. [[concepts/file-timestamps\|File timestamps]] and the [[concepts/stat-family\|stat]] family then distinguish events, target selection, and availability of extended information. | [M01 p.17] [M02 p.6] [M02 p.7] [M02 p.8] |
 
 The dependency map is:
 

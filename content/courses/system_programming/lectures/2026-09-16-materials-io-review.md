@@ -29,7 +29,7 @@ M01 슬라이드 12–47과 M02 슬라이드 3–8의 고정된 본문을 바탕
 
 ### Unix I/O의 `read`·`write`: 요청한 양과 실제 처리한 양
 
-Unix I/O(유닉스 입출력)의 `read`와 `write`는 [[File descriptor]](파일 서술자)로 지정한 대상과 프로그램의 메모리 사이에서 byte를 옮긴다. `read`는 파일에서 메모리로, `write`는 메모리에서 파일로 옮긴다. 일반적인 순차 파일 접근에서는 현재 File position(파일 위치)에서 전송을 시작하고, 실제로 처리한 만큼 위치가 전진한다. 여기서 가장 먼저 구분할 것은 **요청량, 메모리 용량, 실제 처리량**이다. [M01 p.12]
+Unix I/O(유닉스 입출력)의 `read`와 `write`는 [[concepts/file-descriptor|File descriptor]](파일 서술자)로 지정한 대상과 프로그램의 메모리 사이에서 byte를 옮긴다. `read`는 파일에서 메모리로, `write`는 메모리에서 파일로 옮긴다. 일반적인 순차 파일 접근에서는 현재 File position(파일 위치)에서 전송을 시작하고, 실제로 처리한 만큼 위치가 전진한다. 여기서 가장 먼저 구분할 것은 **요청량, 메모리 용량, 실제 처리량**이다. [M01 p.12]
 
 ```c
 #include <unistd.h>
@@ -104,7 +104,7 @@ int fd = open(
 
 ### `lseek`: 위치 변경과 파일 크기 변경은 다르다
 
-[[File offset]](파일 오프셋)은 파일 안에서 다음 접근이 시작될 위치를 나타낸다. `lseek`는 데이터를 복사하지 않고 이 위치를 바꾼다. 함수 이름에 `seek`가 있다고 해서 장치가 반드시 물리적으로 이동한다는 뜻도 아니다. 이 자료에서 추적하는 것은 프로그램에 보이는 파일 위치이다. [M01 p.17]
+[[concepts/file-offset|File offset]](파일 오프셋)은 파일 안에서 다음 접근이 시작될 위치를 나타낸다. `lseek`는 데이터를 복사하지 않고 이 위치를 바꾼다. 함수 이름에 `seek`가 있다고 해서 장치가 반드시 물리적으로 이동한다는 뜻도 아니다. 이 자료에서 추적하는 것은 프로그램에 보이는 파일 위치이다. [M01 p.17]
 
 ```c
 off_t lseek(int fd, off_t offset, int whence);
@@ -140,7 +140,7 @@ while (read(STDIN_FILENO, &c, 1) > 0) {
 
 이 코드는 데이터 흐름을 간결하게 보여 주지만, 종료 원인을 구별하지 않는다. `read`의 결과가 `0`이어도 반복이 끝나고 `-1`이어도 끝난다. `write`의 결과도 검사하지 않으며, 원본 프로그램은 마지막에 항상 `EXIT_SUCCESS`를 반환한다. 따라서 반복문을 빠져나왔다는 사실만으로 “정상적으로 끝까지 복사했다”고 말할 수 없다. [M01 p.19]
 
-[[Short count]](부분 전송)는 오류 반환 `-1` 없이 요청보다 적은 byte를 처리한 경우이다. 슬라이드 20에서는 512 bytes를 요청했는데 302 bytes를 읽는다. 이 결과는 “실패해서 유효 데이터가 없다”가 아니라, **이번 호출로 302 bytes를 얻었다**는 뜻이다. 남은 210 bytes가 반드시 다음 호출에 도착한다거나, 이번 결과만으로 EOF가 확정된다는 뜻은 아니다. [M01 p.20]
+[[concepts/short-count|Short count]](부분 전송)는 오류 반환 `-1` 없이 요청보다 적은 byte를 처리한 경우이다. 슬라이드 20에서는 512 bytes를 요청했는데 302 bytes를 읽는다. 이 결과는 “실패해서 유효 데이터가 없다”가 아니라, **이번 호출로 302 bytes를 얻었다**는 뜻이다. 남은 210 bytes가 반드시 다음 호출에 도착한다거나, 이번 결과만으로 EOF가 확정된다는 뜻은 아니다. [M01 p.20]
 
 자료는 short count가 나타날 수 있는 상황으로 EOF 근처의 읽기, 저장 공간이 부족한 쓰기, terminal의 행 입력, socket과 pipe의 입출력, interrupt와 signal을 열거한다. 이 상황들이 모두 같은 결과를 반환한다는 뜻은 아니다. 일부 진행 후 양수를 반환할 수도 있고, 진행 없이 오류를 반환할 수도 있으므로 **반환값을 먼저 분류한 뒤 오류인 경우 `errno`를 해석**해야 한다. 성공한 호출 뒤 남아 있는 `errno`만으로 양의 반환값을 오류로 바꾸어 읽으면 안 된다. [M01 p.20]
 
@@ -171,7 +171,7 @@ $$
 
 ### Standard I/O의 동기: Buffering과 Formatted I/O는 별개의 기능이다
 
-프로그램은 문자 하나나 한 줄씩 처리하는 경우가 많다. 그러나 프로그램의 처리 단위가 작다는 이유로 kernel에 요청하는 단위까지 항상 작아야 하는 것은 아니다. 슬라이드 19처럼 byte마다 `read`와 `write`를 호출하면, 데이터의 양에 비례해 system call(시스템 호출)이 매우 많이 발생한다. Standard I/O(표준 입출력)는 이 문제를 [[Buffering]](버퍼링)으로 줄인다. [M01 p.19] [M01 p.23] [M01 p.25]
+프로그램은 문자 하나나 한 줄씩 처리하는 경우가 많다. 그러나 프로그램의 처리 단위가 작다는 이유로 kernel에 요청하는 단위까지 항상 작아야 하는 것은 아니다. 슬라이드 19처럼 byte마다 `read`와 `write`를 호출하면, 데이터의 양에 비례해 system call(시스템 호출)이 매우 많이 발생한다. Standard I/O(표준 입출력)는 이 문제를 [[concepts/buffering|Buffering]](버퍼링)으로 줄인다. [M01 p.19] [M01 p.23] [M01 p.25]
 
 슬라이드 23은 10 MiB를 byte 단위로 복사한 측정 예를 제시한다. 아래 수치는 자료에 수록된 특정 실행의 결과이며, 현재 컴퓨터에서 새로 측정한 결과가 아니다. [M01 p.23]
 
@@ -279,7 +279,7 @@ Formatted input의 대표는 `fscanf(stream, format, ...)`이다. 입력을 form
 
 ### Standard streams와 `fprintf`·`printf`의 Hello 예제
 
-[[Standard streams]](표준 스트림)는 프로그램의 기본 입력, 일반 출력, 오류 출력을 나누는 통로이다. Unix descriptor와 stdio stream의 대응은 다음과 같다. [M01 p.29]
+[[concepts/standard-streams|Standard streams]](표준 스트림)는 프로그램의 기본 입력, 일반 출력, 오류 출력을 나누는 통로이다. Unix descriptor와 stdio stream의 대응은 다음과 같다. [M01 p.29]
 
 | 역할 | Standard I/O stream | Unix I/O descriptor |
 |---|---|---|
@@ -328,7 +328,7 @@ Buffering은 대체로 투명하지만, **출력이 관찰되는 시점**에는 
 
 Fully buffered 입력에서는 먼저 buffer에 남아 있는 데이터를 제공한다. Buffer가 비면 하위 `read`로 채운다. 출력에서는 데이터를 모으다가 buffer가 가득 차면 하위 `write`로 내보낸다. 그래서 `fread`·`fwrite` 호출마다 반드시 `read`·`write`가 한 번씩 발생하는 것은 아니다. 큰 전송의 직접 처리 등 실제 library의 모든 경로를 이 단순 모델이 열거하는 것도 아니다. [M01 p.34]
 
-`fflush`는 출력 buffer에 남은 데이터를 underlying stream으로 전달하도록 요청한다. 여기서 [[Flushing]](버퍼 비우기)을 **저장 장치에 영구적으로 기록되었다는 보장**과 혼동해서는 안 된다. 슬라이드의 “disk에 쓴다”는 표현은 stdio buffer에서 하위 I/O로 전달하는 동작으로 한정해 이해한다. 전달이 실패할 수 있으므로 실제 코드에서는 `fflush` 결과도 확인해야 한다. [M01 p.34]
+`fflush`는 출력 buffer에 남은 데이터를 underlying stream으로 전달하도록 요청한다. 여기서 [[concepts/flushing|Flushing]](버퍼 비우기)을 **저장 장치에 영구적으로 기록되었다는 보장**과 혼동해서는 안 된다. 슬라이드의 “disk에 쓴다”는 표현은 stdio buffer에서 하위 I/O로 전달하는 동작으로 한정해 이해한다. 전달이 실패할 수 있으므로 실제 코드에서는 `fflush` 결과도 확인해야 한다. [M01 p.34]
 
 슬라이드 32의 그림은 여섯 번의 `printf`가 `h`, `e`, `l`, `l`, `o`, `\n`을 같은 buffer에 쌓고, 이 6 bytes가 `write(1, buf, 6)`로 전달되는 관계를 보여 준다. 별도의 문자열 끝 NUL까지 출력하는 그림이 아니다. 이 그림에서 newline으로 전달이 일어나는 조건은 뒤의 mode 설명과 함께 **line buffering**으로 읽어야 한다. [M01 p.32] [M01 p.33]
 
@@ -435,9 +435,9 @@ Socket에 대한 경고도 마찬가지다. 자료는 Standard I/O stream의 제
 
 ### File metadata와 Inode: 파일 이름과 파일의 속성
 
-[[File metadata]](파일 메타데이터)는 파일 내용에 대한 정보이다. 자료는 파일 이름, 종류, 크기, 시간 정보, 접근 권한을 예로 든다. 파일을 읽어 얻는 byte 내용과 그 파일이 누구 소유이며 얼마나 크고 어떤 종류인지에 대한 정보는 서로 다른 대상이다. [M02 p.4]
+[[concepts/file-metadata|File metadata]](파일 메타데이터)는 파일 내용에 대한 정보이다. 자료는 파일 이름, 종류, 크기, 시간 정보, 접근 권한을 예로 든다. 파일을 읽어 얻는 byte 내용과 그 파일이 누구 소유이며 얼마나 크고 어떤 종류인지에 대한 정보는 서로 다른 대상이다. [M02 p.4]
 
-Kernel이 파일별 metadata를 관리하지만 모든 정보가 같은 장소에 저장되는 것은 아니다. 자료의 기본 모델에서 **filename은 directory에**, 파일 자체의 대표적인 속성은 [[Inode]](아이노드)에 저장된다. Directory는 이름과 파일을 연결하는 관계를 제공하고, inode는 파일의 내부 식별과 속성을 다룬다. 이 구분 때문에 파일 이름을 inode 안의 단일 문자열 필드처럼 생각하면 안 된다. [M02 p.4]
+Kernel이 파일별 metadata를 관리하지만 모든 정보가 같은 장소에 저장되는 것은 아니다. 자료의 기본 모델에서 **filename은 directory에**, 파일 자체의 대표적인 속성은 [[concepts/inode|Inode]](아이노드)에 저장된다. Directory는 이름과 파일을 연결하는 관계를 제공하고, inode는 파일의 내부 식별과 속성을 다룬다. 이 구분 때문에 파일 이름을 inode 안의 단일 문자열 필드처럼 생각하면 안 된다. [M02 p.4]
 
 슬라이드의 “나머지는 모두 inode에 있다”는 표현은 소개하는 기본 metadata 모델의 범위로 읽는다. 모든 file system의 모든 확장 속성 배치와 저장 방식을 하나의 문장으로 확정하는 것은 아니다. 중요한 학습 대상은 **이름을 찾는 구조와 파일 자체의 속성을 나타내는 구조를 분리하는 것**이다. [M02 p.4]
 
@@ -496,7 +496,7 @@ Owner read bit가 설정되어 있다는 사실과 현재 process가 실제로 �
 
 ### Sparse file: 논리적 크기와 실제 할당량
 
-[[Sparse file]](희소 파일)을 이해하려면 “파일에서 읽을 수 있는 범위”와 “그 범위를 저장하기 위해 할당한 공간”을 분리해야 한다. 앞의 seek 후 write 예처럼 일부 범위가 hole이면, 그 구간은 읽을 때 0으로 보이면서도 모든 위치에 데이터 block이 할당되지 않을 수 있다. [M01 p.17] [M02 p.6]
+[[concepts/sparse-file|Sparse file]](희소 파일)을 이해하려면 “파일에서 읽을 수 있는 범위”와 “그 범위를 저장하기 위해 할당한 공간”을 분리해야 한다. 앞의 seek 후 write 예처럼 일부 범위가 hole이면, 그 구간은 읽을 때 0으로 보이면서도 모든 위치에 데이터 block이 할당되지 않을 수 있다. [M01 p.17] [M02 p.6]
 
 슬라이드 6은 다음 비교식을 제시한다.
 
@@ -514,7 +514,7 @@ st_size / 512 > st_blocks
 
 ### File timestamps: `atime`, `mtime`, `ctime`, Birth time
 
-[[File timestamps]](파일 시간 정보)는 하나의 “마지막 변경 시간”으로 합칠 수 없다. 자료는 file access, content modification, inode status change를 구별한다. 이름이 비슷하더라도 어떤 사건의 시간을 나타내는지 먼저 확인해야 한다. [M02 p.5] [M02 p.7]
+[[concepts/file-timestamps|File timestamps]](파일 시간 정보)는 하나의 “마지막 변경 시간”으로 합칠 수 없다. 자료는 file access, content modification, inode status change를 구별한다. 이름이 비슷하더라도 어떤 사건의 시간을 나타내는지 먼저 확인해야 한다. [M02 p.5] [M02 p.7]
 
 | 시간 | 의미 |
 |---|---|
@@ -559,15 +559,15 @@ Birth time은 별도 지원 조건을 갖는다. 자료는 전통적인 Unix fil
 
 ### Byte 전송에서 Stream 관리로
 
-앞 본문의 출발점은 [[File descriptor]](파일 서술자)를 통한 byte 전송이다. `read`·`write`의 **요청량과 실제 처리량**을 구별하면, [[Short count]](부분 전송)를 처리할 때 다음 주소와 남은 길이를 함께 갱신해야 하는 이유가 이어진다. `lseek`는 이 전송의 시작 위치를 바꾸며, 위치 변경과 파일 크기 변경을 분리해서 생각하게 한다. [M01 p.12] [M01 p.17] [M01 p.20]
+앞 본문의 출발점은 [[concepts/file-descriptor|File descriptor]](파일 서술자)를 통한 byte 전송이다. `read`·`write`의 **요청량과 실제 처리량**을 구별하면, [[concepts/short-count|Short count]](부분 전송)를 처리할 때 다음 주소와 남은 길이를 함께 갱신해야 하는 이유가 이어진다. `lseek`는 이 전송의 시작 위치를 바꾸며, 위치 변경과 파일 크기 변경을 분리해서 생각하게 한다. [M01 p.12] [M01 p.17] [M01 p.20]
 
-다음 연결은 프로그램의 처리 단위와 실제 system call(시스템 호출)의 단위를 분리하는 것이다. 문자마다 처리하는 프로그램도 [[Buffering]](버퍼링)을 통해 큰 단위로 데이터를 주고받을 수 있다. 여기서 `FILE *`가 관리하는 stream과 underlying descriptor의 역할이 나뉘고, application이 소비한 위치와 kernel이 미리 읽어 온 위치도 달라질 수 있다. Buffering의 이점과 출력 지연은 같은 구조의 두 결과이다. [M01 p.23] [M01 p.25] [M01 p.26] [M01 p.40]
+다음 연결은 프로그램의 처리 단위와 실제 system call(시스템 호출)의 단위를 분리하는 것이다. 문자마다 처리하는 프로그램도 [[concepts/buffering|Buffering]](버퍼링)을 통해 큰 단위로 데이터를 주고받을 수 있다. 여기서 `FILE *`가 관리하는 stream과 underlying descriptor의 역할이 나뉘고, application이 소비한 위치와 kernel이 미리 읽어 온 위치도 달라질 수 있다. Buffering의 이점과 출력 지연은 같은 구조의 두 결과이다. [M01 p.23] [M01 p.25] [M01 p.26] [M01 p.40]
 
 `fopen`·보조 함수·`fread` 의사코드는 그 구조를 상태 변화로 풀어낸다. 자원을 확보하고, buffer를 채우고, 필요한 만큼 소비하고, 마지막에 정리하는 순서이다. 이 원리를 이해한 뒤에는 API 이름만으로 성능이나 안전성을 판단하지 않고, 필요한 기능·전송 단위·오류 처리·사용 조건을 함께 비교할 수 있다. [M01 p.41] [M01 p.42] [M01 p.43] [M01 p.45] [M01 p.46] [M01 p.47]
 
 ### 내용의 Byte와 파일의 속성을 연결하기
 
-[[File metadata]](파일 메타데이터)는 파일 내용의 byte와 구별되는 속성이다. [[Inode]](아이노드)와 directory의 역할을 나누면 이름, 소유자, 권한, 논리적 크기, 실제 할당량을 한 덩어리로 혼동하지 않게 된다. 앞의 seek 이후 write는 [[Sparse file]](희소 파일)의 논리적 크기와 할당량 차이로 이어지고, `fileno`는 stream을 사용하는 프로그램에서도 descriptor 기반 metadata 조회를 구분할 수 있게 한다. [M01 p.17] [M01 p.27] [M02 p.4] [M02 p.5] [M02 p.6] [M02 p.8]
+[[concepts/file-metadata|File metadata]](파일 메타데이터)는 파일 내용의 byte와 구별되는 속성이다. [[concepts/inode|Inode]](아이노드)와 directory의 역할을 나누면 이름, 소유자, 권한, 논리적 크기, 실제 할당량을 한 덩어리로 혼동하지 않게 된다. 앞의 seek 이후 write는 [[concepts/sparse-file|Sparse file]](희소 파일)의 논리적 크기와 할당량 차이로 이어지고, `fileno`는 stream을 사용하는 프로그램에서도 descriptor 기반 metadata 조회를 구분할 수 있게 한다. [M01 p.17] [M01 p.27] [M02 p.4] [M02 p.5] [M02 p.6] [M02 p.8]
 
 아래 지도는 자료의 개념 의존 관계이다. **9월 16일에 실제로 진행된 순서나 범위를 뜻하지 않는다.**
 
@@ -604,7 +604,7 @@ flowchart TD
 | LO19–LO21 | Unix I/O와 Standard I/O의 장단점 및 선택 조건 | [M01 p.45]–[M01 p.47] | R19–R21, P10 |
 | LO22–LO24 | Directory/inode, `struct stat`, type·permission·소유자 | [M02 p.3]–[M02 p.6] | R22–R24, P07–P08 |
 | LO25 | Hole과 sparse allocation의 단위 해석 | [M01 p.17] [M02 p.6] | R25, P03·P07 |
-| LO26–LO27 | [[File timestamps]](파일 시간 정보), 조회 대상과 metadata API | [M02 p.5] [M02 p.7] [M02 p.8] | R26–R27, P08 |
+| LO26–LO27 | [[concepts/file-timestamps\|File timestamps]](파일 시간 정보), 조회 대상과 metadata API | [M02 p.5] [M02 p.7] [M02 p.8] | R26–R27, P08 |
 
 M01 슬라이드 44는 `Class Summary` 제목과 장식으로 구성된 전환 페이지이다. 별도의 내용을 만들어 목표에 추가하거나 실제 강의 종료 지점으로 해석하지 않는다.
 
