@@ -15,6 +15,10 @@ tags: [course, system-programming]
 - 2026-09-02 · [[courses/system_programming/lectures/en/2026-09-02-lecture-01|English]]
 - 2026-09-09 · [[courses/system_programming/lectures/en/2026-09-09-lecture-03|English]]
 - 2026-09-14 · [[courses/system_programming/lectures/en/2026-09-14-lecture-04|English]]
+- 2026-09-21 · [[courses/system_programming/lectures/2026-09-21-lecture-05|한국어]]
+- 2026-09-21 · [[courses/system_programming/lectures/en/2026-09-21-lecture-05|English]]
+- 2026-09-16 · [[courses/system_programming/lectures/2026-09-16-materials-io-review|한국어]]
+- 2026-09-16 · [[courses/system_programming/lectures/en/2026-09-16-materials-io-review|English]]
 
 
 ## 개념 지도
@@ -39,6 +43,19 @@ tags: [course, system-programming]
 - [[concepts/system-call|System call]]
 - [[concepts/unix-filesystem|Unix filesystem]]
 - [[concepts/unix-io|Unix I/O]]
+- [[concepts/binary-io|Binary data와 I/O]]
+- [[concepts/c-string|C-string interpretation]]
+- [[concepts/directory-entry|Directory entry]]
+- [[concepts/directory-stream|Directory stream]]
+- [[concepts/dup|Descriptor duplication]]
+- [[concepts/file-descriptor-passing|descriptor passing]]
+- [[concepts/file-metadata|File metadata]]
+- [[concepts/fork|inherited descriptors]]
+- [[concepts/indirection|indirection]]
+- [[concepts/io-redirection|I/O redirection]]
+- [[concepts/open-file-table|Open file table]]
+- [[concepts/pathname|Pathname]]
+- [[concepts/stat-family|fstatat]]
 
 강의가 추가되면 관련 개념이 자동으로 연결됩니다.
 
