@@ -12,6 +12,7 @@
 - [[courses/discrete_mathematics/transcripts/2026-09-07|2026-09-07 보정 STT]]
 - [[courses/discrete_mathematics/transcripts/2026-09-09|2026-09-09 보정 STT]]
 - [[courses/discrete_mathematics/transcripts/2026-09-14|2026-09-14 보정 STT]]
+- [[courses/discrete_mathematics/transcripts/2026-09-23|2026-09-23 보정 STT]]
 
 ## 프로그래밍의 원리
 
