@@ -12,6 +12,7 @@ tags: [course, discrete-mathematics]
 - [[courses/discrete_mathematics/lectures/2026-09-07-lecture-02|2026-09-07 · 2강]]
 - 2026-09-14 · [[courses/discrete_mathematics/lectures/2026-09-14-lecture-04|한국어]]
 - 2026-09-09 · [[courses/discrete_mathematics/lectures/2026-09-09-lecture-03|한국어]]
+- 2026-09-23 · [[courses/discrete_mathematics/lectures/2026-09-23-lecture-05|한국어]]
 
 
 ## 개념 지도
@@ -88,6 +89,15 @@ tags: [course, discrete-mathematics]
 - [[concepts/strassen-matrix-multiplication|Strassen’s Matrix Multiplication]]
 - [[concepts/time-complexity|Time complexity]]
 - [[concepts/worst-case-analysis|Worst-case analysis]]
+- [[concepts/bezout-identity|Bézout’s Theorem]]
+- [[concepts/euclidean-algorithm|Euclidean algorithm]]
+- [[concepts/fibonacci-sequence|Fibonacci sequence]]
+- [[concepts/greatest-common-divisor|Greatest Common Divisor]]
+- [[concepts/hash-function|Hash function]]
+- [[concepts/modular-arithmetic|Modular arithmetic]]
+- [[concepts/modular-inverse|Modular Inverse]]
+- [[concepts/prime-number-theorem|Prime Number Theorem]]
+- [[concepts/pseudorandom-number-generator|PRNG]]
 
 강의가 추가되면 관련 개념이 자동으로 연결됩니다.
 

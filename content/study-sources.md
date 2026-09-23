@@ -8,6 +8,7 @@
 - [[courses/discrete_mathematics/lectures/2026-09-07-lecture-02|2026-09-07-lecture-02 · 한국어]]
 - [[courses/discrete_mathematics/lectures/2026-09-09-lecture-03|2026-09-09-lecture-03 · 한국어]]
 - 2026-09-14 · [[courses/discrete_mathematics/lectures/2026-09-14-lecture-04|한국어]]
+- 2026-09-23 · [[courses/discrete_mathematics/lectures/2026-09-23-lecture-05|한국어]]
 - [[courses/discrete_mathematics/transcripts/2026-09-02|2026-09-02 보정 STT]]
 - [[courses/discrete_mathematics/transcripts/2026-09-07|2026-09-07 보정 STT]]
 - [[courses/discrete_mathematics/transcripts/2026-09-09|2026-09-09 보정 STT]]
