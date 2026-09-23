@@ -19,6 +19,7 @@ tags: [course, system-programming]
 - 2026-09-21 · [[courses/system_programming/lectures/en/2026-09-21-lecture-05|English]]
 - 2026-09-16 · [[courses/system_programming/lectures/2026-09-16-materials-io-review|한국어]]
 - 2026-09-16 · [[courses/system_programming/lectures/en/2026-09-16-materials-io-review|English]]
+- 2026-09-23 · [[courses/system_programming/lectures/2026-09-23-lecture-06|한국어]]
 
 
 ## 개념 지도
@@ -70,6 +71,21 @@ tags: [course, system-programming]
 - [[concepts/sparse-file|Sparse file]]
 - [[concepts/standard-streams|Standard streams]]
 - [[concepts/user-space|User space]]
+- [[concepts/arrays|Arrays]]
+- [[concepts/command-line-arguments|Command line parameters]]
+- [[concepts/data-alignment|Data alignment]]
+- [[concepts/data-types|Data types]]
+- [[concepts/directory-traversal|Directory traversal]]
+- [[concepts/dynamic-memory-allocation|Dynamic allocation]]
+- [[concepts/memory-abstraction|Memory abstraction]]
+- [[concepts/memory-layout|Memory layout]]
+- [[concepts/parameter-passing|Parameter passing]]
+- [[concepts/pattern-matching|Pattern matching]]
+- [[concepts/pointers|Pointers]]
+- [[concepts/sizeof|sizeof]]
+- [[concepts/struct|Structures]]
+- [[concepts/union|Unions]]
+- [[concepts/virtual-memory|Virtual memory]]
 
 강의가 추가되면 관련 개념이 자동으로 연결됩니다.
 
