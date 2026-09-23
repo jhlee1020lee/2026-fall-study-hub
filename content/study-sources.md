@@ -95,6 +95,7 @@
 - [[courses/system_programming/transcripts/2026-09-09|2026-09-09 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-14|2026-09-14 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-21|2026-09-21 보정 STT]]
+- [[courses/system_programming/transcripts/2026-09-23|2026-09-23 보정 STT]]
 
 ## 컴퓨팅 살펴보기
 
