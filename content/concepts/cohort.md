@@ -11,3 +11,4 @@ review_status: approved
 ## 관련 강의
 
 - [[courses/aging_and_family/lectures/2026-09-14-lecture-02|2026-09-14 · aging_and_family · 한국어]]
+- [[courses/aging_and_family/lectures/2026-09-21-lecture-03|2026-09-21 · aging_and_family · 한국어]]
