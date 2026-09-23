@@ -20,6 +20,7 @@ tags: [course, system-programming]
 - 2026-09-16 · [[courses/system_programming/lectures/2026-09-16-materials-io-review|한국어]]
 - 2026-09-16 · [[courses/system_programming/lectures/en/2026-09-16-materials-io-review|English]]
 - 2026-09-23 · [[courses/system_programming/lectures/2026-09-23-lecture-06|한국어]]
+- 2026-09-23 · [[courses/system_programming/lectures/en/2026-09-23-lecture-06|English]]
 
 
 ## 개념 지도
@@ -86,6 +87,10 @@ tags: [course, system-programming]
 - [[concepts/struct|Structures]]
 - [[concepts/union|Unions]]
 - [[concepts/virtual-memory|Virtual memory]]
+- [[concepts/abi|ABI]]
+- [[concepts/aslr|ASLR]]
+- [[concepts/process|Process]]
+- [[concepts/virtual-address|virtual address]]
 
 강의가 추가되면 관련 개념이 자동으로 연결됩니다.
 

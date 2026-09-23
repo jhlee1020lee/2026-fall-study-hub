@@ -91,6 +91,7 @@
 - 2026-09-16 · [[courses/system_programming/lectures/2026-09-16-materials-io-review|한국어]]
 - 2026-09-16 · [[courses/system_programming/lectures/en/2026-09-16-materials-io-review|English]]
 - 2026-09-23 · [[courses/system_programming/lectures/2026-09-23-lecture-06|한국어]]
+- 2026-09-23 · [[courses/system_programming/lectures/en/2026-09-23-lecture-06|English]]
 - [[courses/system_programming/transcripts/2026-09-02|2026-09-02 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-07|2026-09-07 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-09|2026-09-09 보정 STT]]
