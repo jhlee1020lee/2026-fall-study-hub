@@ -492,7 +492,8 @@ export async function loadQuartzConfig(
 
   // Import built-in plugins
   const builtinPlugins = await import("../index")
-  const builtinTransformers: unknown[] = []
+  // Runs before CrawlLinks while preserving the configured global strategy.
+  const builtinTransformers: unknown[] = [builtinPlugins.UnitSiblingLinks()]
   const builtinEmitters = [
     builtinPlugins.ComponentResources(),
     builtinPlugins.Assets(),

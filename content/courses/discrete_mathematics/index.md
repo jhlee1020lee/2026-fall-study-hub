@@ -1,21 +1,69 @@
 ---
-title: 이산수학
-description: 이산수학 강의 흐름, 개념 연결, 복습 문제
-tags: [course, discrete-mathematics]
+title: "이산수학"
+description: "이산수학 단원 교과서와 강의 기록"
+cssclasses: ["unit-index"]
 ---
 
-# 이산수학
+아래 순서로 단원을 읽으세요. 각 단원에서 연결된 원자료·수업 기록과 연습문제를 확인할 수 있습니다.
 
-## 강의노트
+## 단원 목차
 
-- [[courses/discrete_mathematics/lectures/2026-09-02-lecture-01|2026-09-02 · 1강]]
-- [[courses/discrete_mathematics/lectures/2026-09-07-lecture-02|2026-09-07 · 2강]]
-- 2026-09-14 · [[courses/discrete_mathematics/lectures/2026-09-14-lecture-04|한국어]]
-- 2026-09-09 · [[courses/discrete_mathematics/lectures/2026-09-09-lecture-03|한국어]]
-- 2026-09-23 · [[courses/discrete_mathematics/lectures/2026-09-23-lecture-05|한국어]]
+1. **Discrete Mathematics의 언어와 Logic·Proof** · [[courses/discrete_mathematics/units/logic-and-proof|한국어]]
 
+   Proposition과 quantifier를 계산하고 귀류법의 가정과 모순을 확인한다.
 
-## 개념 지도
+2. **Sets·Functions·Sequences로 구조 표현하기** · [[courses/discrete_mathematics/units/sets-functions-sequences|한국어]]
+
+   Set 연산, 함수의 성질과 역함수, countability, 수열과 합의 조건을 함께 점검한다.
+
+3. **Matrices와 Linear Maps의 대응** · [[courses/discrete_mathematics/units/matrices-and-linear-maps|한국어]]
+
+   Matrix 계산을 linear map의 표현·합성·inverse와 연결하고 neural-network 예를 검산한다.
+
+4. **Algorithm 명세와 Searching·Sorting의 실행** · [[courses/discrete_mathematics/units/algorithms-search-and-sort|한국어]]
+
+   Fibonacci, maximum, 검색과 정렬을 상태 추적과 invariant로 확인한다.
+
+5. **Algorithmic Paradigms·Greedy와 계산 가능성** · [[courses/discrete_mathematics/units/paradigms-greedy-and-computability|한국어]]
+
+   Greedy의 계산·교환 논증과 Turing machine·Halting Problem의 한계를 복습한다.
+
+6. **Asymptotic Analysis와 Cost Model** · [[courses/discrete_mathematics/units/asymptotic-analysis-and-cost-models|한국어]]
+
+   Big-O·Ω·Θ의 증명과 시간·공간·데이터 이동·평균 분석의 조건을 점검한다.
+
+7. **Searching·Matrix Multiplication의 Complexity** · [[courses/discrete_mathematics/units/search-and-matrix-complexity|한국어]]
+
+   검색 count와 분포, 행렬곱·Strassen 비용, AI 계산식의 domain과 검증을 연결한다.
+
+8. **Prime Number Theorem과 소수 분포의 추정** · [[courses/discrete_mathematics/units/prime-distribution|한국어]]
+
+   PNT의 상대 근사·균등 선택 확률과 li 및 조건부 error bound를 구별한다.
+
+9. **GCD·Euclidean Algorithm·Bézout의 구성** · [[courses/discrete_mathematics/units/gcd-euclid-and-bezout|한국어]]
+
+   GCD의 정의부터 Euclidean invariant·logarithmic division bound·Bézout 역대입까지 확인한다.
+
+10. **Congruence Classes와 Modular Inverse** · [[courses/discrete_mathematics/units/modular-arithmetic-and-inverses|한국어]]
+
+   대표원 독립성, inverse의 modulo 유일성과 GCD 조건을 계산·증명으로 확인한다.
+
+11. **Hash Function과 데이터 분산** · [[courses/discrete_mathematics/units/hashing-and-data-distribution|한국어]]
+
+   Hash의 고정 길이 출력과 저장·조회 규칙, collision과 분포 의존성을 복습한다.
+
+12. **Pseudorandom Generation과 Cryptographic 요구** · [[courses/discrete_mathematics/units/pseudorandomness-and-security|한국어]]
+
+   Seed expansion의 한계, LCG trace·LSB·cycle과 cryptographic 요구를 확인한다.
+
+## 원자료와 강의 기록
+
+- [[courses/discrete_mathematics/materials|교수 제공 자료 목록과 다운로드]]
+- [[courses/discrete_mathematics/lectures/index|날짜별 강의노트와 보정 STT]]
+
+[[courses/discrete_mathematics/units/index#자료별로-단원-찾기|자료 파일 이름으로 단원 찾기]]
+
+## 개념과 관련 자료 찾아보기
 
 - [[concepts/힐베르트호텔|Hilbert’s Grand Hotel(힐베르트 호텔)]]
 - [[concepts/행렬곱|Matrix multiplication(행렬곱)]]
@@ -98,23 +146,3 @@ tags: [course, discrete-mathematics]
 - [[concepts/modular-inverse|Modular Inverse]]
 - [[concepts/prime-number-theorem|Prime Number Theorem]]
 - [[concepts/pseudorandom-number-generator|PRNG]]
-
-강의가 추가되면 관련 개념이 자동으로 연결됩니다.
-
-## 강의자료
-
-- [[courses/discrete_mathematics/materials|교수 제공 자료 목록과 다운로드]]
-
-## 추가 공개 강의노트
-
-- 2026-09-09 · [[courses/discrete_mathematics/lectures/2026-09-09-lecture-03|한국어]]
-
-## 보정 STT
-
-개인정보를 가린 공개용 사본이며 불명확한 발화는 표시를 유지합니다.
-
-- [[courses/discrete_mathematics/transcripts/2026-09-02|2026-09-02 보정 STT]]
-- [[courses/discrete_mathematics/transcripts/2026-09-07|2026-09-07 보정 STT]]
-- [[courses/discrete_mathematics/transcripts/2026-09-09|2026-09-09 보정 STT]]
-- [[courses/discrete_mathematics/transcripts/2026-09-14|2026-09-14 보정 STT]]
-- [[courses/discrete_mathematics/transcripts/2026-09-23|2026-09-23 보정 STT]]

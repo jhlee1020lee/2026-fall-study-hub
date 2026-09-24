@@ -87,3 +87,308 @@ article.exam-question {
     }
   }
 }
+
+// Unit reading pages opt in through frontmatter cssclasses. Keep historical
+// lecture notes, question previews, and their controls on the existing styles.
+article.unit-textbook,
+article.unit-index {
+  --bodyFont: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+  --headerFont: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+
+  box-sizing: border-box;
+  max-width: 46rem;
+  margin-inline: auto;
+  font-family: var(--bodyFont);
+  font-size: 1.025rem;
+  line-height: 1.9;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+
+  p,
+  li,
+  tbody {
+    font-family: var(--bodyFont);
+    line-height: 1.9;
+  }
+
+  p {
+    margin-block: 1.15em;
+  }
+
+  li + li {
+    margin-top: 0.35em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--headerFont);
+    line-height: 1.5;
+    scroll-margin-top: 2rem;
+  }
+
+  h2 {
+    margin-top: 3rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--lightgray);
+    font-size: 1.45rem;
+  }
+
+  h3 {
+    margin-top: 2.1rem;
+    font-size: 1.18rem;
+  }
+
+  h4 {
+    margin-top: 1.75rem;
+    font-size: 1.05rem;
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+
+    &:focus-visible {
+      outline: 2px solid var(--secondary);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+  }
+
+  // The heading permalink remains discoverable when reached by keyboard.
+  :is(h2, h3, h4):focus-within > a[href^="#"] {
+    opacity: 1;
+  }
+
+  pre,
+  code {
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+
+  pre,
+  .table-container,
+  .katex-display {
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  pre > code {
+    line-height: 1.7;
+  }
+
+  .table-container {
+    margin-block: 1.4rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 8px;
+
+    > table {
+      margin: 0;
+      padding: 0;
+      min-width: 100%;
+      font-size: 0.93em;
+    }
+
+    th,
+    td {
+      padding: 0.65rem 0.85rem;
+      line-height: 1.75;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--highlight);
+      border-bottom: 1px solid var(--lightgray);
+    }
+  }
+
+  // Preserve native disclosure semantics and the visible triangle. Answers
+  // remain closed in the document; styling never reveals their hidden body.
+  details {
+    margin-block: 1.25rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 8px;
+    background: var(--light);
+
+    > summary {
+      box-sizing: border-box;
+      min-height: 2.75rem;
+      padding-block: 0.3rem;
+      color: var(--secondary);
+      font-weight: $semiBoldWeight;
+      cursor: pointer;
+
+      &:focus-visible {
+        outline: 2px solid var(--secondary);
+        outline-offset: 4px;
+        border-radius: 2px;
+      }
+    }
+
+    &[open] > summary {
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--lightgray);
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .unit-overview {
+    margin-block: 1.5rem 2rem;
+    padding: 1rem 1.25rem;
+    border-inline-start: 3px solid var(--secondary);
+    border-radius: 0 8px 8px 0;
+    background: var(--highlight);
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .unit-source-note {
+    margin-block: 1rem;
+    padding-inline-start: 0.9rem;
+    border-inline-start: 2px solid var(--lightgray);
+    font-size: 0.9em;
+  }
+
+  .unit-grid,
+  .unit-grid > ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-block: 1.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .unit-grid:has(> ul) {
+    display: block;
+  }
+
+  .unit-card,
+  .unit-grid > ul > li {
+    min-width: 0;
+    margin: 0;
+    padding: 1.1rem 1.2rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 10px;
+    background: var(--light);
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+
+    h3 {
+      margin-block: 0 0.7rem;
+      font-size: 1.08rem;
+    }
+
+    p {
+      margin-block: 0.7rem;
+      font-size: 0.94em;
+    }
+
+    &:focus-within {
+      border-color: var(--secondary);
+    }
+  }
+
+  .unit-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-block: 2.5rem 1.5rem;
+    padding-top: 1.3rem;
+    border-top: 1px solid var(--lightgray);
+
+    > a,
+    > p {
+      box-sizing: border-box;
+      flex: 1 1 10rem;
+      min-width: 0;
+      margin: 0;
+    }
+
+    > a,
+    > p > a {
+      display: block;
+      min-height: 2.75rem;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--lightgray);
+      border-radius: 7px;
+      background: var(--highlight);
+      line-height: 1.6;
+
+      &:hover {
+        border-color: var(--secondary);
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    font-size: 1rem;
+
+    h2 {
+      margin-top: 2.4rem;
+      font-size: 1.3rem;
+    }
+
+    .unit-grid,
+    .unit-grid > ul {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .unit-overview,
+    details,
+    .unit-card,
+    .unit-grid > ul > li {
+      padding-inline: 0.9rem;
+    }
+  }
+}
+
+// Keep the new reading pages' header focused on the learner-facing title.
+// Source information stays in the chapter; article answer disclosures are
+// outside this header selector and retain their native behavior.
+.page:has(article.unit-textbook, article.unit-index) .center > .page-header {
+  .article-title {
+    font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  .note-properties.metadata-container {
+    display: none;
+  }
+}
+
+// The stock mobile drawer starts inside the page's 1rem side padding but uses
+// 100vw. Bound it to that inset only on the new unit pages.
+@media all and ($mobile) {
+  // A long header or inline code must not enlarge the grid's only column.
+  .page:has(article.unit-textbook, article.unit-index) > #quartz-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page:has(article.unit-textbook, article.unit-index) .explorer .explorer-content {
+    width: calc(100vw - 2rem);
+    max-width: calc(100vw - 2rem);
+  }
+}

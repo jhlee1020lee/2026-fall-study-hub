@@ -1,29 +1,53 @@
 ---
-title: System Programming
-description: System Programming 강의 흐름, 개념 연결, 복습 문제
-tags: [course, system-programming]
+title: "시스템프로그래밍"
+description: "시스템프로그래밍 단원 교과서와 강의 기록"
+cssclasses: ["unit-index"]
 ---
 
-# System Programming
+아래 순서로 단원을 읽으세요. 각 단원에서 연결된 원자료·수업 기록과 연습문제를 확인할 수 있습니다.
 
-## 강의노트
+## 단원 목차
 
-- 2026-09-02 · 1강 · [[courses/system_programming/lectures/2026-09-02-lecture-01|한국어]]
-- 2026-09-07 · 2강 · [[courses/system_programming/lectures/2026-09-07-lecture-02|한국어]] · [[courses/system_programming/lectures/en/2026-09-07-lecture-02|English]]
-- 2026-09-14 · [[courses/system_programming/lectures/2026-09-14-lecture-04|한국어]]
-- 2026-09-09 · [[courses/system_programming/lectures/2026-09-09-lecture-03|한국어]]
-- 2026-09-02 · [[courses/system_programming/lectures/en/2026-09-02-lecture-01|English]]
-- 2026-09-09 · [[courses/system_programming/lectures/en/2026-09-09-lecture-03|English]]
-- 2026-09-14 · [[courses/system_programming/lectures/en/2026-09-14-lecture-04|English]]
-- 2026-09-21 · [[courses/system_programming/lectures/2026-09-21-lecture-05|한국어]]
-- 2026-09-21 · [[courses/system_programming/lectures/en/2026-09-21-lecture-05|English]]
-- 2026-09-16 · [[courses/system_programming/lectures/2026-09-16-materials-io-review|한국어]]
-- 2026-09-16 · [[courses/system_programming/lectures/en/2026-09-16-materials-io-review|English]]
-- 2026-09-23 · [[courses/system_programming/lectures/2026-09-23-lecture-06|한국어]]
-- 2026-09-23 · [[courses/system_programming/lectures/en/2026-09-23-lecture-06|English]]
+1. **System Programming과 C 프로그램의 구성·빌드** · [[courses/system_programming/units/systems-c-build|한국어]] · [[courses/system_programming/units/en/systems-c-build|English]]
 
+   C의 실행 흐름, 개발 환경과 build 단계를 함께 복습한다.
 
-## 개념 지도
+2. **C object·type·주소와 pointer** · [[courses/system_programming/units/objects-pointers|한국어]] · [[courses/system_programming/units/en/objects-pointers|English]]
+
+   Type·주소·lifetime으로 pointer 코드와 memory 크기를 검산한다.
+
+3. **문자 처리와 DFA·Decommenter의 경계조건** · [[courses/system_programming/units/state-machines|한국어]] · [[courses/system_programming/units/en/state-machines|English]]
+
+   DFA transition과 세 출력 관측값으로 문자 처리의 경계를 검토한다.
+
+4. **Unix file·directory·inode와 metadata** · [[courses/system_programming/units/files-metadata|한국어]] · [[courses/system_programming/units/en/files-metadata|English]]
+
+   File type, link와 mount, stat·directory API의 의미를 연결한다.
+
+5. **Permission·실행 identity·확장 metadata** · [[courses/system_programming/units/permissions|한국어]] · [[courses/system_programming/units/en/permissions|English]]
+
+   Permission bit, effective identity, ACL과 xattr의 역할·한계를 구별한다.
+
+6. **Unix I/O·열린 파일 상태·stdio buffering** · [[courses/system_programming/units/io-streams|한국어]] · [[courses/system_programming/units/en/io-streams|English]]
+
+   Unix I/O와 stdio를 반환 단위·공유 offset·buffering으로 비교한다.
+
+7. **Process memory·alignment·호출의 실제 표현** · [[courses/system_programming/units/memory-layout|한국어]] · [[courses/system_programming/units/en/memory-layout|English]]
+
+   Memory section, padding·stride와 parameter passing을 byte 단위로 검토한다.
+
+8. **Dirtree의 순회·filter·출력 계약과 설계** · [[courses/system_programming/units/dirtree|한국어]] · [[courses/system_programming/units/en/dirtree|English]]
+
+   Dirtree의 출력 계약·depth·filter·memory 책임을 검산한다.
+
+## 원자료와 강의 기록
+
+- [[courses/system_programming/materials|교수 제공 자료 목록과 다운로드]]
+- [[courses/system_programming/lectures/index|날짜별 강의노트와 보정 STT]]
+
+[[courses/system_programming/units/index#자료별로-단원-찾기|자료 파일 이름으로 단원 찾기]]
+
+## 개념과 관련 자료 찾아보기
 
 - [[concepts/함수|Function(함수)]]
 - [[concepts/반복문|Loop(반복문)]]
@@ -91,28 +115,3 @@ tags: [course, system-programming]
 - [[concepts/aslr|ASLR]]
 - [[concepts/process|Process]]
 - [[concepts/virtual-address|virtual address]]
-
-강의가 추가되면 관련 개념이 자동으로 연결됩니다.
-
-## 강의자료
-
-
-
-- [[courses/system_programming/materials|교수 제공 자료 목록과 다운로드]]
-
-## 추가 공개 강의노트
-
-- 2026-09-09 · [[courses/system_programming/lectures/2026-09-09-lecture-03|한국어]]
-- 2026-09-09 · [[courses/system_programming/lectures/en/2026-09-09-lecture-03|English]]
-- 2026-09-02 · [[courses/system_programming/lectures/en/2026-09-02-lecture-01|English]]
-
-## 보정 STT
-
-개인정보를 가린 공개용 사본이며 불명확한 발화는 표시를 유지합니다.
-
-- [[courses/system_programming/transcripts/2026-09-02|2026-09-02 보정 STT]]
-- [[courses/system_programming/transcripts/2026-09-07|2026-09-07 보정 STT]]
-- [[courses/system_programming/transcripts/2026-09-09|2026-09-09 보정 STT]]
-- [[courses/system_programming/transcripts/2026-09-14|2026-09-14 보정 STT]]
-- [[courses/system_programming/transcripts/2026-09-21|2026-09-21 보정 STT]]
-- [[courses/system_programming/transcripts/2026-09-23|2026-09-23 보정 STT]]

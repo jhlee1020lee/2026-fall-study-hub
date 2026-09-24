@@ -2,6 +2,20 @@
 
 노트에는 설명과 연습문제가, 보정 STT에는 교수자의 발화와 강조점이 있습니다. STT의 불명확 표시와 자료 기반 복습 여부를 함께 확인하세요. 링크를 제공했다는 이유만으로 모든 문서를 읽었다고 가정하지 말고, 답변 근거로 실제 읽은 회차와 타임스탬프를 제시하세요.
 
+<!-- UNIT_NAVIGATION:BEGIN -->
+## 단원별 교과서
+
+개념을 처음 배울 때는 단원 목차에서 시작하세요. 아래 날짜별 기록과 STT 목록은 그대로 확인할 수 있습니다.
+
+- [[courses/discrete_mathematics/units/index|이산수학 단원 목차]]
+- [[courses/principles_of_programming/units/index|프로그래밍의 원리 단원 목차]]
+- [[courses/aging_and_family/units/index|고령화와 가족 단원 목차]]
+- [[courses/computer_architecture/units/index|컴퓨터구조 단원 목차]]
+- [[courses/computer_programming/units/index|컴퓨터프로그래밍 단원 목차]]
+- [[courses/system_programming/units/index|시스템프로그래밍 단원 목차]]
+- [[courses/exploring_computing/units/index|컴퓨팅 살펴보기 단원 목차]]
+<!-- UNIT_NAVIGATION:END -->
+
 ## 이산수학
 
 - [[courses/discrete_mathematics/lectures/2026-09-02-lecture-01|2026-09-02-lecture-01 · 한국어]]

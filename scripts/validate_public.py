@@ -14,6 +14,8 @@ from pathlib import Path
 
 from note_validation import parse_frontmatter, validate_lecture_note
 from selected_page_cache import is_selected_manifest, read_safe_file, validate_selected_manifest
+from unit_validation import declares_unit, structural_prose, unit_path, validate_unit_chapter
+from lecture_archive_validation import archive_course, declares_archive, validate_lecture_archive
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,6 +64,64 @@ TEXT_PATTERNS = {
     "Korean phone number": re.compile(r"(?<!\d)01[016789][ -]?\d{3,4}[ -]?\d{4}(?!\d)"),
     "student number": re.compile(r"(?<!\d)20\d{2}[#*\d]{5,8}(?!\d)"),
 }
+
+
+# These exact eight mathematical expressions were individually source-checked.
+# Do not exempt an entire math span: an added path, unknown command or changed
+# expression must still fail. The complete unit hash/review gates also apply.
+UNIT_MATH_PATH_LOOKALIKES = frozenset({
+    r"F:\mathbb R\to\mathbb R",
+    r"F:\mathbb R^k\to\mathbb R^m",
+    r"F:\mathbb R^n\to\mathbb R",
+    r"F:\mathbb R^n\to\mathbb R^m",
+    r"G:\mathbb R^n\to\mathbb R^k",
+    r"G:\{0,1\}^{s}\to\{0,1\}^{L},\qquad L>s",
+    "f(x)=O(g(x))\\quad\\Longleftrightarrow\\quad\n"
+    r"\exists C>0,\exists k>0,\ \forall x>k:\ |f(x)|\le C|g(x)|",
+    r"h:\mathbb Z\to\mathbb Z_m,\qquad h(x)=x\bmod m",
+})
+
+
+def contains_windows_path(text: str, relative: str) -> bool:
+    """Keep all path matches except exact, closed textbook math expressions."""
+    text = text.removeprefix("\ufeff").replace("\r\n", "\n")
+    matches = list(TEXT_PATTERNS["Windows absolute path"].finditer(text))
+    if not matches:
+        return False
+    try:
+        metadata, body = parse_frontmatter(text)
+    except ValueError:
+        return True
+    if (unit_path(relative) != (metadata.get("course"), metadata.get("lang"), metadata.get("unit_id"))
+            or metadata.get("note_layout") != "textbook_unit_v1"
+            or metadata.get("source_kind") != "unit_chapter"):
+        return True
+    # structural_prose preserves offsets while masking fenced/indented code and
+    # comments. Also exclude inline code and raw HTML code/attribute contexts.
+    prose = list(" " * (len(text) - len(body)) + structural_prose(body))
+    joined = "".join(prose)
+    hidden = list(re.finditer(r"(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)", joined))
+    hidden += list(re.finditer(r"(?is)<(code|pre|script|style)\b[^>]*>[\s\S]*?(?:</\1\s*>|\Z)", joined))
+    hidden += list(re.finditer(r"<[^>\n]*>", joined))
+    for match in hidden:
+        prose[match.start():match.end()] = " " * (match.end() - match.start())
+    prose = "".join(prose)
+    opening = None
+    allowed = set()
+    for token in re.finditer(r"(?<![\\$])(\$\$?)(?!\$)", prose):
+        if opening is None:
+            opening = token
+            continue
+        if token[1] != opening[1]:
+            # A different dollar delimiter cannot close this expression.
+            continue
+        # Masking only locates eligible delimiters. Compare the original bytes
+        # so hidden code/HTML can never make a path disappear from the value.
+        value = text[opening.end():token.start()]
+        if (opening[1] == "$$" or "\n" not in value) and value.strip() in UNIT_MATH_PATH_LOOKALIKES:
+            allowed.update(match.start() for match in matches if opening.end() <= match.start() < token.start())
+        opening = None
+    return any(match.start() not in allowed for match in matches)
 
 
 def repository_files() -> list[Path]:
@@ -149,8 +209,16 @@ def validate(*, index: bool = False, revision: str | None = None) -> list[str]:
             for k, v in transcripts.items()
         ):
             raise ValueError("invalid reviewed transcript hashes")
+        reviewed_units = policy.get("reviewed_units", {})
+        if not isinstance(reviewed_units, dict) or any(
+            not isinstance(k, str) or unit_path(k) is None
+            or not isinstance(v, str) or not re.fullmatch(r"[0-9a-f]{64}", v)
+            for k, v in reviewed_units.items()
+        ):
+            raise ValueError("invalid reviewed unit hashes")
     except (RuntimeError, OSError, ValueError, KeyError, TypeError) as exc:
         return [f"Cannot inspect publication snapshot or validation policy: {type(exc).__name__}"]
+    available_paths = {path.relative_to(ROOT).as_posix() for path in snapshot.files if snapshot.is_file(path)}
     for path in snapshot.files:
         try:
             relative = path.relative_to(ROOT)
@@ -191,7 +259,8 @@ def validate(*, index: bool = False, revision: str | None = None) -> list[str]:
         is_pdf_page_cache = len(relative.parts) >= 2 and relative.parts[:2] == ("content", "page_cache")
         if relative.parts and relative.parts[0] == "content" and not is_pdf_page_cache:
             for label, pattern in TEXT_PATTERNS.items():
-                if pattern.search(text):
+                found = contains_windows_path(text, relative.as_posix()) if label == "Windows absolute path" else pattern.search(text)
+                if found:
                     errors.append(f"{label} found in {relative}")
 
         is_lecture = (
@@ -203,16 +272,35 @@ def validate(*, index: bool = False, revision: str | None = None) -> list[str]:
         )
         is_cache_page = is_pdf_page_cache and path.name.startswith("page-") and path.suffix.lower() == ".md"
         is_transcript = "transcripts" in lowered_parts
+        in_units = len(relative.parts) >= 4 and relative.parts[:2] == ("content", "courses") and relative.parts[3] == "units"
+        is_content_markdown = relative.parts[0] == "content" and path.suffix.lower() == ".md"
+        maybe_unit_metadata = is_content_markdown and text.removeprefix("\ufeff").startswith("---")
         if is_transcript:
             if path.suffix.lower() != ".md" or transcripts.get(relative.as_posix()) != hashlib.sha256(snapshot.read_bytes(path)).hexdigest():
                 errors.append(f"transcript is unreviewed or changed: {relative}")
         metadata: dict[str, object] = {}
-        if is_lecture or is_cache_page or is_transcript:
+        if is_lecture or is_cache_page or is_transcript or in_units or maybe_unit_metadata:
             try:
                 metadata, _ = parse_frontmatter(text)
             except ValueError as exc:
-                errors.append(f"{exc}: {relative}")
-                continue
+                # Plain index pages need no frontmatter; malformed chapter metadata
+                # cannot use that exception or escape through another content path.
+                if is_lecture or is_cache_page or is_transcript or (in_units and path.name != "index.md") or re.search(r"(?m)^(?:source_kind|note_layout):[^\n]*(?:unit_chapter|textbook_unit_v1)", text):
+                    errors.append(f"{exc}: {relative}")
+                    continue
+        is_unit = (in_units and path.name != "index.md") or declares_unit(metadata)
+        if archive_course(relative.as_posix()) is not None or declares_archive(metadata):
+            archive_errors = validate_lecture_archive(text, relative.as_posix(), available_paths,
+                                                       lambda name: snapshot.read_text(ROOT / name))
+            errors.extend(f"{error}: {relative}" for error in archive_errors)
+            if not archive_errors:
+                is_lecture = False
+        if is_unit:
+            if path.suffix.lower() != ".md" or reviewed_units.get(relative.as_posix()) != hashlib.sha256(snapshot.read_bytes(path)).hexdigest():
+                errors.append(f"unit is unreviewed or changed: {relative}")
+            errors.extend(f"{error}: {relative}" for error in validate_unit_chapter(
+                text, relative.as_posix(), available_paths,
+                lambda name: snapshot.read_text(ROOT / name)))
         if is_transcript:
             if metadata.get("source_kind") != "corrected_transcript" or metadata.get("privacy_redacted") is not True or metadata.get("verbatim_complete") is not False:
                 errors.append(f"transcript must declare corrected, redacted, incomplete source status: {relative}")

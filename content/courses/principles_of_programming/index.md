@@ -1,20 +1,49 @@
 ---
-title: 프로그래밍의 원리
-description: 프로그래밍의 원리 강의 흐름, 개념 연결, 복습 문제
-tags: [course, principles-of-programming]
+title: "프로그래밍의 원리"
+description: "프로그래밍의 원리 단원 교과서와 강의 기록"
+cssclasses: ["unit-index"]
 ---
 
-# 프로그래밍의 원리
+아래 순서로 단원을 읽으세요. 각 단원에서 연결된 원자료·수업 기록과 연습문제를 확인할 수 있습니다.
 
-## 강의노트
+## 단원 목차
 
-- [[courses/principles_of_programming/lectures/2026-09-01-lecture-01|2026-09-01 · 1강]]
-- [[courses/principles_of_programming/lectures/2026-09-03-lecture-02|2026-09-03 · 2강]]
-- 2026-09-15 · [[courses/principles_of_programming/lectures/2026-09-15-lecture-04|한국어]]
-- 2026-09-17 · [[courses/principles_of_programming/lectures/2026-09-17-lecture-05|한국어]]
+1. **프로그래밍 원리, Specification과 Abstraction** · [[courses/principles_of_programming/units/principles-specification|한국어]]
 
+   Specification과 검증의 범위를 이해하고 계산·추상화·언어 선택을 구분하는 단원입니다.
 
-## 개념 지도
+2. **Expression·Value·Function과 Evaluation** · [[courses/principles_of_programming/units/expressions-functions|한국어]]
+
+   이름 치환·함수 적용·조건 선택을 이용해 expression의 계산과 종료를 추적합니다.
+
+3. **Call-by-value·Call-by-name과 Lazy Evaluation** · [[courses/principles_of_programming/units/evaluation-strategies|한국어]]
+
+   CBV·CBN·val·def·lazy val을 평가 시점, 반복, 종료와 출력으로 비교합니다.
+
+4. **Blocks, Scope와 Environment** · [[courses/principles_of_programming/units/blocks-scope|한국어]]
+
+   Block 결과·shadowing·정의 환경·정적 검사와 local helper 구성을 추적합니다.
+
+5. **Newton's Method, Recursion과 Tail Call** · [[courses/principles_of_programming/units/recursion|한국어]]
+
+   Newton 반복·call stack·accumulator·tail call을 계산과 자원 조건으로 설명합니다.
+
+6. **Higher-Order Functions와 계산 구조의 재사용** · [[courses/principles_of_programming/units/higher-order-functions|한국어]]
+
+   함수 인자로 계산을 재사용하고 mapReduce의 종료값·결합 순서·정보 보존을 분석합니다.
+
+7. **Closures, 환경 보존과 Currying** · [[courses/principles_of_programming/units/closures-currying|한국어]]
+
+   Closure의 환경 보존과 by-name을 이해하고 currying·부분 적용의 호출 단계를 추적합니다.
+
+## 원자료와 강의 기록
+
+- [[courses/principles_of_programming/materials|교수 제공 자료 목록과 다운로드]]
+- [[courses/principles_of_programming/lectures/index|날짜별 강의노트와 보정 STT]]
+
+[[courses/principles_of_programming/units/index#자료별로-단원-찾기|자료 파일 이름으로 단원 찾기]]
+
+## 개념과 관련 자료 찾아보기
 
 - [[concepts/formal-verification|formal verification(형식 검증)]]
 - [[concepts/abstraction-level|abstraction level(추상화 수준)]]
@@ -58,26 +87,4 @@ tags: [course, principles-of-programming]
 - [[concepts/environment-model|Environment model]]
 - [[concepts/higher-order-functions|Higher-order function]]
 - [[concepts/map-reduce|mapReduce]]
-
-## 강의자료
-
-- [[courses/principles_of_programming/materials|교수 제공 자료 목록과 다운로드]]
-
 - [[page_cache/principles_of_programming/lecture-part1/page-001|Part 1 페이지 미리보기]]
-
-PDF 원본은 위 자료 목록에서 내려받을 수 있습니다. 기존 페이지 미리보기도 유지합니다.
-
-## 추가 공개 강의노트
-
-- 2026-09-08 · [[courses/principles_of_programming/lectures/2026-09-08-lecture-03|한국어]]
-- 2026-09-10 · [[courses/principles_of_programming/lectures/2026-09-10-materials-blocks|한국어 · 자료 기반 복습]]
-
-## 보정 STT
-
-개인정보를 가린 공개용 사본이며 불명확한 발화는 표시를 유지합니다.
-
-- [[courses/principles_of_programming/transcripts/2026-09-01|2026-09-01 보정 STT]]
-- [[courses/principles_of_programming/transcripts/2026-09-03|2026-09-03 보정 STT]]
-- [[courses/principles_of_programming/transcripts/2026-09-08|2026-09-08 보정 STT]]
-- [[courses/principles_of_programming/transcripts/2026-09-15|2026-09-15 보정 STT]]
-- [[courses/principles_of_programming/transcripts/2026-09-17|2026-09-17 보정 STT]]

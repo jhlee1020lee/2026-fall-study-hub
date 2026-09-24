@@ -1,22 +1,53 @@
 ---
-title: Computer Programming
-description: Computer Programming 강의 흐름, 개념 연결, 복습 문제
-tags: [course, computer-programming]
+title: "컴퓨터프로그래밍"
+description: "컴퓨터프로그래밍 단원 교과서와 강의 기록"
+cssclasses: ["unit-index"]
 ---
 
-# Computer Programming
+아래 순서로 단원을 읽으세요. 각 단원에서 연결된 원자료·수업 기록과 연습문제를 확인할 수 있습니다.
 
-## 강의노트
+## 단원 목차
 
-- 2026-09-01 · 1강 · [[courses/computer_programming/lectures/2026-09-01-lecture-01|한국어]] · [[courses/computer_programming/lectures/en/2026-09-01-lecture-01|English]]
-- 2026-09-03 · 2강 · [[courses/computer_programming/lectures/2026-09-03-lecture-02|한국어]] · [[courses/computer_programming/lectures/en/2026-09-03-lecture-02|English]]
-- 2026-09-15 · [[courses/computer_programming/lectures/2026-09-15-lecture-05|한국어]]
-- 2026-09-15 · [[courses/computer_programming/lectures/en/2026-09-15-lecture-05|English]]
-- 2026-09-17 · [[courses/computer_programming/lectures/2026-09-17-lecture-06|한국어]]
-- 2026-09-17 · [[courses/computer_programming/lectures/en/2026-09-17-lecture-06|English]]
+1. **Programming의 목적과 Java 실행·개발 환경** · [[courses/computer_programming/units/java-runtime|한국어]] · [[courses/computer_programming/units/en/java-runtime|English]]
 
+   Programming 검증과 Java source부터 IDE 실행까지의 흐름을 복습한다.
 
-## 개념 지도
+2. **Variables·Types·Operators와 String** · [[courses/computer_programming/units/types-expressions|한국어]] · [[courses/computer_programming/units/en/types-expressions|English]]
+
+   Type 변환, 연산 순서, String과 한 줄 입력을 계산·추적으로 확인한다.
+
+3. **Array의 생성·참조와 다차원 데이터** · [[courses/computer_programming/units/arrays|한국어]] · [[courses/computer_programming/units/en/arrays|English]]
+
+   Array 생성·기본값·index·ragged row와 String reference 변경을 확인한다.
+
+4. **Boolean 조건·분기·반복과 실행 추적** · [[courses/computer_programming/units/control-flow|한국어]] · [[courses/computer_programming/units/en/control-flow|English]]
+
+   Boolean·분기·반복을 추적하며 경계값, 누적 최댓값과 delimiter 처리를 복습한다.
+
+5. **Method의 계약·호출·반환과 재사용** · [[courses/computer_programming/units/methods|한국어]] · [[courses/computer_programming/units/en/methods|English]]
+
+   평균 계산의 재사용, method 계약·signature와 호출·반환 흐름을 복습한다.
+
+6. **Objects·Constructors·Static과 Reference 전달** · [[courses/computer_programming/units/objects-references|한국어]] · [[courses/computer_programming/units/en/objects-references|English]]
+
+   OOP 책임, 초기화·static 공유와 reference 전달·GC를 상태 추적으로 복습한다.
+
+7. **Encapsulation과 접근·상태 설계** · [[courses/computer_programming/units/encapsulation|한국어]] · [[courses/computer_programming/units/en/encapsulation|English]]
+
+   상태 일관성, 접근 범위, 실패 처리와 getter·setter의 검증·추적을 복습한다.
+
+8. **입력 검증·Board 판정·객체 상호작용 실습** · [[courses/computer_programming/units/lab-applications|한국어]] · [[courses/computer_programming/units/en/lab-applications|English]]
+
+   입력 검증·board 규칙·Player/Fight/Main 계약을 제한된 trace와 사례로 확인한다.
+
+## 원자료와 강의 기록
+
+- [[courses/computer_programming/materials|교수 제공 자료 목록과 다운로드]]
+- [[courses/computer_programming/lectures/index|날짜별 강의노트와 보정 STT]]
+
+[[courses/computer_programming/units/index#자료별로-단원-찾기|자료 파일 이름으로 단원 찾기]]
+
+## 개념과 관련 자료 찾아보기
 
 - [[concepts/string-pool|String pool(문자열 풀)]]
 - [[concepts/primitive-and-reference-types|primitive type(기본형) vs reference type(참조형)]]
@@ -71,30 +102,4 @@ tags: [course, computer-programming]
 - [[concepts/object-reference|Object reference]]
 - [[concepts/object-references|Object references]]
 - [[concepts/predicates|predicates]]
-
-강의가 추가되면 관련 개념이 자동으로 연결됩니다.
-
-## 강의자료
-
-
-
-- [[courses/computer_programming/materials|교수 제공 자료 목록과 다운로드]]
 - [[page_cache/computer_programming/lab01/page-001|Lab 01 페이지 미리보기]]
-
-## 추가 공개 강의노트
-
-- 2026-09-08 · [[courses/computer_programming/lectures/2026-09-08-lecture-03|한국어]]
-- 2026-09-08 · [[courses/computer_programming/lectures/en/2026-09-08-lecture-03|English]]
-- 2026-09-10 · [[courses/computer_programming/lectures/2026-09-10-lecture-04|한국어]]
-- 2026-09-10 · [[courses/computer_programming/lectures/en/2026-09-10-lecture-04|English]]
-
-## 보정 STT
-
-개인정보를 가린 공개용 사본이며 불명확한 발화는 표시를 유지합니다.
-
-- [[courses/computer_programming/transcripts/2026-09-01|2026-09-01 보정 STT]]
-- [[courses/computer_programming/transcripts/2026-09-03|2026-09-03 보정 STT]]
-- [[courses/computer_programming/transcripts/2026-09-08|2026-09-08 보정 STT]]
-- [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 보정 STT]]
-- [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 보정 STT]]
-- [[courses/computer_programming/transcripts/2026-09-17|2026-09-17 보정 STT]]
