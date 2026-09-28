@@ -25,6 +25,7 @@ review_status: approved
 - [`05.IO.Files.and.Directories_3d312c60.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/05.IO.Files.and.Directories_3d312c60.pptx) · 0.2 MiB
 - [`06.MM.Variable.and.Memory.Recap.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/06.MM.Variable.and.Memory.Recap.pptx) · 0.3 MiB
 - [`07.MM.Virtual.Memory.Recap.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/07.MM.Virtual.Memory.Recap.pptx) · 0.6 MiB
+- [`07.MM.Virtual.Memory.Recap_2ffc3cf7.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/07.MM.Virtual.Memory.Recap_2ffc3cf7.pptx) · 0.6 MiB
 - [`08.MM.Dynamic.Memory.Allocation.I.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/08.MM.Dynamic.Memory.Allocation.I.pptx) · 0.5 MiB
 - [`09.MM.Dynamic.Memory.Allocation.II.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/09.MM.Dynamic.Memory.Allocation.II.pptx) · 0.5 MiB
 - [`10.RE.Life.Cycle.of.a.Program.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/10.RE.Life.Cycle.of.a.Program.pptx) · 0.2 MiB
