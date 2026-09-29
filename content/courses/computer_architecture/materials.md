@@ -21,4 +21,4 @@ review_status: approved
 - [`lec.04.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.04.pdf) · 1.2 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.04/manifest.json)
 - [`lec.05.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.05.pdf) · 6.4 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.05/manifest.json)
 - [`lec.05.typo.fixed.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.05.typo.fixed.pdf) · 6.4 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.05.typo.fixed/manifest.json)
-- [`lec.06.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.06.pdf) · 4.6 MiB
+- [`lec.06.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.06.pdf) · 4.6 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.06/manifest.json)
