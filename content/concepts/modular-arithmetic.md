@@ -11,3 +11,4 @@ review_status: approved
 ## 관련 강의
 
 - [[courses/discrete_mathematics/lectures/2026-09-23-lecture-05|2026-09-23 · discrete_mathematics · 한국어]]
+- [[courses/discrete_mathematics/lectures/2026-09-28-lecture-06|2026-09-28 · discrete_mathematics · 한국어]]

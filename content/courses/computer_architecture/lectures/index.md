@@ -18,7 +18,7 @@ archive_layout: "dated_lecture_archive_v1"
 - 2026-09-08 · [[courses/computer_architecture/lectures/2026-09-08-lecture-03|한국어]] · [[courses/computer_architecture/lectures/en/2026-09-08-lecture-03|English]]
 - 2026-09-10 · [[courses/computer_architecture/lectures/2026-09-10-lecture-04|한국어]] · [[courses/computer_architecture/lectures/en/2026-09-10-lecture-04|English]]
 - 2026-09-15 · [[courses/computer_architecture/lectures/2026-09-15-lecture-05|한국어]] · [[courses/computer_architecture/lectures/en/2026-09-15-lecture-05|English]]
-- 2026-09-29 · [[courses/computer_architecture/lectures/2026-09-29-lecture-05|한국어]]
+- 2026-09-29 · [[courses/computer_architecture/lectures/2026-09-29-lecture-05|한국어]] · [[courses/computer_architecture/lectures/en/2026-09-29-lecture-05|English]]
 
 ## 보정 STT
 

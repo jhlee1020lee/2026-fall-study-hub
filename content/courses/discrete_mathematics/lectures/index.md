@@ -18,6 +18,7 @@ archive_layout: "dated_lecture_archive_v1"
 - 2026-09-09 · [[courses/discrete_mathematics/lectures/2026-09-09-lecture-03|한국어]]
 - 2026-09-14 · [[courses/discrete_mathematics/lectures/2026-09-14-lecture-04|한국어]]
 - 2026-09-23 · [[courses/discrete_mathematics/lectures/2026-09-23-lecture-05|한국어]]
+- 2026-09-28 · [[courses/discrete_mathematics/lectures/2026-09-28-lecture-06|한국어]]
 
 ## 보정 STT
 
