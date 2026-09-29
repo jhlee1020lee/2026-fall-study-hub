@@ -16,6 +16,7 @@ archive_layout: "dated_lecture_archive_v1"
 - 2026-09-07 · [[courses/aging_and_family/lectures/2026-09-07-lecture-01|한국어]]
 - 2026-09-14 · [[courses/aging_and_family/lectures/2026-09-14-lecture-02|한국어]]
 - 2026-09-21 · [[courses/aging_and_family/lectures/2026-09-21-lecture-03|한국어]]
+- 2026-09-28 · [[courses/aging_and_family/lectures/2026-09-28-lecture-04|한국어]]
 
 ## 보정 STT
 

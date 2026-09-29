@@ -20,6 +20,7 @@ archive_layout: "dated_lecture_archive_v1"
 - 2026-09-16 · 자료 기반 복습 · [[courses/system_programming/lectures/2026-09-16-materials-io-review|한국어]] · [[courses/system_programming/lectures/en/2026-09-16-materials-io-review|English]]
 - 2026-09-21 · [[courses/system_programming/lectures/2026-09-21-lecture-05|한국어]] · [[courses/system_programming/lectures/en/2026-09-21-lecture-05|English]]
 - 2026-09-23 · [[courses/system_programming/lectures/2026-09-23-lecture-06|한국어]] · [[courses/system_programming/lectures/en/2026-09-23-lecture-06|English]]
+- 2026-09-28 · [[courses/system_programming/lectures/2026-09-28-lecture-07|한국어]]
 
 ## 보정 STT
 
