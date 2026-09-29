@@ -51,6 +51,7 @@
 - [[courses/aging_and_family/transcripts/2026-09-07|2026-09-07 보정 STT]]
 - [[courses/aging_and_family/transcripts/2026-09-14|2026-09-14 보정 STT]]
 - [[courses/aging_and_family/transcripts/2026-09-21|2026-09-21 보정 STT]]
+- [[courses/aging_and_family/transcripts/2026-09-28|2026-09-28 보정 STT]]
 
 ## Computer Architecture
 
