@@ -389,3 +389,6 @@ tags:
 - [[concepts/secret-sharing|Secret Sharing]]
 - [[concepts/single-cycle-cpu|Single-cycle CPU]]
 - [[concepts/symmetric-key-cryptography|Symmetric-key Cryptography]]
+- [[concepts/address-space|isolation]]
+- [[concepts/memory-protection|permissions]]
+- [[concepts/page-replacement|second-chance approximation]]
