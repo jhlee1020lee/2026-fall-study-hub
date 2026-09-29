@@ -31,6 +31,7 @@ archive_layout: "dated_lecture_archive_v1"
 - [[courses/system_programming/transcripts/2026-09-14|2026-09-14 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-21|2026-09-21 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-23|2026-09-23 보정 STT]]
+- [[courses/system_programming/transcripts/2026-09-28|2026-09-28 보정 STT]]
 
 ## 원자료
 
