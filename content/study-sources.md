@@ -69,6 +69,7 @@
 - [[courses/computer_architecture/transcripts/2026-09-08|2026-09-08 보정 STT]]
 - [[courses/computer_architecture/transcripts/2026-09-10|2026-09-10 보정 STT]]
 - [[courses/computer_architecture/transcripts/2026-09-15|2026-09-15 보정 STT]]
+- [[courses/computer_architecture/transcripts/2026-09-29|2026-09-29 보정 STT]]
 
 ## Computer Programming
 
