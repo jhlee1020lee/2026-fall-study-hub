@@ -15,6 +15,8 @@ review_status: approved
 
 - [`2026.fall.computer.architecture.syllabus.Gukmun.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/2026.fall.computer.architecture.syllabus.Gukmun.pdf) · 0.1 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus.gukmun/manifest.json)
 - [`2026.fall.computer.architecture.syllabus.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/2026.fall.computer.architecture.syllabus.pdf) · 0.1 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/2026.fall.computer.architecture.syllabus/manifest.json)
+- [`Docker.Install.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/Docker.Install.pdf) · 1.1 MiB
+- [`Lab.0.1.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/Lab.0.1.pdf) · 0.6 MiB
 - [`lec.01.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.01.pdf) · 8.4 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.01/manifest.json)
 - [`lec.02.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.02.pdf) · 3.7 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/manifest.json)
 - [`lec.03.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.03.pdf) · 4.3 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.03/manifest.json)
