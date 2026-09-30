@@ -24,4 +24,4 @@ review_status: approved
 - [`Lab01.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab01.pptx) · 8.5 MiB
 - [`Lab02.v4.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab02.v4.pdf) · 0.7 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/manifest.json)
 - [`Lab03.v2.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab03.v2.pdf) · 0.6 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/manifest.json)
-- [`Lab04.v2.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab04.v2.pdf) · 0.9 MiB
+- [`Lab04.v2.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab04.v2.pdf) · 0.9 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v2/manifest.json)

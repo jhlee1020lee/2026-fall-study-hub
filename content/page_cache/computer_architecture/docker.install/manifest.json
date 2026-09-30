@@ -1,0 +1,59 @@
+{
+  "course": "computer_architecture",
+  "source_pdf": "Docker.Install.pdf",
+  "source_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/Docker.Install.pdf",
+  "source_sha256": "8eeef970716a99879a541af7c2e369610aeaaf72e1addabcac15df419d2d38f6",
+  "generated_at": "2026-09-30T14:34:12Z",
+  "total_pages": 7,
+  "pages": [
+    {
+      "pdf_page": 1,
+      "markdown": "content/page_cache/computer_architecture/docker.install/page-001.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-001",
+      "png": "static/page_cache/computer_architecture/docker.install/page-001.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/docker.install/page-001.png"
+    },
+    {
+      "pdf_page": 2,
+      "markdown": "content/page_cache/computer_architecture/docker.install/page-002.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-002",
+      "png": "static/page_cache/computer_architecture/docker.install/page-002.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/docker.install/page-002.png"
+    },
+    {
+      "pdf_page": 3,
+      "markdown": "content/page_cache/computer_architecture/docker.install/page-003.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-003",
+      "png": "static/page_cache/computer_architecture/docker.install/page-003.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/docker.install/page-003.png"
+    },
+    {
+      "pdf_page": 4,
+      "markdown": "content/page_cache/computer_architecture/docker.install/page-004.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-004",
+      "png": "static/page_cache/computer_architecture/docker.install/page-004.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/docker.install/page-004.png"
+    },
+    {
+      "pdf_page": 5,
+      "markdown": "content/page_cache/computer_architecture/docker.install/page-005.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-005",
+      "png": "static/page_cache/computer_architecture/docker.install/page-005.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/docker.install/page-005.png"
+    },
+    {
+      "pdf_page": 6,
+      "markdown": "content/page_cache/computer_architecture/docker.install/page-006.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-006",
+      "png": "static/page_cache/computer_architecture/docker.install/page-006.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/docker.install/page-006.png"
+    },
+    {
+      "pdf_page": 7,
+      "markdown": "content/page_cache/computer_architecture/docker.install/page-007.md",
+      "markdown_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-007",
+      "png": "static/page_cache/computer_architecture/docker.install/page-007.png",
+      "png_url": "https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/docker.install/page-007.png"
+    }
+  ]
+}
