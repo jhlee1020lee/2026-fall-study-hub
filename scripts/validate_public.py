@@ -66,7 +66,7 @@ TEXT_PATTERNS = {
 }
 
 
-# These exact eight mathematical expressions were individually source-checked.
+# These exact mathematical expressions were individually source-checked.
 # Do not exempt an entire math span: an added path, unknown command or changed
 # expression must still fail. The complete unit hash/review gates also apply.
 UNIT_MATH_PATH_LOOKALIKES = frozenset({
@@ -79,6 +79,8 @@ UNIT_MATH_PATH_LOOKALIKES = frozenset({
     "f(x)=O(g(x))\\quad\\Longleftrightarrow\\quad\n"
     r"\exists C>0,\exists k>0,\ \forall x>k:\ |f(x)|\le C|g(x)|",
     r"h:\mathbb Z\to\mathbb Z_m,\qquad h(x)=x\bmod m",
+    r"h:\mathbb Z\to\mathbb Z_m",
+    r"G:\{0,1\}^s\to\{0,1\}^{L},\qquad L>s",
 })
 
 
@@ -216,6 +218,13 @@ def validate(*, index: bool = False, revision: str | None = None) -> list[str]:
             for k, v in reviewed_units.items()
         ):
             raise ValueError("invalid reviewed unit hashes")
+        materials_only_units = policy.get("materials_only_units", {})
+        if not isinstance(materials_only_units, dict) or any(
+            not isinstance(k, str) or unit_path(k) is None
+            or not isinstance(v, str) or not re.fullmatch(r"[0-9a-f]{64}", v)
+            or reviewed_units.get(k) != v for k, v in materials_only_units.items()
+        ):
+            raise ValueError("invalid materials-only unit hashes")
     except (RuntimeError, OSError, ValueError, KeyError, TypeError) as exc:
         return [f"Cannot inspect publication snapshot or validation policy: {type(exc).__name__}"]
     available_paths = {path.relative_to(ROOT).as_posix() for path in snapshot.files if snapshot.is_file(path)}
@@ -300,7 +309,9 @@ def validate(*, index: bool = False, revision: str | None = None) -> list[str]:
                 errors.append(f"unit is unreviewed or changed: {relative}")
             errors.extend(f"{error}: {relative}" for error in validate_unit_chapter(
                 text, relative.as_posix(), available_paths,
-                lambda name: snapshot.read_text(ROOT / name)))
+                lambda name: snapshot.read_text(ROOT / name),
+                materials_only=(materials_only_units.get(relative.as_posix()) ==
+                                hashlib.sha256(snapshot.read_bytes(path)).hexdigest())))
         if is_transcript:
             if metadata.get("source_kind") != "corrected_transcript" or metadata.get("privacy_redacted") is not True or metadata.get("verbatim_complete") is not False:
                 errors.append(f"transcript must declare corrected, redacted, incomplete source status: {relative}")

@@ -1,6 +1,6 @@
 ---
 title: "프로그램 번역·Linking·Loading"
-description: "Separate compilation부터 linking·loading과 세 instruction의 상태 변화까지 추적한다."
+description: "Symbol 연결에서 실행 중 register·memory 변화까지 추적한다."
 course: "computer_architecture"
 unit_id: "program-translation-loading"
 lang: "ko"
@@ -11,20 +11,19 @@ draft: false
 cssclasses: ["unit-textbook"]
 source_assets: ["lec 02.pdf"]
 private_source_assets: []
-source_lectures: ["courses/computer_architecture/lectures/2026-09-03-lecture-02"]
+source_lectures: ["courses/computer_architecture/lectures/2026-09-03-lecture-02", "courses/computer_architecture/lectures/2026-09-08-lecture-03"]
 ---
 
-파일을 따로 번역한 결과가 실행 가능한 프로그램이 되는 과정을 따라간다. Symbol 연결·주소 조정·memory image 준비를 나누어 보면 machine code가 있어도 곧바로 실행할 수 없는 이유가 드러난다.
+파일별 번역이 끝나도 이름과 주소를 연결하는 일이 남는다. Linking·loading·실행을 나누어 값이 언제 바뀌는지 추적한다.
 
-## Separate compilation과 파일 사이의 Symbol
+## Separate compilation과 symbol의 연결
 
-프로그램을 여러 파일로 나누면 각 파일을 독립적으로 번역할 수 있다. 하지만 한 파일이 다른 파일의 함수나 변수를 사용한다면, 나중에 그 이름이 정확히 어느 정의를 가리키는지 연결해야 한다. [ISA와 architectural state](architecture-contract.md)가 실행의 의미를 정한다면, translation(번역)·linking(연결)·loading(적재)은 실행할 프로그램을 준비하는 과정이다. 여기서는 C 함수·배열·pointer의 기초를 전제로, 녹음이 없는 9월 3일 자료의 예제를 따라간다.
+여러 source file로 나눈 프로그램도 실행할 때는 하나의 일관된 주소 공간에서 서로의 함수와 데이터를 찾아야 한다. Separate compilation(분리 컴파일)은 각 파일을 따로 번역하게 해 주지만, 다른 파일에서 정의한 이름의 최종 위치까지 그 단계에서 모두 알 수 있는 것은 아니다. 이 차이를 해결하는 과정이 linking이다. 아래 내용은 [[courses/computer_architecture/lectures/2026-09-03-lecture-02|2026-09-03 강의 노트 · 자료 기반]]와 같은 instructor 자료를 읽는 복습이며, 녹음으로 확인된 그날의 구두 진도는 아니다.
 
-[[page_cache/computer_architecture/lec.02/page-019|CA M008 p.19]]의 `main.c`는 `int buf[2] = {1, 2};`를 정의하고 `main`에서 `swap`을 호출한다. 다른 파일 `swap.c`에는 다음 코드가 있다.
+[CA M008 PDF p.19](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-019)의 예제에서 `main.c`는 `int buf[2] = {1, 2};`를 정의하고 `main`에서 `swap()`을 호출한다. 다음은 함께 제시된 `swap.c`이다.
 
 ```c
 extern int buf[];
-
 int *bufp0 = &buf[0];
 static int *bufp1;
 
@@ -38,47 +37,59 @@ void swap()
 }
 ```
 
-`extern int buf[];`는 배열의 정의가 다른 곳에서 제공됨을 알린다. `bufp0`는 첫 원소를 가리키며 함수 안에서 `bufp1`은 둘째 원소를 가리키게 된다. 먼저 `temp`에 1을 보관하고, 첫 원소에 2를 쓴 다음, 둘째 원소에 보관해 둔 1을 쓴다. 결과는 `{2, 1}`이다. 첫 값을 보관하지 않고 먼저 덮어쓰면 마지막 대입에 필요한 원래 값이 사라진다.
+Pointer(포인터)는 대상의 주소를 담고, `*bufp0`는 그 주소에 있는 값을 읽거나 쓸 때 사용한다. `bufp0`가 첫 원소를, `bufp1`가 두 번째 원소를 가리키게 한 뒤 다음 순서로 값을 바꾼다.
 
-Symbol(심볼)은 이 연결 과정에서 함수나 객체를 식별하는 이름이다. [[page_cache/computer_architecture/lec.02/page-020|CA M008 p.20]]의 화살표는 다음 차이를 보여 준다.
+| 실행한 문장 | `temp` | `buf[0]` | `buf[1]` |
+|---|---:|---:|---:|
+| `temp = *bufp0;` | 1 | 1 | 2 |
+| `*bufp0 = *bufp1;` | 1 | 2 | 2 |
+| `*bufp1 = temp;` | 1 | 2 | 1 |
 
-| 이름 또는 사용 | Linker 관점의 역할 |
+두 번째 문장에서 첫 값을 덮어쓰므로, 그 전에 `temp`에 보존해야 한다. 최종 배열은 `{2, 1}`이다. 이것은 instructor의 작은 예제를 추적한 결과이며 과제 프로그램이나 새 실행 실험은 아니다.
+
+### Global symbol, external reference, local symbol
+
+Symbol(심벌)은 linking 과정에서 정의와 참조를 연결하는 이름이다. [CA M008 PDF p.20](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-020)의 빨간 표시는 C의 지역변수라는 표현과 linker의 local symbol이 같은 뜻이 아님을 보여 준다.
+
+| 예제 요소 | Linker 관점의 역할 |
 |---|---|
-| `main.c`의 `main`, `buf` 정의 | 다른 파일에서 참조할 수 있는 global symbol |
+| `main.c`의 `main`, `buf` 정의 | 다른 파일과 연결할 수 있는 global symbol |
+| `main.c`의 `swap` 사용 | 다른 파일의 정의를 요구하는 external reference |
 | `swap.c`의 `swap`, `bufp0` 정의 | Global symbol |
-| `main.c`의 `swap` 사용, `swap.c`의 `buf` 사용 | 다른 파일의 정의가 필요한 external reference |
-| 파일 범위의 `static bufp1` | 이 파일에 한정되는 local symbol |
-| 함수 안의 `temp` | 실행 중 사용하는 automatic local variable |
+| `swap.c`의 `extern int buf[]`와 `buf` 사용 | 다른 파일에서 정의된 배열 참조 |
+| File-scope `static int *bufp1` | 해당 파일에 한정된 linker-local symbol |
+| 함수 안의 automatic `temp` | 이 예제에서 파일 간 symbol resolution의 대상이 아닌 실행 중 지역변수 |
 
-`bufp1`과 `temp`는 모두 일상적으로 “지역적”이라고 부를 수 있지만 이유가 다르다. `bufp1`의 `static`은 파일 사이 이름 연결을 제한하고 그 저장공간은 함수 호출마다 새로 생기는 automatic 변수와 다르다. `temp`는 한 번의 `swap` 실행에 필요한 값이다. 그림의 “Linker knows nothing of temp”는 이 변수가 파일 간 symbol resolution(심볼 해결)의 대상이 아니라는 뜻이지, 실행할 때 값이 필요 없다는 뜻이 아니다.
+특히 `bufp0`는 그 자체로 이 파일에 정의된 pointer이면서 초기화할 주소는 다른 파일의 `buf`에 의존한다. “이름을 정의한다”와 “그 정의 안에서 다른 symbol을 참조한다”는 동시에 성립할 수 있다. `static bufp1`과 automatic `temp`를 모두 그냥 “local”이라고 묶으면 linking에 필요한 구분이 사라진다.
 
-## Translation과 Relocatable object file
+## Translation에서 executable까지
 
-Assembly code(어셈블리 코드)는 instruction의 사람이 읽을 수 있는 표기이고, assembler(어셈블러)는 이를 binary machine code(이진 기계어)로 옮긴다. Compiler는 고수준 연산을 instruction으로 바꾸는 역할을 한다. Pseudo-instruction(의사 명령어)은 여러 실제 machine instruction으로 확장될 수 있으므로 assembly source의 줄 수와 실행 instruction 수를 같다고 세면 안 된다. [[page_cache/computer_architecture/lec.02/page-028|CA M008 p.28]]
+Assembly code(어셈블리 코드)는 machine instruction을 사람이 읽는 표기이고, assembler(어셈블러)는 이를 binary machine code로 옮긴다. Pseudo-instruction은 여러 machine instruction으로 확장될 수 있으므로 assembly source 줄 수와 실제 instruction 수를 같다고 가정하지 않는다. [CA M008 PDF p.28](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-028)
 
-[[page_cache/computer_architecture/lec.02/page-021|CA M008 p.21]]의 흐름에서는 `main.c`와 `swap.c`가 각각 translators인 `cpp`, `cc1`, `as`를 지나 `main.o`와 `swap.o`가 된다. 전처리, compilation, assembly를 거친 결과가 각각 따로 만들어지는 것이다. Compiler driver는 이러한 단계를 묶어서 호출할 수 있다.
+[CA M008 PDF p.21](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-021)은 `main.c`와 `swap.c`가 각각 translators `cpp`, `cc1`, `as`를 지나 `main.o`, `swap.o`가 되는 흐름을 보여 준다. 이 object file들은 separately compiled이면서 relocatable하다. Compiler driver는 이 여러 도구의 호출을 묶어 표현할 수 있고, linker `ld`가 object들을 실행 파일 `p`로 연결한다. 자료 속 driver 명령은 이 흐름의 예이지 여기서 실행한 명령이 아니다.
 
-이 `.o` 파일들은 relocatable object file(재배치 가능한 목적 파일)이다. 이미 machine code가 있어도 다른 파일의 symbol이 아직 연결되지 않았거나 최종 주소가 정해지지 않았을 수 있다. 예를 들어 `main.o`에는 `swap` 호출이 있지만 `swap`의 실제 코드가 어디에 놓일지는 두 파일을 연결할 때 정해진다. 따라서 machine code를 만들었다는 것과 완성된 실행 파일을 만들었다는 것은 다른 단계다.
+이미 binary instruction이 생겼어도 아직 linking이 필요한 이유는 두 가지이다. **Symbol resolution**은 이름이 어느 정의를 가리키는지 정한다. **Relocation**은 최종 code/data 배치에 맞추어 주소 참조를 조정한다. 어떤 이름을 뜻하는지와 그 대상이 최종적으로 어느 주소에 놓이는지는 서로 다른 질문이다.
 
-## Symbol resolution과 Relocation
+[CA M008 PDF p.22](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-022)를 왼쪽 object별 구역에서 오른쪽 executable 구역으로 읽으면 다음 관계가 보인다.
 
-Linker(링커)는 서로 다른 object file의 정의와 참조를 연결하고 최종 code·data 배치를 만든다. Symbol resolution은 “이 이름은 어느 정의인가?”에 답하고, relocation(재배치)은 “최종 배치에서 이 주소 참조를 어떻게 맞출 것인가?”에 답한다.
+| 내용 | Object에서의 위치 | 연결 뒤 의미 |
+|---|---|---|
+| `main`, `swap`의 코드 | 각 object의 `.text` | 실행 파일의 code 배치에 포함 |
+| 초기값이 있는 `buf`, `bufp0` | `.data` | Data 배치와 참조 주소를 정함 |
+| File-scope `bufp1` | `.bss` | 해당 저장공간을 배치 |
+| Headers, `.symtab`, `.debug` | 형식·심벌·debug 정보 | 모두를 실행 중 일반 data와 동일시할 수 없음 |
 
-![Object file의 code와 data가 실행 파일의 section으로 모이는 원자료 도표](https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.02/page-022.png)
+따라서 object file을 단순히 이어 붙인다는 설명만으로는 부족하다. 다른 object를 향하던 참조까지 최종 배치와 일치해야 실행 가능한 전체가 된다. 세부 relocation 종류나 dynamic linker 구현은 이 그림이 설명하는 범위를 넘는다.
 
-[[page_cache/computer_architecture/lec.02/page-022|CA M008 p.22]]에서 왼쪽 `main.o`와 `swap.o`의 작은 상자가 오른쪽 실행 파일의 큰 상자로 모인다. `main`과 `swap` 코드는 `.text`, 초기값이 있는 `buf`와 `bufp0`는 `.data`, 파일 범위의 `bufp1`은 `.bss`에 표시되어 있다. 함수 안의 `temp`를 이 global/static data 목록에 추가해서는 안 된다.
+## Loading과 instruction의 상태 변화
 
-`bufp0`는 단순한 정수 초기값이 아니라 `buf[0]`의 주소를 갖는 pointer이므로, `buf`의 최종 배치와 주소 참조를 일치시키는 문제가 생긴다. 함수 호출의 target도 같은 이유로 최종 code 위치와 맞아야 한다. 그림에는 headers, `.symtab`, `.debug`도 따로 있다. 이들은 파일의 모든 내용이 실행 instruction이거나 프로그램의 보통 data라는 생각이 틀렸음을 보여 준다. 이 설명은 static linking의 입문 모형이며 모든 relocation 종류나 dynamic linker의 동작을 열거하지는 않는다.
+Loader(로더)는 executable의 내용을 실행 가능한 memory image로 준비한다. [CA M008 PDF p.23](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-023)은 ELF 파일의 section과 runtime memory layout을 나란히 둔다. `.init`, `.text`, `.rodata`는 read-only segment 쪽으로, `.data`, `.bss`는 read/write segment 쪽으로 연결된다. Runtime에는 heap, shared-library mapping 영역, user stack 등이 함께 있고 위쪽에는 kernel 영역이 표시된다. 이 그림의 주소는 특정 32-bit 주소 공간의 예시이므로 모든 RV64 프로그램의 고정 주소로 사용하면 안 된다.
 
-## ELF Loading과 실행 중 Memory layout
+File 안의 정보와 runtime 공간도 일대일로 같은 것은 아니다. 예를 들어 symbol/debug 정보를 담는 항목은 일반 변수들의 data segment와 구분해야 한다. Loading은 이런 실행 환경을 준비하고, ISA는 준비된 instruction이 상태를 어떻게 바꾸는지 정한다.
 
-Loading은 실행 파일로부터 실행에 필요한 memory image를 준비하는 단계다. [[page_cache/computer_architecture/lec.02/page-023|CA M008 p.23]]의 ELF(실행 파일 형식) 그림은 왼쪽의 file 구성과 오른쪽의 runtime memory 구성을 구분한다. `.init`·`.text`·`.rodata`는 read-only segment, `.data`·`.bss`는 read/write segment로 묶여 있다. 그 위에 runtime heap, shared-library mapping 영역, user stack과 kernel 영역이 표시되어 있다.
+### 세 instruction에서 값과 주소를 따로 추적하기
 
-이 그림에서 읽어야 할 핵심은 **파일의 section 목록과 실행 중 memory 전체가 같지 않다**는 점이다. File의 symbol/debug 정보 전체를 일반 data segment와 동일시할 수 없고, 실행 중 사용하는 heap과 stack도 구분해야 한다. 그림의 주소는 특정 32-bit 주소 공간의 예시다. 모든 OS나 RV64 프로그램이 그 고정 주소에 적재된다는 뜻은 아니다.
-
-## 적재된 Instruction이 State를 바꾸는 과정
-
-Loader가 실행할 내용을 배치한 다음에는 ISA가 각 instruction의 효과를 정한다. [[page_cache/computer_architecture/lec.02/page-024|CA M008 p.24]]는 처음에 `PC=0x1000`, `GPR[x10]=0x2000`, `MEM[0x2000]=41`인 예를 준다. `GPR[x10]`은 register의 값이며 `MEM[a]`는 주소 `a`의 memory 값이라는 표기다.
+[CA M008 PDF p.24](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-024)의 시작 상태는 `PC = 0x1000`, `GPR[x10] = 0x2000`, `MEM[0x2000] = 41`이다. 여기서 `GPR[x10]`은 register 안의 값, `MEM[a]`는 주소 `a`에 있는 memory 값을 뜻한다.
 
 ```asm
 lw   x5, 0(x10)
@@ -86,115 +97,110 @@ addi x5, x5, 1
 sw   x5, 0(x10)
 ```
 
-| 실행한 instruction의 주소 | 동작 | 실행 뒤 `x5` | 해당 memory 값 | 다음 PC |
-|---|---|---|---|---|
-| `0x1000` | `lw`로 주소 `0x2000`에서 읽음 | 41 | 41 | `0x1004` |
-| `0x1004` | `addi`로 1을 더함 | 42 | 41 | `0x1008` |
-| `0x1008` | `sw`로 결과를 같은 주소에 씀 | 42 | 42 | `0x100C` |
+| Instruction 주소 | 동작 | 실행 후 `x5` | 실행 후 `MEM[0x2000]` | 다음 PC |
+|---|---|---:|---:|---|
+| `0x1000` | Base `0x2000` + offset 0에서 word를 읽음 | 41 | 41 | `0x1004` |
+| `0x1004` | Register의 값에 immediate 1을 더함 | 42 | 41 | `0x1008` |
+| `0x1008` | Register의 word를 같은 주소에 저장 | 42 | 42 | `0x100C` |
 
-중간 행에서 register가 42가 되어도 memory는 아직 41이다. Arithmetic가 register를 바꾼 뒤 명시적인 store가 있어야 memory의 값도 바뀐다. 이 예는 기본 32-bit instruction을 사용하므로 PC가 매번 4 bytes씩 증가한다. Data를 담는 register의 폭과 instruction 자체의 길이를 같은 것으로 읽으면 안 된다. 이 분리는 [Register와 memory의 데이터 표현](data-register-memory.md)에서 더 자세히 이어진다.
+`lw`가 읽는 41은 주소 `0x2000`과 다르다. `addi`가 register를 42로 바꾸어도 memory는 아직 41이다. 마지막 `sw`가 있어야 memory까지 42가 된다. 여기서는 각 instruction이 32 bits, 즉 4 bytes인 순차 예제이므로 PC가 4씩 증가한다. 이런 상태 추적은 [[courses/computer_architecture/lectures/2026-09-08-lecture-03|2026-09-08 강의 노트]]의 register·load-store 설명으로 이어지며, translation이 만드는 instruction과 실행이 바꾸는 상태를 연결해 준다.
 
 ## 핵심 정리
 
-- `static`의 파일 내 linkage와 함수 안 automatic variable의 local 범위는 서로 다르다.
-- Object file에 machine code가 있어도 외부 symbol과 최종 주소는 아직 미정일 수 있다.
-- Symbol resolution은 정의를 연결하고 relocation은 최종 위치에 주소 참조를 맞춘다.
-- ELF의 file section과 실행 중 heap·stack은 같은 목록이 아니다.
-- Register 연산의 결과는 store가 실행되어야 memory에 반영된다.
+- Symbol resolution은 정의를 고르고 relocation은 최종 주소 참조를 맞춘다.
+- File-scope `static`과 함수의 automatic 지역변수는 linker 관점에서 다르다.
+- Loader가 memory image를 준비한 뒤 instruction의 의미에 따라 상태가 바뀐다.
 
 ## 확인·연습문제
 
-### 개념 확인과 추적
+### 개념 확인
 
-#### 확인 Q01 · Symbol의 종류와 값 보존
+#### 확인 Q01 · Swap의 값 추적
 
-본문의 `swap`에서 `{1,2}`가 바뀌는 순서를 설명하라. `buf`, `swap`, `bufp0`, 파일 범위 `static bufp1`, 함수 안 `temp`를 연결 관점에서 구분하고, `temp`를 linker가 연결하지 않아도 필요한 이유를 말하라.
-
-<details><summary>해설 보기</summary>
-
-`temp`가 첫 값 1을 보관하고 첫 원소에 2를 쓴 뒤 둘째 원소에 보관한 1을 써 `{2,1}`이 된다. `buf`의 정의와 `swap`·`bufp0`의 정의는 global symbol이며 다른 파일에서 사용하는 `buf`·`swap`은 external reference다. `bufp1`은 파일 내부로 linkage가 제한된 static 저장 객체이고 `temp`는 호출 중 쓰는 automatic local variable이다. 파일 간 이름 해결 대상이 아니어도 덮어쓰기 전 값을 보존할 runtime 역할이 있다.
-
-**채점·확인 기준:** 세 대입 순서와 global/external/file-local/automatic 구분을 모두 보인다.
-
-</details>
-
-#### 확인 Q02 · Machine code와 실행 파일
-
-`main.c`와 `swap.c`에서 각각 `.o`가 만들어지고 하나의 실행 파일이 되는 단계를 설명하라. Compiler·assembler·compiler driver의 역할과 pseudo-instruction의 줄 수를 구분하라.
+`buf={1,2}`, `bufp0=&buf[0]`, `bufp1=&buf[1]`에서 `temp=*bufp0; *bufp0=*bufp1; *bufp1=temp;` 뒤의 배열을 각 단계마다 써라. `temp`를 생략하면 왜 안 되는가?
 
 <details><summary>해설 보기</summary>
 
-각 source는 preprocessing·compilation·assembly를 거쳐 따로 번역된 relocatable object가 된다. Compiler는 고수준 연산을 instruction으로, assembler는 assembly를 machine code로 옮기며 driver는 여러 단계를 묶어 호출할 수 있다. Linker는 object를 연결한다. `.o`에 machine code가 있어도 외부 참조와 최종 배치가 미정일 수 있고 pseudo-instruction은 여러 실제 instruction으로 확장될 수 있으므로 source 줄 수도 실행 instruction 수가 아니다.
+첫 단계는 `temp=1`, 배열 `{1,2}`이다. 둘째는 `{2,2}`, 셋째는 `{2,1}`이다. Pointer 자체는 주소를 담고 `*`는 그곳의 값을 접근한다. 첫 원소를 덮기 전에 원래 값 1을 `temp`로 보존하지 않으면 마지막에 복구할 값이 사라진다.
 
-**채점·확인 기준:** 단계 순서, 도구 역할, object가 아직 relocatable인 이유와 pseudo-instruction의 한계를 설명한다.
+**채점·확인:** 주소와 값, 각 대입 후 배열, 보존 이유를 확인한다.
 
 </details>
 
-#### 확인 Q03 · 이름 해결과 주소 조정
+#### 확인 Q02 · Symbol의 세 역할
 
-`main.o`의 `swap` 호출과 `bufp0=&buf[0]`를 이용해 symbol resolution과 relocation의 질문을 구분하라. 예제의 code·초기화 data·`bufp1`·symbol/debug 정보는 어떻게 분류되는가?
+`main.c`의 `main`, `buf`, `swap` 사용과 `swap.c`의 `swap`, `bufp0`, `extern int buf[]`, file-scope `static bufp1`, automatic `temp`를 분류하라.
 
 <details><summary>해설 보기</summary>
 
-Resolution은 호출의 `swap`이나 참조의 `buf`가 어느 정의인지 정한다. Relocation은 code/data의 최종 위치에 맞게 call target과 pointer의 주소 참조를 조정한다. `main`·`swap` 코드는 `.text`, 초기값이 있는 `buf`·`bufp0`는 `.data`, `bufp1`은 그림의 `.bss`에 놓인다. `.symtab`·`.debug`와 headers는 일반 instruction/data와 구분하며 `temp`를 global/static section 목록에 넣지 않는다.
+`main`·`buf`의 정의와 `swap.c`의 `swap`·`bufp0` 정의는 global symbol이다. `main.c`의 `swap` 사용과 `swap.c`의 `buf` 참조는 다른 파일의 정의를 요구한다. `bufp0`를 정의하면서 그 초기화에 외부 `buf` 주소를 사용할 수 있다. File-scope `static bufp1`은 linker-local symbol이고 automatic `temp`는 함수 실행 중 지역변수여서 이 예의 파일 간 symbol resolution 대상이 아니다.
 
-**채점·확인 기준:** 정의 선택과 위치 조정을 구별하고 pointer 초기값도 주소 참조임을 설명한다.
+**채점·확인:** `bufp0`의 정의와 외부 참조가 동시에 성립함을 포함한다.
 
 </details>
 
-#### 확인 Q04 · ELF File과 Runtime memory
+#### 확인 Q03 · Object에서 executable로
 
-ELF file의 section 목록을 runtime memory의 전체 모습과 같다고 보면 무엇을 놓치는가? Read-only/read-write 부분과 heap·shared libraries·stack을 구분하라.
+`cpp`·`cc1`·`as`·`ld` 흐름, symbol resolution과 relocation, `.text`·`.data`·`.bss`·`.symtab`·`.debug`를 연결하라. 이미 machine code가 있는데 linking이 필요한 이유와 pseudo-instruction의 주의점은 무엇인가?
 
 <details><summary>해설 보기</summary>
 
-그림에서 `.init`·`.text`·`.rodata`는 read-only, `.data`·`.bss`는 read/write segment다. 실행 중에는 heap, shared-library mapping, user stack과 kernel 영역도 구분된다. Symbol/debug 정보를 모두 일반 data segment로 읽으면 파일의 도구용 정보와 실행 상태를 혼동한다. Loader가 실행용 memory image를 준비하며 그림의 주소는 특정 32-bit 예시다.
+각 C 파일이 preprocessing·compilation·assembly를 거쳐 별도 relocatable `.o`가 되고 `ld`가 executable을 만든다. Driver는 이 도구 호출을 묶을 수 있다. Resolution은 이름의 정의를, relocation은 최종 배치에 맞는 참조 주소를 정하므로 단순 파일 연결만으로 부족하다. `main`·`swap` 코드는 `.text`, 초기화된 `buf`·`bufp0`는 `.data`, `bufp1`은 `.bss`에 해당한다. Header·symbol·debug 정보는 일반 변수 data와 구분한다. Pseudo-instruction이 여러 machine instruction으로 확장될 수 있어 줄 수와 IC는 다르다.
 
-**채점·확인 기준:** 두 segment 분류와 runtime 영역 차이, 주소 예시의 범위를 확인한다.
+**채점·확인:** 이름 연결과 주소 조정을 나누고 모든 section 예를 분류한다.
 
 </details>
 
-#### 확인 Q05 · Register 갱신과 Memory 갱신
+#### 확인 Q04 · 적재와 주소 공간
 
-처음 `PC=0x1000`, `x10=0x2000`, `MEM[0x2000]=41`이다. 본문의 `lw x5,0(x10)` → `addi x5,x5,1` → `sw x5,0(x10)` 뒤의 `x5`, memory, PC를 각각 추적하고 loader와 ISA의 역할을 분리하라.
+ELF 그림의 read-only/read-write segment와 heap·shared-library·stack·kernel 영역을 설명하라. Loader가 하는 일과 ISA가 정하는 일은 무엇이며 그림 주소는 모든 RV64 실행에 고정되는가?
 
 <details><summary>해설 보기</summary>
 
-첫 load 뒤 `(x5,memory,PC)=(41,41,0x1004)`, 덧셈 뒤 `(42,41,0x1008)`, store 뒤 `(42,42,0x100C)`다. Memory는 store까지 41이며 register 산술이 memory를 자동 갱신하지 않는다. Loader는 실행 내용을 준비하고 ISA는 각 instruction의 상태 변화를 정한다. PC의 +4는 이 예제의 32-bit instruction 길이에서 나온다.
+그림은 `.init/.text/.rodata`를 read-only, `.data/.bss`를 read/write로 묶고 runtime heap·shared-library mapping·user stack과 위쪽 kernel 영역을 보인다. Loader는 실행할 memory image를 준비하고 ISA는 적재된 instruction의 상태 전이 의미를 제공한다. `.symtab/.debug` 전체를 변수 data segment로 보지 않는다. 이 그림은 특정 32-bit 주소 공간 예이므로 모든 RV64의 고정 배치가 아니다.
 
-**채점·확인 기준:** 세 시점 모두를 쓰고 data register 폭과 instruction 길이를 혼동하지 않는다.
+**채점·확인:** File section과 runtime 영역을 구별하고 32-bit 예시 한계를 밝힌다.
 
 </details>
 
-### 적용과 오류 진단
+#### 확인 Q05 · Load·계산·store의 시점
 
-#### 연습 P01 · 설명에서 단계 혼동 찾기
-
-새로 만든 자료 기반 일반 연습이다. 제공된 18문항에는 linking/loading의 직접 유형 근거가 없다. 다음 설명을 각각 고쳐라: (a) “`bufp0`의 주소 초기값은 각 `.o`를 만드는 순간 모든 최종 배치에서 유효하다.” (b) “`temp`가 `.bss`에 없으므로 swap은 첫 값을 보관할 수 없다.” (c) “Loader가 `addi`를 적재하면 memory의 41도 바로 42가 된다.”
+`PC=0x1000`, `x10=0x2000`, `MEM[0x2000]=41`에서 `lw x5,0(x10); addi x5,x5,1; sw x5,0(x10)`의 각 단계 뒤 `x5`, memory, PC를 구하라. Instruction은 각각 4 bytes이다.
 
 <details><summary>해설 보기</summary>
 
-(a) 최종 `buf` 배치에 맞춰 pointer 주소 참조를 조정해야 한다. Relocatable이라는 성질과 충돌하는 주장이다. (b) Automatic `temp`는 실행 중 원래 값을 보관하며 global/static section 분류와 별개다. (c) 적재와 실행이 다르고 `addi` 실행 자체도 register만 바꾼다. 해당 store가 실행된 뒤에야 memory가 42가 된다.
+`lw` 뒤 `(x5,memory,PC)=(41,41,0x1004)`, `addi` 뒤 `(42,41,0x1008)`, `sw` 뒤 `(42,42,0x100C)`이다. 주소 `0x2000`은 값 41과 다르다. 덧셈은 register만 바꾸고 store가 있어야 memory가 바뀐다. PC는 4-byte instruction 세 개만큼 진행한다.
 
-**채점·확인 기준:** 세 오류를 각각 relocation·storage 역할·실행 효과로 설명한다.
+**채점·확인:** `addi` 직후 memory가 아직 41인지 확인한다.
 
 </details>
 
-### 복습 순서
+### 적용 연습
 
-Q01–Q03으로 symbol·번역·주소 연결을 설명하고 Q04–Q05의 file/memory 구분과 상태 표를 빈 종이에 다시 쓴다. P01의 잘못된 문장을 고친 뒤 [[courses/computer_architecture/units/data-register-memory|Register와 memory]]에서 주소·값·폭 구분을 강화한다.
+#### 연습 P01 · 단계별 증거 판별
+
+새로 만든 자료 기반 일반 연습이다. 두 `.o`가 만들어졌으므로 외부 `swap`의 주소도 확정되었고 이미 `buf`가 뒤집혔다는 주장이 있다. 또 `.debug`를 모두 변수 data라고 부른다. 각 주장의 오류와 실행 결과를 확인하려면 필요한 단계를 설명하라.
+
+18개 후보에는 symbol resolution·relocation·ELF loading을 직접 평가하는 문항이 없어 해당 시험 스타일의 근거는 없다.
+
+<details><summary>해설 보기</summary>
+
+Object 생성은 파일별 번역이다. Cross-file symbol resolution과 최종 배치의 relocation은 linking에서 필요하다. Loading은 memory image를 준비할 뿐이고 `swap`의 대입을 실제 실행해야 `{2,1}`이 된다. `.debug`는 debug 정보이며 초기화된 변수들의 `.data`와 다르다. 단계가 성공했다는 주장과 실행 중 값 추적은 별도로 확인해야 한다.
+
+**채점·확인:** Translation→linking→loading→execution 순서와 각 단계의 한계를 답한다.
+
+</details>
+
+### 짧은 복습 계획
+
+Q01–Q03으로 symbol과 section을 분류한 뒤 Q04–Q05를 연결하자. P01에서 어느 단계의 증거인지 말하고, 다음 날 Q05의 register/memory 표를 다시 작성하자.
 
 ## 출처
 
-- [[courses/computer_architecture/lectures/2026-09-03-lecture-02|2026-09-03 · 자료 기반 복습]]
+- [[courses/computer_architecture/lectures/2026-09-03-lecture-02|2026-09-03 강의 노트 · 자료 기반]]
+- [[courses/computer_architecture/lectures/2026-09-08-lecture-03|2026-09-08 강의 노트 · 관련 선수 개념]]
+- [lec 02.pdf](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.02.pdf) — [p.19](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-019), [p.20](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-020), [p.21](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-021), [p.22](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-022), [p.23](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-023), [p.24](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-024), [p.28](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-028)
 
-- [lec.02.pdf](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.02.pdf): [[page_cache/computer_architecture/lec.02/page-019|p.19]], [[page_cache/computer_architecture/lec.02/page-020|p.20]], [[page_cache/computer_architecture/lec.02/page-028|p.28]], [[page_cache/computer_architecture/lec.02/page-021|p.21]], [[page_cache/computer_architecture/lec.02/page-022|p.22]], [[page_cache/computer_architecture/lec.02/page-023|p.23]], [[page_cache/computer_architecture/lec.02/page-024|p.24]]
+9월 3일 자료 기반 복습이며 녹음으로 확인한 구두 진도가 아니다. 9월 8일 노트는 register·load-store의 관련 설명이다. 자료 속 코드는 읽기 예이고 실행 실험이나 현재 과제의 구현이 아니다.
 
-- 이 단원 전체는 녹음·STT가 없는 2026-09-03 lec.02 자료 기반 복습이며 정확한 구두 진도를 확인하지 않는다.
-- ELF 주소 그림은 32-bit 예시이며 모든 OS·RV64의 고정 배치가 아니다. Linking 설명은 입문 static-linking 모형으로, 모든 relocation 종류나 dynamic linker를 다루지 않는다.
-- 코드 추적은 기본 32-bit instruction과 유효한 data 주소를 전제로 한다. Source 명령을 실행한 결과나 과제 구현은 아니다.
-
-
----
-
-[[courses/computer_architecture/units/architecture-contract|← 이전: 컴퓨터의 구성과 ISA: 명세에서 구현까지]] · [[courses/computer_architecture/units/index|단원 목차]] · [[courses/computer_architecture/units/data-register-memory|다음: 데이터 표현·Register·Memory →]]
+시험 연결은 2025-2 복기본에 한정되며 공식 원문·정답은 독립 확인되지 않았다. 제공 답안은 검증된 정답으로 채택하지 않았고 과거 채점 규칙·출제 가능성을 현 학기로 옮기지 않는다.

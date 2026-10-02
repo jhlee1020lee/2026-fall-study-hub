@@ -794,3 +794,30 @@ test("the same hash paragraph inside code, raw HTML or a nested example stays un
     assert.equal(normalizeTextbookHashLiterals(source), source)
   }
 })
+
+const counterParagraph = "첫 읽기는 값 0/history 1, 두 설정은 change #1과 #2, 둘째 읽기는 값 53/history 2다. Getter도 `readHistory`를 바꾸므로 부작용이 있다. Setter는 값 비교 없이 호출마다 증가하므로 같은 값 두 번도 두 번 센다. 이는 실제 값 변경 횟수와 다르다. P.23에서 쓰는 `getReadHistory()`가 p.22에 정의되어 있지 않으므로 의도된 trace이지 완성 코드의 실행 입증은 아니다. 녹음도 긴 trace는 생략했다."
+
+test("reviewed CP counter paragraph preserves numeric hashes through actual OFM", async () => {
+  const source = questionSource("ko", "encapsulation", "Q07", `<details><summary>Solution</summary>\n\n${counterParagraph}\n\n</details>`).replace("system_programming", "computer_programming")
+  assert.ok((await renderedHashParagraph(source)).tagLinks.length > 0)
+  const rendered = UnitSiblingLinks().textTransform!({} as BuildCtx, source)
+  assert.equal(rendered, source.replace(/#[12]/g, x => "\\" + x))
+  assert.deepEqual(await renderedHashParagraph(rendered), { paragraphs: [counterParagraph.replace(/`([^`]+)`/g, "$1")], tagLinks: [], tags: [] })
+  assert.equal(normalizeTextbookHashLiterals(rendered), rendered)
+  assert.equal(normalizeTextbookHashLiterals(source.replaceAll("\n", "\r\n")), rendered.replaceAll("\n", "\r\n"))
+})
+
+test("CP counter normalization requires exact course, language, unit, Q07 and paragraph", () => {
+  const source = questionSource("ko", "encapsulation", "Q07", counterParagraph).replace("system_programming", "computer_programming")
+  for (const other of [
+    source.replace("computer_programming", "system_programming"),
+    source.replace("encapsulation", "packages"),
+    source.replace('lang: "ko"', 'lang: "en"'),
+    source.replace("#### 확인 Q07", "#### 확인 Q08"),
+    source.replace("## 확인·연습문제", "## 본문"),
+    source.replace("change #1", "change #3"),
+    source.replace(counterParagraph, "This is an intentional #1tag."),
+    source.replace(counterParagraph, "```text\n" + counterParagraph + "\n```"),
+    source.replace(counterParagraph, "> " + counterParagraph),
+  ]) assert.equal(normalizeTextbookHashLiterals(other), other)
+})

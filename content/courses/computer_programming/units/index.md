@@ -32,11 +32,23 @@ cssclasses: ["unit-index"]
 
 7. **Encapsulation과 접근·상태 설계** · [[courses/computer_programming/units/encapsulation|한국어]] · [[courses/computer_programming/units/en/encapsulation|English]]
 
-   상태 일관성, 접근 범위, 실패 처리와 getter·setter의 검증·추적을 복습한다.
+   접근 수준, 상태 일관성, null 검사와 getter/setter의 효과를 복습한다.
 
-8. **입력 검증·Board 판정·객체 상호작용 실습** · [[courses/computer_programming/units/lab-applications|한국어]] · [[courses/computer_programming/units/en/lab-applications|English]]
+8. **Packages·이름 공간·Java API 활용** · [[courses/computer_programming/units/packages|한국어]] · [[courses/computer_programming/units/en/packages|English]]
 
-   입력 검증·board 규칙·Player/Fight/Main 계약을 제한된 trace와 사례로 확인한다.
+   이름 공간, 버전별 분기, import와 API 문서 읽기를 연결한다.
+
+9. **Inheritance·형 변환·재정의와 생성 순서** · [[courses/computer_programming/units/inheritance|한국어]] · [[courses/computer_programming/units/en/inheritance|English]]
+
+   상속 설계와 overload·override·hiding·cast·초기화·접근 규칙을 복습한다.
+
+10. **동적 Binding·Object 계약·Interface와 Abstract Class** · [[courses/computer_programming/units/object-contracts-interfaces|한국어]] · [[courses/computer_programming/units/en/object-contracts-interfaces|English]]
+
+   Binding, Object 계약, List·Comparable와 interface/abstract class 설계를 복습한다.
+
+11. **입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습** · [[courses/computer_programming/units/lab-applications|한국어]] · [[courses/computer_programming/units/en/lab-applications|English]]
+
+   입력 검증, board 판정, Player/Fight 계약과 Lab04 게임의 경계를 복습한다.
 
 ## 자료별로 단원 찾기
 
@@ -45,11 +57,15 @@ cssclasses: ["unit-index"]
 - **Lecture 1 Introduction.pdf** — [[courses/computer_programming/units/java-runtime|Programming의 목적과 Java 실행·개발 환경]] ([[courses/computer_programming/units/en/java-runtime|English]]) · [[courses/computer_programming/units/objects-references|Objects·Constructors·Static과 Reference 전달]] ([[courses/computer_programming/units/en/objects-references|English]])
 - **Lecture 2 Java Basics 1.pdf** — [[courses/computer_programming/units/java-runtime|Programming의 목적과 Java 실행·개발 환경]] ([[courses/computer_programming/units/en/java-runtime|English]]) · [[courses/computer_programming/units/types-expressions|Variables·Types·Operators와 String]] ([[courses/computer_programming/units/en/types-expressions|English]]) · [[courses/computer_programming/units/arrays|Array의 생성·참조와 다차원 데이터]] ([[courses/computer_programming/units/en/arrays|English]]) · [[courses/computer_programming/units/control-flow|Boolean 조건·분기·반복과 실행 추적]] ([[courses/computer_programming/units/en/control-flow|English]]) · [[courses/computer_programming/units/objects-references|Objects·Constructors·Static과 Reference 전달]] ([[courses/computer_programming/units/en/objects-references|English]])
 - **Lab01.pdf** — [[courses/computer_programming/units/java-runtime|Programming의 목적과 Java 실행·개발 환경]] ([[courses/computer_programming/units/en/java-runtime|English]])
-- **Lab02 v4.pdf** — [[courses/computer_programming/units/java-runtime|Programming의 목적과 Java 실행·개발 환경]] ([[courses/computer_programming/units/en/java-runtime|English]]) · [[courses/computer_programming/units/arrays|Array의 생성·참조와 다차원 데이터]] ([[courses/computer_programming/units/en/arrays|English]]) · [[courses/computer_programming/units/control-flow|Boolean 조건·분기·반복과 실행 추적]] ([[courses/computer_programming/units/en/control-flow|English]]) · [[courses/computer_programming/units/lab-applications|입력 검증·Board 판정·객체 상호작용 실습]] ([[courses/computer_programming/units/en/lab-applications|English]])
+- **Lab02 v4.pdf** — [[courses/computer_programming/units/java-runtime|Programming의 목적과 Java 실행·개발 환경]] ([[courses/computer_programming/units/en/java-runtime|English]]) · [[courses/computer_programming/units/arrays|Array의 생성·참조와 다차원 데이터]] ([[courses/computer_programming/units/en/arrays|English]]) · [[courses/computer_programming/units/control-flow|Boolean 조건·분기·반복과 실행 추적]] ([[courses/computer_programming/units/en/control-flow|English]]) · [[courses/computer_programming/units/lab-applications|입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습]] ([[courses/computer_programming/units/en/lab-applications|English]])
 - **3 java basics 2.pdf** — [[courses/computer_programming/units/types-expressions|Variables·Types·Operators와 String]] ([[courses/computer_programming/units/en/types-expressions|English]]) · [[courses/computer_programming/units/arrays|Array의 생성·참조와 다차원 데이터]] ([[courses/computer_programming/units/en/arrays|English]]) · [[courses/computer_programming/units/control-flow|Boolean 조건·분기·반복과 실행 추적]] ([[courses/computer_programming/units/en/control-flow|English]]) · [[courses/computer_programming/units/methods|Method의 계약·호출·반환과 재사용]] ([[courses/computer_programming/units/en/methods|English]])
 - **4 oop.pdf** — [[courses/computer_programming/units/types-expressions|Variables·Types·Operators와 String]] ([[courses/computer_programming/units/en/types-expressions|English]]) · [[courses/computer_programming/units/objects-references|Objects·Constructors·Static과 Reference 전달]] ([[courses/computer_programming/units/en/objects-references|English]]) · [[courses/computer_programming/units/encapsulation|Encapsulation과 접근·상태 설계]] ([[courses/computer_programming/units/en/encapsulation|English]])
-- **Lab03 v2.pdf** — [[courses/computer_programming/units/objects-references|Objects·Constructors·Static과 Reference 전달]] ([[courses/computer_programming/units/en/objects-references|English]]) · [[courses/computer_programming/units/encapsulation|Encapsulation과 접근·상태 설계]] ([[courses/computer_programming/units/en/encapsulation|English]]) · [[courses/computer_programming/units/lab-applications|입력 검증·Board 판정·객체 상호작용 실습]] ([[courses/computer_programming/units/en/lab-applications|English]])
-- **5 encapsulation.pdf** — [[courses/computer_programming/units/encapsulation|Encapsulation과 접근·상태 설계]] ([[courses/computer_programming/units/en/encapsulation|English]])
+- **Lab03 v2.pdf** — [[courses/computer_programming/units/objects-references|Objects·Constructors·Static과 Reference 전달]] ([[courses/computer_programming/units/en/objects-references|English]]) · [[courses/computer_programming/units/encapsulation|Encapsulation과 접근·상태 설계]] ([[courses/computer_programming/units/en/encapsulation|English]]) · [[courses/computer_programming/units/lab-applications|입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습]] ([[courses/computer_programming/units/en/lab-applications|English]])
+- **5 encapsulation.pdf** — [[courses/computer_programming/units/encapsulation|Encapsulation과 접근·상태 설계]] ([[courses/computer_programming/units/en/encapsulation|English]]) · [[courses/computer_programming/units/packages|Packages·이름 공간·Java API 활용]] ([[courses/computer_programming/units/en/packages|English]])
+- **Lab04 v2.pdf** — [[courses/computer_programming/units/encapsulation|Encapsulation과 접근·상태 설계]] ([[courses/computer_programming/units/en/encapsulation|English]]) · [[courses/computer_programming/units/packages|Packages·이름 공간·Java API 활용]] ([[courses/computer_programming/units/en/packages|English]]) · [[courses/computer_programming/units/lab-applications|입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습]] ([[courses/computer_programming/units/en/lab-applications|English]])
+- **Lab04 v4.pdf** — [[courses/computer_programming/units/encapsulation|Encapsulation과 접근·상태 설계]] ([[courses/computer_programming/units/en/encapsulation|English]]) · [[courses/computer_programming/units/packages|Packages·이름 공간·Java API 활용]] ([[courses/computer_programming/units/en/packages|English]]) · [[courses/computer_programming/units/lab-applications|입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습]] ([[courses/computer_programming/units/en/lab-applications|English]])
+- **6 inheritance 1.pdf** — [[courses/computer_programming/units/inheritance|Inheritance·형 변환·재정의와 생성 순서]] ([[courses/computer_programming/units/en/inheritance|English]]) · [[courses/computer_programming/units/object-contracts-interfaces|동적 Binding·Object 계약·Interface와 Abstract Class]] ([[courses/computer_programming/units/en/object-contracts-interfaces|English]])
+- **7 inheritance 2.pdf** — [[courses/computer_programming/units/object-contracts-interfaces|동적 Binding·Object 계약·Interface와 Abstract Class]] ([[courses/computer_programming/units/en/object-contracts-interfaces|English]])
 
 ## 원자료와 강의 기록
 

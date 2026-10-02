@@ -263,6 +263,34 @@ class UnitPublicationTests(unittest.TestCase):
         self.assertTrue(any("email address" in e for e in errors))
         self.assertTrue(any("unit draft" in e for e in errors))
 
+    def test_materials_only_requires_exact_policy_hash_and_public_materials(self):
+        text = unit().replace(f"source_lectures:\n  - {SLUG}", "source_lectures: []")
+        self.chapter.write_text(text, encoding="utf-8")
+        self.approve_fixture()
+        self.assertTrue(any("source_lectures" in e for e in public.validate()))
+        digest = hashlib.sha256(self.chapter.read_bytes()).hexdigest()
+        policy_path = self.root / "scripts/public_validation_policy.json"
+        policy = json.loads(policy_path.read_text(encoding="utf-8"))
+        policy["materials_only_units"] = {RELATIVE: digest}
+        policy_path.write_text(json.dumps(policy), encoding="utf-8")
+        self.assertEqual(public.validate(), [])
+        self.chapter.write_text(text + "\nChanged body.\n", encoding="utf-8")
+        self.assertTrue(any("source_lectures" in e for e in public.validate()))
+        self.chapter.write_text(text.replace("source_assets: [memory.pptx]", "source_assets: []"), encoding="utf-8")
+        digest = hashlib.sha256(self.chapter.read_bytes()).hexdigest()
+        policy["reviewed_units"] = {RELATIVE: digest}
+        policy["materials_only_units"] = {RELATIVE: digest}
+        policy_path.write_text(json.dumps(policy), encoding="utf-8")
+        self.assertTrue(any("source_lectures" in e for e in public.validate()))
+
+    def test_materials_only_policy_cannot_authorize_nonreviewed_hash(self):
+        self.approve_fixture()
+        policy_path = self.root / "scripts/public_validation_policy.json"
+        policy = json.loads(policy_path.read_text(encoding="utf-8"))
+        policy["materials_only_units"] = {RELATIVE: "0" * 64}
+        policy_path.write_text(json.dumps(policy), encoding="utf-8")
+        self.assertTrue(any("Cannot inspect" in e for e in public.validate()))
+
     def test_exact_closed_source_checked_math_does_not_look_like_a_private_drive(self):
         for expression in public.UNIT_MATH_PATH_LOOKALIKES:
             with self.subTest(expression=expression):

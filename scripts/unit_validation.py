@@ -428,7 +428,8 @@ def _direct_pdf_sources(body: str, course: str, assets: list[str], available_pat
 
 
 def validate_unit_chapter(text: str, relative: str, available_paths: set[str],
-                          read_text: Callable[[str], str] | None = None) -> list[str]:
+                          read_text: Callable[[str], str] | None = None, *,
+                          materials_only: bool = False) -> list[str]:
     """Validate chapter bytes against canonical paths in this exact snapshot."""
     errors: list[str] = []
     identity = unit_path(relative)
@@ -453,8 +454,11 @@ def validate_unit_chapter(text: str, relative: str, available_paths: set[str],
         errors.append("unit private_source_assets must be a subset of source_assets")
         private = []
     lectures = metadata.get("source_lectures")
-    if not isinstance(lectures, list) or not lectures or any(not isinstance(slug, str) for slug in lectures):
-        errors.append("unit source_lectures must be a nonempty list of canonical lecture slugs")
+    material_evidence = bool(assets) and not private and all(
+        asset.lower().endswith((".pdf", ".ppt", ".pptx")) for asset in assets)
+    if (not isinstance(lectures, list) or any(not isinstance(slug, str) for slug in lectures)
+            or (not lectures and not (materials_only is True and material_evidence))):
+        errors.append("unit source_lectures requires canonical lecture slugs or exact reviewed materials-only approval")
     else:
         if len(set(lectures)) != len(lectures):
             errors.append("unit source_lectures contains duplicate slugs")

@@ -8,11 +8,11 @@ cssclasses: ["unit-index"]
 
 1. **System Programming과 C 프로그램의 구성·빌드** · [[courses/system_programming/units/systems-c-build|한국어]] · [[courses/system_programming/units/en/systems-c-build|English]]
 
-   C의 실행 흐름, 개발 환경과 build 단계를 함께 복습한다.
+   C의 기본 제어 흐름, build 단계, local·remote 작업의 차이를 복습한다.
 
 2. **C object·type·주소와 pointer** · [[courses/system_programming/units/objects-pointers|한국어]] · [[courses/system_programming/units/en/objects-pointers|English]]
 
-   Type·주소·lifetime으로 pointer 코드와 memory 크기를 검산한다.
+   Type, pointer 대입, array 변환, 동적 storage의 크기와 수명을 확인한다.
 
 3. **문자 처리와 DFA·Decommenter의 경계조건** · [[courses/system_programming/units/state-machines|한국어]] · [[courses/system_programming/units/en/state-machines|English]]
 
@@ -24,7 +24,7 @@ cssclasses: ["unit-index"]
 
 5. **Permission·실행 identity·확장 metadata** · [[courses/system_programming/units/permissions|한국어]] · [[courses/system_programming/units/en/permissions|English]]
 
-   Permission bit, effective identity, ACL과 xattr의 역할·한계를 구별한다.
+   File·directory 권한, set-ID identity, ACL·xattr의 역할을 구분한다.
 
 6. **Unix I/O·열린 파일 상태·stdio buffering** · [[courses/system_programming/units/io-streams|한국어]] · [[courses/system_programming/units/en/io-streams|English]]
 
@@ -32,11 +32,19 @@ cssclasses: ["unit-index"]
 
 7. **Process memory·alignment·호출의 실제 표현** · [[courses/system_programming/units/memory-layout|한국어]] · [[courses/system_programming/units/en/memory-layout|English]]
 
-   Memory section, padding·stride와 parameter passing을 byte 단위로 검토한다.
+   Process storage, padding, union, 값 전달과 IA-32 frame을 복습한다.
 
 8. **Dirtree의 순회·filter·출력 계약과 설계** · [[courses/system_programming/units/dirtree|한국어]] · [[courses/system_programming/units/en/dirtree|English]]
 
-   Dirtree의 출력 계약·depth·filter·memory 책임을 검산한다.
+   Traversal·출력 폭·통계·pattern 문법을 구분하여 Dirtree 명세를 점검한다.
+
+9. **Memory hierarchy·locality와 cache 교체** · [[courses/system_programming/units/cache-hierarchy|한국어]] · [[courses/system_programming/units/en/cache-hierarchy|English]]
+
+   Locality와 block 이동에서 conflict·LRU·clock까지 cache의 판단 과정을 복습한다.
+
+10. **Virtual Memory·page translation·공유와 보호** · [[courses/system_programming/units/virtual-memory|한국어]] · [[courses/system_programming/units/en/virtual-memory|English]]
+
+   Page 변환·fault·공유 mapping과 역사적 TLB/data-cache 주소 경로를 복습한다.
 
 ## 자료별로 단원 찾기
 
@@ -44,13 +52,21 @@ cssclasses: ["unit-index"]
 
 - **01.CProgrammingExamples.pptx** — [[courses/system_programming/units/systems-c-build|System Programming과 C 프로그램의 구성·빌드]] ([[courses/system_programming/units/en/systems-c-build|English]]) · [[courses/system_programming/units/state-machines|문자 처리와 DFA·Decommenter의 경계조건]] ([[courses/system_programming/units/en/state-machines|English]])
 - **00.Introduction.pptx** — [[courses/system_programming/units/systems-c-build|System Programming과 C 프로그램의 구성·빌드]] ([[courses/system_programming/units/en/systems-c-build|English]]) · [[courses/system_programming/units/objects-pointers|C object·type·주소와 pointer]] ([[courses/system_programming/units/en/objects-pointers|English]]) · [[courses/system_programming/units/state-machines|문자 처리와 DFA·Decommenter의 경계조건]] ([[courses/system_programming/units/en/state-machines|English]]) · [[courses/system_programming/units/io-streams|Unix I/O·열린 파일 상태·stdio buffering]] ([[courses/system_programming/units/en/io-streams|English]])
+- **10.RE.Life.Cycle.of.a.Program.pptx** — [[courses/system_programming/units/systems-c-build|System Programming과 C 프로그램의 구성·빌드]] ([[courses/system_programming/units/en/systems-c-build|English]])
+- **11.RE.Linking.and.Loading.pptx** — [[courses/system_programming/units/systems-c-build|System Programming과 C 프로그램의 구성·빌드]] ([[courses/system_programming/units/en/systems-c-build|English]])
 - **02.CPointers_24a7628c.pptx** — [[courses/system_programming/units/objects-pointers|C object·type·주소와 pointer]] ([[courses/system_programming/units/en/objects-pointers|English]])
-- **06.MM.Variable.and.Memory.Recap.pptx** — [[courses/system_programming/units/objects-pointers|C object·type·주소와 pointer]] ([[courses/system_programming/units/en/objects-pointers|English]]) · [[courses/system_programming/units/memory-layout|Process memory·alignment·호출의 실제 표현]] ([[courses/system_programming/units/en/memory-layout|English]])
+- **06.MM.Variable.and.Memory.Recap.pptx** — [[courses/system_programming/units/objects-pointers|C object·type·주소와 pointer]] ([[courses/system_programming/units/en/objects-pointers|English]]) · [[courses/system_programming/units/memory-layout|Process memory·alignment·호출의 실제 표현]] ([[courses/system_programming/units/en/memory-layout|English]]) · [[courses/system_programming/units/virtual-memory|Virtual Memory·page translation·공유와 보호]] ([[courses/system_programming/units/en/virtual-memory|English]])
+- **08.MM.Dynamic.Memory.Allocation.I.pptx** — [[courses/system_programming/units/objects-pointers|C object·type·주소와 pointer]] ([[courses/system_programming/units/en/objects-pointers|English]])
+- **09.MM.Dynamic.Memory.Allocation.II.pptx** — [[courses/system_programming/units/objects-pointers|C object·type·주소와 pointer]] ([[courses/system_programming/units/en/objects-pointers|English]])
 - **03.IO.Unix.Filesystem.Concepts.pptx** — [[courses/system_programming/units/files-metadata|Unix file·directory·inode와 metadata]] ([[courses/system_programming/units/en/files-metadata|English]]) · [[courses/system_programming/units/permissions|Permission·실행 identity·확장 metadata]] ([[courses/system_programming/units/en/permissions|English]])
 - **04.IO.Direct.and.Buffered.IO_8e725857.pptx** — [[courses/system_programming/units/files-metadata|Unix file·directory·inode와 metadata]] ([[courses/system_programming/units/en/files-metadata|English]]) · [[courses/system_programming/units/io-streams|Unix I/O·열린 파일 상태·stdio buffering]] ([[courses/system_programming/units/en/io-streams|English]])
 - **05.IO.Files.and.Directories_3d312c60.pptx** — [[courses/system_programming/units/files-metadata|Unix file·directory·inode와 metadata]] ([[courses/system_programming/units/en/files-metadata|English]]) · [[courses/system_programming/units/permissions|Permission·실행 identity·확장 metadata]] ([[courses/system_programming/units/en/permissions|English]]) · [[courses/system_programming/units/io-streams|Unix I/O·열린 파일 상태·stdio buffering]] ([[courses/system_programming/units/en/io-streams|English]])
 - **04.IO.Direct.and.Buffered.IO.pptx** — [[courses/system_programming/units/io-streams|Unix I/O·열린 파일 상태·stdio buffering]] ([[courses/system_programming/units/en/io-streams|English]])
+- **EE209 AssemblyFunctions.pptx** — [[courses/system_programming/units/memory-layout|Process memory·alignment·호출의 실제 표현]] ([[courses/system_programming/units/en/memory-layout|English]])
 - **lab 2 input and output.pptx** — [[courses/system_programming/units/dirtree|Dirtree의 순회·filter·출력 계약과 설계]] ([[courses/system_programming/units/en/dirtree|English]])
+- **lab 2 input and output_2b90a395.pptx** — [[courses/system_programming/units/dirtree|Dirtree의 순회·filter·출력 계약과 설계]] ([[courses/system_programming/units/en/dirtree|English]])
+- **07.MM.Virtual.Memory.Recap.pptx** — [[courses/system_programming/units/cache-hierarchy|Memory hierarchy·locality와 cache 교체]] ([[courses/system_programming/units/en/cache-hierarchy|English]]) · [[courses/system_programming/units/virtual-memory|Virtual Memory·page translation·공유와 보호]] ([[courses/system_programming/units/en/virtual-memory|English]])
+- **07.MM.Virtual.Memory.Recap_2ffc3cf7.pptx** — [[courses/system_programming/units/cache-hierarchy|Memory hierarchy·locality와 cache 교체]] ([[courses/system_programming/units/en/cache-hierarchy|English]]) · [[courses/system_programming/units/virtual-memory|Virtual Memory·page translation·공유와 보호]] ([[courses/system_programming/units/en/virtual-memory|English]])
 
 ## 원자료와 강의 기록
 

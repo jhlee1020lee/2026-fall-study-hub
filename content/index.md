@@ -12,7 +12,7 @@ cssclasses: ["unit-index"]
 
 - [[courses/discrete_mathematics/index|이산수학]]
 
-  12개 단원을 순서대로 읽기.
+  16개 단원을 순서대로 읽기.
 
 - [[courses/principles_of_programming/index|프로그래밍의 원리]]
 
@@ -24,15 +24,15 @@ cssclasses: ["unit-index"]
 
 - [[courses/computer_architecture/index|컴퓨터구조]]
 
-  8개 단원을 순서대로 읽기.
+  12개 단원을 순서대로 읽기.
 
 - [[courses/computer_programming/index|컴퓨터프로그래밍]]
 
-  8개 단원을 순서대로 읽기.
+  11개 단원을 순서대로 읽기.
 
 - [[courses/system_programming/index|시스템프로그래밍]]
 
-  8개 단원을 순서대로 읽기.
+  10개 단원을 순서대로 읽기.
 
 - [[courses/exploring_computing/index|컴퓨팅 살펴보기]]
 

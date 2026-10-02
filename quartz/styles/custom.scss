@@ -392,3 +392,8 @@ article.unit-index {
     max-width: calc(100vw - 2rem);
   }
 }
+
+// Long inline snippets may wrap without changing their text or block-code scrolling.
+article.unit-textbook :not(pre) > code {
+  overflow-wrap: anywhere;
+}

@@ -1,6 +1,6 @@
 ---
 title: "Encapsulation과 접근·상태 설계"
-description: "상태 일관성, 접근 범위, 실패 처리와 getter·setter의 검증·추적을 복습한다."
+description: "접근 수준, 상태 일관성, null 검사와 getter/setter의 효과를 복습한다."
 course: "computer_programming"
 unit_id: "encapsulation"
 lang: "ko"
@@ -9,74 +9,61 @@ source_kind: "unit_chapter"
 review_status: "approved"
 draft: false
 cssclasses: ["unit-textbook"]
-source_assets: ["4 oop.pdf", "5 encapsulation.pdf", "Lab03 v2.pdf"]
+source_assets: ["4 oop.pdf", "5 encapsulation.pdf", "Lab03 v2.pdf", "Lab04 v2.pdf", "Lab04 v4.pdf"]
 private_source_assets: []
 source_lectures: ["courses/computer_programming/lectures/2026-09-15-lecture-05", "courses/computer_programming/lectures/2026-09-17-lecture-06"]
 ---
 
-상태를 읽을 권한과 바꿀 권한을 분리하고 method가 지킬 관계를 설명한다. Access modifier·validation·logging을 함께 검토하면 private만으로 해결되지 않는 오류를 찾을 수 있다.
+허용할 접근과 상태 변경을 함께 설계하는 이유를 정리한다. 판매·문자열 검증·접근 기록을 추적하며 정상 결과와 실패 뒤 상태를 구분해 보자.
 
-## Encapsulation이 허용된 interaction을 만든다
+## Encapsulation: 상태 변경을 객체의 책임으로 묶기
 
-[[courses/computer_programming/units/objects-references|Objects와 references]]로 상태를 묶었다면 다음 문제는 누가 어떤 경로로 그 상태를 바꿀 수 있는가다. Encapsulation(캡슐화)은 필요한 interaction(상호작용)을 제공하면서 내부 복잡성과 허용하지 않을 접근을 감추는 설계다. 자동차 사용자는 steering wheel과 accelerator로 조작할 수 있지만 engine 내부 전체를 이해할 필요는 없다.
+객체를 사용하려고 그 내부의 모든 field(필드)와 method(메서드)를 알아야 한다면, 구현이 조금만 바뀌어도 사용하는 코드가 함께 흔들린다. Encapsulation(캡슐화)은 내부 상태와 동작을 묶고, 외부에는 필요한 interaction을 제공하는 설계다. 자동차를 운전할 때 조향 장치와 가속 장치의 사용법은 필요하지만 엔진의 모든 부품을 알 필요는 없다는 비유가 여기에 해당한다. Abstraction(추상화)은 사용자가 알아야 할 복잡성을 줄이고, defensive programming(방어적 프로그래밍)은 예상하지 않은 상태 변경을 제한한다. 내부를 숨긴다는 말은 source의 존재를 비밀로 한다는 뜻보다 **허용하는 접근 경로를 정한다**는 뜻이다. [Computer Programming M012 PDF pp.4–7]
 
-Abstraction(추상화)은 사용에 필요한 interface(사용 접점)로 복잡성을 줄이는 목적이고, defensive programming(방어적 프로그래밍)은 예상하지 못한 상태 변경을 제한하는 목적이다. 여기서 interface는 우선 객체의 사용 약속을 뜻하며, 이후 배울 Java의 `interface` 선언 문법 전체를 전제하지 않는다. 사람에게 source의 존재를 비밀로 하는 것이 아니라 프로그램에서 허용할 경로를 설계하는 것이다. [Computer Programming M012, PDF pp.2–7](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/5.encapsulation.pdf)
+2026-09-15 강의의 로봇 팔·머리·몸통 분업 비유도 같은 이유를 설명한다. 각 부분을 만드는 사람은 다른 부분의 전체 구현 대신 합의된 기능과 결과에 의존할 수 있다. 이는 협업에서 interface가 필요한 이유이며 검증을 생략하라는 뜻은 아니다. 여기서 interface는 일반적인 사용 경계이고, 아직 Java의 `interface` 선언을 뜻하지 않는다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT 01:08:56–01:09:54]]의 불명확한 비율 표현은 정확한 백분율로 바꾸지 않는다. 이 설명의 기존 맥락은 [[courses/computer_programming/lectures/2026-09-15-lecture-05|2026-09-15 강의 노트 · Encapsulation]]에서도 이어 볼 수 있다.
 
-[[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT]] 01:08:56 이후의 robot arm·head·chest 분업 비유도 이 목적에 맞는다. 각 부분을 맡은 사람은 다른 부분의 모든 구현을 읽기보다 합의한 기능에 의존해 연결할 수 있다. 이는 검증 없이 남의 코드를 믿으라는 뜻은 아니다. 어떤 입력을 받고 어떤 결과·상태를 보장하는지 합의해야 협력이 가능하다.
+M011 p.59의 capsule 그림은 variables와 methods를 한 class로 묶는다. M012 p.3은 복잡한 기계 내부와 간단한 조작 panel을 대비한다. 두 그림을 함께 읽으면 단순히 코드를 한 상자에 넣는 것과, 사용하는 쪽에 필요한 조작만 제공하는 것의 차이가 보인다. 수리하는 사람에게 필요한 내부 정보와 정상 기능을 사용하는 사람에게 필요한 정보는 다르다.
 
-### Inheritance·polymorphism이 다루는 다른 관계
+### 판매 한 번에 함께 바뀌는 두 값
 
-OOP의 소개에서는 abstraction을 Encapsulation, code reuse(코드 재사용)를 Inheritance(상속), 행동의 다양화를 Polymorphism(다형성)에 연결한다. M011 pp.58–61의 Organisms → Animals·Plants → Duck·Cat·Tree·Grass는 **class 사이의 계층**을 설명한다. Child class는 parent class의 특성을 이어받아 코드를 재사용하고 자기 특성을 추가할 수 있다. Cat class를 정의하고 그 class에서 여러 cat objects를 만드는 관계와 다르다.
+`FruitStore`는 `balance = 10000`, `stock = 30`에서 시작한다. 개당 가격이 `2000`인 과일 세 개를 팔면 다음 두 변화가 함께 일어나야 한다.
 
-Polymorphism의 소개 예는 공통 행동 `animalSound`를 개·고양이·오리가 서로 다른 소리로 구현한다는 것이다. Caller가 공통 약속으로 요청해도 구체적 class의 행동은 다를 수 있다. 같은 Car class의 두 instances가 speed=100과 speed=90을 갖는 단순 상태 차이를 이런 구현 차이와 혼동하지 않는다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT]] 01:04:10 및 [M011 PDF pp.58–61](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/4.oop.pdf)
+\[
+\text{stock}'=30-3=27,\qquad
+\text{balance}'=10000+2000\times3=16000.
+\]
 
-이 단계에서 필요한 것은 동기의 구별이다. 구체적인 inheritance 문법, override, method dispatch는 이후 학습이며 현재 예제의 전제로 몰래 끼워 넣지 않는다.
-
-## 관련 상태를 하나의 판매 동작으로 바꾸기
-
-FruitStore의 balance가 10000, stock이 30이고 과일 가격이 2000이라고 하자. 세 개를 팔면 두 값이 함께 바뀌어야 한다.
-
-| 상태 | Balance | Stock |
-| --- | ---: | ---: |
-| 판매 전 | 10000 | 30 |
-| 변화 | +2000×3 = +6000 | −3 |
-| 판매 후 | 16000 | 27 |
-
-외부 코드가 stock만 3 줄이고 balance를 그대로 두면 판매 규칙이 깨진다. M012 pp.4–6은 두 변경을 `sell(int num)`에 모아, caller가 내부 계산을 반복하지 않게 한다. 그러나 method만 만들고 fields를 계속 노출하면 외부의 직접 대입은 여전히 가능하다.
-
-다음 AppleStore 예에서는 balance와 stock을 `private`로 두고, `getBalance()`·`getStock()`으로 읽고 `sell`로 변경한다. Getter(읽기 메서드)가 값을 알려 주어도 외부의 임의 대입까지 허용하지는 않는다. “읽을 수 있다”와 “원하는 값으로 쓸 수 있다”는 다른 권한이다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT]] 01:16:32 및 M012 pp.11–12
-
-원본의 이 methods에는 `public`이 붙어 있지 않아 package-private다. 예제의 같은 package 안에서 호출된다는 전제와 강의 중 편의상 public이라고 부른 표현을 구별한다. 이 예는 관련 상태를 일관되게 변경하는 책임을 설명하며 실제 상거래의 모든 검증·동시성 문제를 해결한 시스템은 아니다.
-
-## Access modifier로 접근 경로 제한하기
-
-Access modifier(접근 제어자)는 member에 허용된 접근 범위를 나타낸다. M012 pp.9–10의 현재 소개를 다음처럼 읽을 수 있다.
-
-| Member의 표기 | 입문 범위에서의 의미 |
-| --- | --- |
-| `private` | 선언 class 내부의 접근을 중심으로 허용 |
-| Modifier 생략 | 같은 package에서 접근하는 package-private |
-| `protected` | 같은 package 및 상속 관계에 따른 접근 |
-| `public` | 외부 class에 접근을 허용하는 공개 member |
-
-Package(패키지)는 여기서는 classes의 묶음이라는 전제만 사용한다. 생략된 modifier를 설명하는 default access라는 말 때문에 실제 선언에 `default`를 적는 것은 아니다. `protected`도 다른 package의 아무 receiver에나 무제한 접근한다는 뜻이 아니다. 각 class 선언 형태에서 네 표기를 똑같이 쓸 수 있다는 일반화 역시 피해야 한다.
-
-M012 p.10의 `private int weight = 80;`을 별도 class의 코드에서 직접 읽으면 private access diagnostic이 난다. 이는 값이 80이라는 사실의 비밀 여부보다 해당 접근 경로가 허용되지 않았기 때문이다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT]] 01:14:06의 소개 이후, Packages의 상세는 p.23 이후 전환에서 유보되었다. 여기의 표가 그 상세 규칙을 대신하지는 않는다.
-
-## Private helper와 실패 시 상태 보존
-
-판매 method에 접근 경로를 모으면 입력 검사를 한 곳에 둘 수 있다. 재고보다 많은 수량을 그냥 빼면 stock이 음수가 되므로, M012 p.14는 다음 helper를 사용한다. 아래 두 method는 AppleStore class 내부의 조각이다.
+외부 코드가 두 field를 직접 수정하면 판매 규칙을 알아야 하고, 재고만 줄이는 실수를 할 수 있다. M012 p.5는 다음처럼 두 대입을 한 행동으로 묶는다. 이는 판매 예제의 method이며 완전한 상거래 시스템은 아니다.
 
 ```java
-private boolean inStock(int num) {
-    int shortage = num - stock;
-    if (shortage > 0) {
-        return false;
-    } else {
-        return true;
-    }
+void sell(int num) {
+    balance += 2000 * num;
+    stock -= num;
 }
+```
 
+이제 caller(호출자)는 `sell(3)`을 요청하면 된다. 다만 method를 추가해도 field가 그대로 노출되어 있다면 caller가 그 경로를 우회할 수 있다. `AppleStore`는 두 field를 `private`로 두고 `getBalance()`, `getStock()`으로 읽으며 `sell()`로 변경하도록 만든다. 값을 알 수 있다는 것과 원하는 값을 대입할 수 있다는 것은 다르다. Getter(조회 메서드)는 이 구별을 가능하게 한다. [M012 PDF pp.11–12]
+
+이 예제의 methods에는 `public`이 없다. 실제 접근 수준은 같은 package에서 사용할 수 있는 package-private이다. 강의도 모든 코드가 같은 package에 있다고 전제한다. 편의상 공개된 기능이라고 부른 표현을 실제 `public` 선언으로 기억하면 안 된다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT 01:16:32–01:18:17]]
+
+## Access control: 사용할 수 있는 경로 정하기
+
+Access modifier(접근 제어자)는 특정 위치에서 member를 사용할 수 있는지 정한다. M012 p.10의 `private int weight = 80;`을 별개의 외부 class에서 직접 읽으려 하면 private access 오류가 난다. 값이 없어서가 아니라 그 접근이 허용되지 않아서다.
+
+| 표기 | 이 범위에서의 의미 | 구별할 점 |
+|---|---|---|
+| `private` | 선언한 class 내부의 접근 | 외부가 field 이름을 안다고 직접 접근할 수 있지는 않다. |
+| modifier 생략 | 같은 package에서 접근 | `default`라는 접근 keyword를 적는 것이 아니다. |
+| `protected` | 같은 package와 subclass의 상속 문맥에서 접근 | 다른 package에서는 임의의 부모 객체를 통한 접근까지 허용하지 않는다. |
+| `public` | 외부에도 공개하는 member | 그 member를 담은 class 자체의 접근 가능성도 필요하다. |
+
+이는 member 접근을 이해하는 출발점이다. 네 수준을 모든 top-level class 선언에 그대로 적용할 수는 없다. Package의 이름 공간과 top-level class 접근은 [Packages](packages.md)에서, 다른 package의 subclass에 관한 제한은 [Inheritance](inheritance.md)에서 구체화한다. [M012 PDF pp.9–10]
+
+### 실패를 반환하면서 상태는 보존하기
+
+접근을 제한해도 허용된 method가 잘못된 상태를 만들 수 있다. 재고 `30`에서 무조건 `50`개를 판매하면 재고가 음수가 된다. M012 pp.13–16은 `private` helper인 `inStock(int num)`을 두고 `shortage = num - stock`이 양수이면 `false`, 아니면 `true`를 돌려준다. 판매는 이 검사에 성공했을 때만 두 field를 변경한다.
+
+```java
 boolean sell(int num) {
     if (inStock(num)) {
         balance += 2000 * num;
@@ -88,209 +75,236 @@ boolean sell(int num) {
 }
 ```
 
-Private helper(내부 보조 메서드)는 검사 방법을 숨기고, caller에게는 판매 요청과 성공 여부만 제공한다. `sell`의 return type이 기존 void에서 boolean으로 바뀐 것은 caller가 실패를 알아야 하기 때문이다.
+`sell(50)`에서는 `50 - 30 = 20`이므로 실패한다. 반환값은 `false`이고 상태는 `balance = 10000`, `stock = 30` 그대로다. 자료의 caller는 이 결과를 받아 `Not enough apples in stock`을 출력한다. 실패 메시지를 출력하는 역할과 판매 method의 반환 역할을 구분해야 한다. 반환 type이 `void`에서 `boolean`으로 바뀐 이유도 요청이 성공했는지 caller가 알아야 하기 때문이다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT 01:20:14–01:22:07]]
 
-초기 balance=10000, stock=30에서 `sell(50)`이면 shortage=20이다. Helper가 false를 반환하여 두 대입을 모두 건너뛰므로 **결과는 false이고 상태도 10000/30으로 유지**된다. Caller는 `Not enough apples in stock`을 출력한다. 실패한 뒤 false만 반환하고 stock을 이미 줄였다면 이 계약을 지킨 것이 아니다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT]] 01:21:14 및 M012 pp.15–16
+이 helper가 완전한 validation(유효성 검사)은 아니다. **원본 코드로부터 계산한 경계 사례**로, 초기 상태에서 `sell(-1)`은 `shortage = -31`이어서 검사를 통과한다. 잔액은 `8000`, 재고는 `31`이 된다. 음수 주문을 거부하는 조건이 원본에 없기 때문이다. 이는 새로 설명한 코드 추론이며 강의자가 이 사례를 말했다는 주장은 아니다. Encapsulation은 검사를 둘 책임을 모아 주지만 올바른 검사 내용을 자동으로 만들어 주지는 않는다.
 
-반대로 이 인쇄 코드는 음수 수량을 거부하지 않는다. 같은 초기 상태에서 `sell(-1)`을 추적하면 shortage=−31이라 통과하고 balance=8000, stock=31이 된다. 이 값은 **원본 코드에서 도출한 경계 분석**이며 강의에서 그 숫자를 말했다는 뜻은 아니다. Encapsulation은 검사를 둘 장소를 제공하지만, 그 안의 검사가 자동으로 완전해지지는 않는다.
+## Getter와 setter: 조회·검증·추적을 나누기
 
-## Getter·setter의 선택과 validation
+Getter와 setter(설정 메서드)는 Java의 특수 문법이 아니라 일반 method의 이름과 역할에 관한 관례다. M012 p.18의 `getAge()`는 `age`를 반환하고, `setAge(int age)`는 `this.age = age`로 현재 객체의 field에 parameter(매개변수)를 대입한다. 모든 private field에 두 method를 모두 제공할 필요는 없다. Getter만 공개하면 해당 경로는 read-only, setter만 공개하면 write-only로 설계할 수 있다. 이것이 class 내부에서도 field를 바꿀 수 없다는 뜻은 아니다. 앞의 `sell()`도 자기 class의 private fields를 직접 갱신한다.
 
-Getter와 setter(쓰기 메서드)는 Java의 특수 문법이 아니라 일반 methods의 이름·설계 관례다.
+Setter는 대입 전 validation을, getter와 setter는 호출 기록을 수행할 수도 있다. 2026-09-15 01:24:58–01:25:52의 나이 예는 부적절한 입력을 거부할 수 있다는 동기다. 음수나 지나치게 큰 수를 언급했다는 이유로 특정 나이 범위가 공식 predicate(판정 조건)로 정해진 것은 아니다. [[courses/computer_programming/transcripts/2026-09-15|해당 날짜 STT · 선택적 접근과 validation]]
 
-```java
-private int age;
+### `null`과 빈 문자열을 구분하는 검사 순서
 
-public int getAge() {
-    return age;
-}
+M012 p.21의 `Person.setName`은 `name == null || name.equals("")`를 검사한다. `null`은 reference(참조)가 객체를 가리키지 않는 상태이고, `""`는 빈 내용의 String이다. 첫 조건은 reference 상태를, 둘째는 문자열 내용을 확인한다. `||`의 short-circuit evaluation(단락 평가) 때문에 첫 조건이 참이면 둘째 조건은 실행되지 않는다. 따라서 `null`에 `equals()`를 호출하지 않는다. 순서를 거꾸로 하면 나중의 null 검사로 앞선 호출 실패를 막을 수 없다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT 01:26:50–01:28:49]]
 
-public void setAge(int age) {
-    this.age = age;
-}
-```
+강의의 주소 0이라는 설명은 개념적 단순화다. 이 설명에서 필요한 것은 “호출할 객체가 없다”는 의미이며 Java가 물리 주소 0을 보장한다는 주장이 아니다.
 
-M012 p.18의 조각에서 getter는 값을 반환하고 setter는 parameter를 field에 대입한다. Getter만 공개하면 이 접점은 read-only(읽기 전용), setter만 공개하면 write-only(쓰기 전용)가 된다. 모든 private field에 둘 다 필요하지 않다. Class 내부까지 반드시 getter/setter만 써야 한다거나 setter가 언제나 void여야 한다는 규칙도 아니다.
-
-Setter에는 validation(유효성 검사)을 둘 수 있다. 음수나 지나치게 큰 나이를 거절한다는 논의는 동기이며, 강의가 정확한 허용 나이 범위를 정한 것은 아니다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT]] 01:24:58
-
-### Null 검사를 먼저 하는 이유
-
-M012 p.21의 이름 setter는 [[courses/computer_programming/units/control-flow|Short-circuit]]를 상태 보호에 사용한다.
+Lab04의 `Book`은 같은 원리를 제목에 적용한다. 다음은 [NM003 PDF p.9](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-009)의 일반 설명 예제이며, NM002 v2 p.8에도 같은 코드가 있다. 이 Lab04 부분은 새 녹음이나 배정된 강의 날짜가 없는 **자료 기반 보충**이다.
 
 ```java
-public void setName(String name) {
-    if (name == null || name.equals("")) {
-        System.out.println("Name cannot be null or empty");
-    } else {
-        this.name = name;
+class Book {
+    private String title;
+
+    public void setTitle(String title) {
+        if (title == null || title.equals("")) {
+            System.out.println("Title cannot be null or empty");
+        } else {
+            this.title = title;
+        }
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
 ```
 
-`name == null`은 reference가 없음을 검사하고, `name.equals("")`는 존재하는 String의 내용이 비었는지 검사한다. Null이면 왼쪽이 true라 오른쪽 method 호출을 건너뛴다. 순서를 바꾸어 null receiver에 equals부터 호출하면 뒤의 검사로 보호할 수 없다. Non-null이고 빈 문자열도 아닌 경우만 저장한다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT]] 01:28:49의 보충이다. Null을 특정 물리 주소 0으로 보장하는 설명은 필요하지 않다.
+새 객체의 `title`에는 명시적 초기값이 없으므로 `null`이 들어 있다. 다음은 이 코드의 상태 변화를 설명하기 위해 구성한 trace다.
 
-## Access tracing으로 사용 경로 관찰하기
+| 순서 | 입력 또는 동작 | 이후 `title` | 이유 |
+|---|---|---|---|
+| 생성 직후 | `getTitle()` | `null` | 아직 제목을 저장하지 않았다. |
+| 첫 설정 | `setTitle("Java")` | `"Java"` | 두 거부 조건이 모두 거짓이다. |
+| 실패한 설정 | `setTitle("")` | `"Java"` | 오류 branch에는 field 대입이 없다. |
+| 다시 실패 | `setTitle(null)` | `"Java"` | short-circuit 후 거부하며 이전 값은 남는다. |
+| 공백 설정 | `setTitle(" ")` | `" "` | 공백 한 글자는 빈 문자열과 다르다. |
 
-접근을 methods에 모으면 읽기와 쓰기를 기록할 수도 있다. M012 p.22의 원래 class 이름은 `ChangableVar`다. `setValue`는 valueToBeWatched에 대입하고 countOfChange를 1 늘린 뒤 change 번호를 출력한다. `getValue`는 readHistory를 1 늘리고 저장값을 반환한다. 따라서 getter도 관찰 가능한 side effect(부수 효과)를 가질 수 있다.
+공백을 자동으로 제거하거나 거부한다고 해석하면 이 predicate보다 강한 규칙을 발명하게 된다. `getTitle()` 자체는 이 예에서 상태를 바꾸지 않는다. 그러나 getter라는 이름만으로 모든 getter가 부작용이 없다고 단정할 수도 없다.
 
-P.23의 자료에 제시된 의도된 흐름은 다음과 같다.
+### 조회 기록도 상태 변화다
 
-| 순서 | 동작 | 추적 결과 |
-| --- | --- | --- |
-| 1 | 첫 `getValue()` | 기본값 0, readHistory=1 |
-| 2 | `setValue(52)` | value=52, change #1 |
-| 3 | `setValue(53)` | value=53, change #2 |
-| 4 | 두 번째 `getValue()` | 값 53, readHistory=2 |
+M012 pp.22–23의 원본 class 이름은 `ChangableVar`다. `setValue()`는 값을 대입할 때마다 `countOfChange`를 증가시키고 change 번호를 출력한다. `getValue()`는 `readHistory`를 증가시킨 뒤 값을 반환한다. 따라서 getter를 부르는 행위도 기록 상태를 바꾼다.
 
-같은 값을 다시 넣어도 setter에는 이전 값과의 비교가 없으므로 count가 증가한다. 즉 “실제로 다른 값으로 바뀐 횟수”보다 **setter 호출 횟수**를 센다.
+의도된 trace는 첫 조회 값 `0`/history `1`, `setValue(52)` 뒤 change `#1`, `setValue(53)` 뒤 change `#2`, 둘째 조회 값 `53`/history `2`다. 같은 값을 두 번 설정해도 setter에 이전 값과 비교하는 조건이 없으므로 두 번 센다. Counter가 뜻하는 것은 실제 값이 달라진 횟수가 아니라 **그 method가 호출된 횟수**다.
 
-다만 p.23에서 호출하는 `getReadHistory()`의 정의가 p.22에 없다. 위 표는 그 history를 읽을 수 있다는 자료의 의도에 따른 설명이지, 두 페이지의 코드가 그대로 완전하게 실행된 결과라는 주장이 아니다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT]] 01:29:46에서도 debugging·logging의 동기는 설명하지만 긴 예제의 상세 추적은 건너뛴다. 이 자료 기반 분석은 누락된 method 구현을 임의로 채우지 않고, 내부 상태를 관찰하는 접점의 설계 효과를 보여 준다.
+다만 p.23에서 호출하는 `getReadHistory()` 정의는 p.22에 없다. 따라서 이 trace는 자료가 의도한 설명이고 두 페이지를 그대로 합친 완전한 실행 프로그램은 아니다. 2026-09-15 01:29:46 강의도 logging/debugging의 동기를 설명하고 긴 trace의 상세 순회는 생략했다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT · 접근 기록]]
+
+## 공통 상태의 재사용과 서로 다른 행동
+
+Encapsulation이 사용 경계를 정한다면, inheritance(상속)는 class 사이에서 특성을 재사용하고 확장하는 관계이고, polymorphism(다형성)은 공통 행동을 구체적인 class마다 다르게 제공하는 개념이다. M011 pp.58–61과 M014 p.4는 각각 abstraction, code reuse, 행동 다양화라는 동기를 연결한다.
+
+M011 p.60의 그림은 `Organisms` 아래 `Animals`와 `Plants`, 그 아래 각각 `Duck`·`Cat`과 `Tree`·`Grass`를 둔다. 더 구체적인 class가 공통 특성을 이어받는 구조를 읽는다. 강의의 `Cat`에 tail을 추가하는 비유도 이 확장을 설명하지만, 불확실한 생물학 표현이나 method 이름을 검증된 사실로 복원하지는 않는다.
+
+예를 들어 동물의 특성을 바탕으로 `Cat` class에 새 특성을 추가하는 일과, 그 class로 여러 cat objects를 만드는 일은 다르다. 개·고양이·오리의 `animalSound()`는 공통 요청을 받지만 각 class에 맞는 소리를 제공한다. 이는 같은 class의 두 객체가 단지 서로 다른 속도 값을 가진다는 설명보다 구현의 차이에 초점을 둔다. [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 STT 01:03:16–01:04:10]]
+
+[[courses/computer_programming/lectures/2026-09-17-lecture-06|2026-09-17 강의 노트 · OOP 복습]]과 [[courses/computer_programming/transcripts/2026-09-17|같은 날짜 STT 00:55–01:51]]도 이 세 특징을 소개한다. 당시의 개념 소개와 새 자료의 상세 문법은 구분한다. [Inheritance](inheritance.md)의 재사용·접근·생성 규칙과 [Object contracts and interfaces](object-contracts-interfaces.md)의 호출 선택은 이 기초를 확장하는 자료 기반 학습이다.
 
 ## 핵심 정리
 
-- Encapsulation은 사용할 접점과 허용된 변경 경로를 설계한다. 읽기 공개와 임의 쓰기 허용은 다르다.
-- 판매는 balance와 stock을 함께 바꾸고 실패하면 둘 다 유지해야 한다.
-- Modifier 생략은 package-private이며 public도 default keyword도 아니다.
-- Setter에 검사를 모을 수 있지만 검사 내용의 완전성은 별도로 확인한다.
-- Getter도 counter를 바꿀 수 있어 이름만으로 side effect가 없다고 단정하지 않는다.
+- Encapsulation은 읽기 허용과 임의 변경 허용을 구별하며, abstraction과 data protection을 함께 지원한다.
+- 성공한 판매는 관련 상태를 함께 바꾸고 실패는 상태를 보존해야 한다. `private`만으로 입력 검사가 완성되지는 않는다.
+- Modifier 생략은 package-private이다. Getter/setter는 일반 method라서 검증·기록을 수행할 수 있다.
+- `null` 검사를 먼저 둔 `||`와 정확한 문자열 조건을 따라 추적한다. 빈 문자열과 공백 문자열은 다르다.
+- Inheritance는 class의 재사용 관계이고 polymorphism은 공통 요청의 구현 차이다.
 
 ## 확인·연습문제
 
-### 개념과 실행을 확인하기
+### 접근과 상태
 
-#### 확인 Q01 · 값을 읽게 해도 남는 보호
+#### 확인 Q01 · 설계 경계
 
-Getter가 값을 알려 주는데 private field의 encapsulation이 남는 이유는? Abstraction·defensive programming과 robot 분업 비유의 약속을 설명하라.
+자동차 조작부와 로봇 분업 비유에서 abstraction과 defensive programming의 역할을 나누어 설명하라. Getter가 값을 알려 주면 encapsulation이 사라지는가?
 
 <details><summary>해설 보기</summary>
 
-읽기 허용과 외부의 임의 쓰기 허용은 다르다. 필요한 method 접점만 제공하면 내부 구현을 몰라도 쓰게 하면서 허용하지 않은 변경 경로를 제한할 수 있다. Abstraction은 사용 복잡성을 줄이고 defensive programming은 잘못된 상태 변경을 막는 목적이다. Robot 부분 담당자도 입력·결과·상태 약속으로 연결하며 검증 없이 믿으라는 뜻은 아니다. 여기의 interface는 사용 접점으로 Java interface 문법 전체를 전제하지 않는다.
+조작부는 사용하는 데 필요한 기능만 드러내 내부 복잡성을 줄인다. 로봇의 각 담당자도 다른 부분 전체 대신 합의된 동작에 의존한다. Defensive programming은 허용된 경로로만 상태를 바꾸게 한다. Getter로 읽는 것과 임의 대입은 다르므로 encapsulation은 남는다. 구현을 비밀로 하거나 협업 검증을 생략한다는 뜻은 아니다.
 
-**확인 기준:** Source 비밀과 접근 경로 제한을 혼동하지 않는다.
+**확인 기준:** 복잡성 축소, 변경 경로 통제, 읽기/쓰기 권한 구별을 모두 설명한다.
 
 </details>
 
-#### 확인 Q02 · 계층·instance·행동 차이
+#### 확인 Q02 · Class 관계와 객체
 
-Organisms→Animals→Cat의 관계와 Cat objects 여러 개의 관계는 같은가? 공통 animalSound가 class마다 다른 소리를 내는 것과 같은 Car class의 speed 차이는?
+`Cat`에 공통 동물 특성을 재사용하고 tail을 추가하는 일, cat 객체 둘을 만드는 일, `animalSound()`를 동물별로 다르게 제공하는 일을 구별하라.
 
 <details><summary>해설 보기</summary>
 
-첫째는 parent·child classes의 상속 관계로 특성·코드를 재사용하고 child 특성을 더한다. 여러 Cat objects는 한 class의 instances라 다른 축이다. 공통 animalSound를 구체적 class별로 다르게 구현하는 것은 polymorphism의 소개이고, 같은 Car method가 서로 다른 speed fields를 읽는 것은 instance 상태 차이다. 이 구별은 동기 소개이며 dispatch·override 세부 코드를 요구하지 않는다.
+첫째는 parent 특성의 재사용·확장인 inheritance다. 둘째는 같은 class로 별도 objects를 만드는 일이다. 셋째는 공통 행동을 구체 class마다 다르게 구현하는 polymorphism의 소개다. 같은 class의 두 객체가 서로 다른 speed 값을 가진다는 사실만으로 세 번째 설명을 대신할 수 없다. 당시 녹음은 이 동기를 소개한 것이며 상세 dispatch 문법은 별도 자료 학습이다.
 
-**확인 기준:** Class 관계·생성 관계·구현 차이·상태 차이를 분리한다.
+**확인 기준:** Class 확장, 객체 생성, 구현 다양화의 세 층을 구별한다.
 
 </details>
 
-#### 확인 Q03 · 한 판매의 두 상태
+#### 확인 Q03 · 함께 바뀌는 상태
 
-`balance = 10000`,stock30,가격2000에서3개 판매 후 값은? 외부가 stock만 바꾸는 문제와 sell method만 추가했을 때 남는 문제, getter의 권한을 설명하라.
+초기 `balance=10000`, `stock=30`, 가격 2000에서 세 개를 판매하면 무엇이 남는가? `sell()` 추가만으로 외부의 잘못된 변경을 막을 수 있는가?
 
 <details><summary>해설 보기</summary>
 
-`balance = 10000 + 6000 = 16000`,stock=30−3=27이다. `stock`만 줄이면 수입과 재고의 관계가 깨진다. `sell`이 두 변경을 묶어도 fields가 노출되면 외부가 우회하므로 private 접근 설계가 필요하다. Getters는 읽기만 제공해 임의 쓰기를 허용하지 않는다. Source의 sell/getters에는 public이 없어서 같은 package 호출을 가정한다.
+`stock=30-3=27`, `balance=10000+2000*3=16000`이다. 두 변경을 `sell()`에 모아야 caller가 한쪽 변경을 빠뜨리지 않는다. Field가 계속 노출되면 method를 우회할 수 있으므로 private 상태와 허용된 methods를 함께 설계한다. Getter는 조회 경로만 제공한다. 원본 `sell`·getters에는 `public`이 없어서 같은 package에서의 호출을 전제한다.
 
-**확인 기준:** 두 계산·우회 가능성·읽기/쓰기 권한을 설명한다.
+**확인 기준:** 두 수치, 우회 가능성, 원본 package-private를 확인한다.
 
 </details>
 
-#### 확인 Q04 · 접근 표기의 실제 의미
+#### 확인 Q04 · 접근 수준
 
-`private`·modifier 생략·protected·public의 현재 소개 범위를 적어라. 생략 자리에 default를 쓰는가? 별도 class가 private weight80을 읽을 때는?
+`private`, modifier 생략, `protected`, `public`의 접근 범위를 설명하라. 별도 class가 `private int weight=80`을 읽지 못하는 이유와 `default`를 적어야 하는지도 답하라.
 
 <details><summary>해설 보기</summary>
 
-`private`는 선언 class 내부 접근 중심, 생략은 같은 package의 package-private, protected는 같은 package와 상속에 따른 접근, public은 외부 접근 허용이다. `default` keyword를 넣는 것이 아니며 modifier 없다고 public이 되지 않는다. 별도 class의 직접 weight 접근은 private diagnostic을 낸다. 이 표를 모든 class 선언 형태나 cross-package의 아무 receiver에도 적용하는 완전 규칙으로 확대하지 않는다.
+`private`는 선언 class 내부 접근, 생략은 같은 package 접근, `protected`는 같은 package 및 subclass의 상속 문맥, `public`은 외부 접근을 허용한다. `weight`의 값은 존재하지만 직접 읽을 권한이 없다. Package-private를 위해 `default`를 쓰지 않는다. 다른 package의 subclass가 임의의 부모 receiver까지 자유롭게 쓸 수는 없고, public member라도 담고 있는 class가 접근 가능해야 한다. 네 modifier를 top-level class에도 그대로 적용하지 않는다.
 
-**확인 기준:** 네 수준과 생략 의미, 입문 표의 한정을 설명한다.
+**확인 기준:** 값 존재와 접근 허용을 분리하고 protected의 한정을 남긴다.
 
 </details>
 
-#### 확인 Q05 · 성공·실패·음수 주문
+#### 확인 Q05 · 실패와 음수 경계
 
-각각 독립 초기 balance10000,stock30이다. `inStock`은 `num-stock>0`이면 false, 아니면 true다. `sell`은 true일 때만 balance+=2000*num,stock-=num 후 true, 아니면 false를 반환한다. `sell(3)`, `sell(50)`, `sell(-1)`을 추적하고 helper와 boolean의 목적을 설명하라.
+원본 `inStock`은 `num-stock>0`이면 실패한다. 각기 초기 `(balance,stock)=(10000,30)`에서 `sell(50)`과 `sell(-1)`의 반환·상태를 계산하고 boolean 결과의 역할을 설명하라.
 
 <details><summary>해설 보기</summary>
 
-3은 shortage−27로 통과해 true,16000/27이다. 50은 shortage20으로 실패해 false,10000/30 유지다. −1은 shortage−31로 통과해 true,8000/31이 된다. `private` helper는 검사 세부를 내부에 모으고 boolean은 caller가 실패를 알게 한다. 실패 결과뿐 아니라 두 상태 불변을 확인해야 하며 현재 helper는 음수 검증이 빠져 완전 validation이 아니다.
+`50-30=20`이므로 첫 호출은 `false`, 상태 `(10000,30)`을 유지한다. Caller가 실패 메시지를 출력하며 helper가 메시지 책임까지 맡는 것은 아니다. `-1-30=-31`은 검사를 통과하므로 둘째는 `true`, 잔액 `10000-2000=8000`, 재고 `30-(-1)=31`이다. `boolean`은 성공 여부를 전달하려고 `void` 대신 사용한다. Helper를 private로 두어 검사 구현을 감추더라도 음수 거부 조건은 별도로 필요하다. 음수 trace는 코드 추론이다.
 
-**확인 기준:** 세 shortage·return·상태 및 실패 시 불변을 확인한다.
+**확인 기준:** 실패 시 두 상태 보존과 음수 통과의 계산을 모두 확인한다.
 
 </details>
 
-#### 확인 Q06 · 선택적인 getter·setter
+### 검증과 기록
 
-`getAge`는 field를 반환하고 setAge(int age)는 this.age=age를 수행한다. 모든 private field에 둘 다 필요한가? 나이 범위와 setter의 return type을 자료에서 어디까지 정할 수 있는가?
+#### 확인 Q06 · 선택적 접근과 short-circuit
+
+Getter/setter는 특수 문법인가? `this.age=age`의 양쪽을 구별하고, `name==null || name.equals("")`의 순서를 바꾸면 왜 위험한지 설명하라.
 
 <details><summary>해설 보기</summary>
 
-둘은 일반 methods의 이름 관례다. Getter만 공개하면 그 접점은 read-only, setter만이면 write-only로 구성할 수 있어 항상 둘 다 필요하지 않다. Setter에 validation을 둘 수 있지만 정확한 허용 나이 범위는 제시되지 않았다. Source setAge의 void는 예 선택이지 모든 setter의 필수 규칙이 아니며 class 내부에서 언제나 accessor만 써야 하는 것도 아니다.
+둘은 일반 method의 관례다. `this.age`는 현재 객체 field, 오른쪽 `age`는 parameter다. Getter만 또는 setter만 공개해 외부 읽기/쓰기 경로를 선택할 수 있고 내부 method는 자기 private field를 직접 사용할 수 있다. `null`이면 왼쪽이 참이어서 오른쪽 호출을 생략한다. 역순은 객체 없는 reference에 먼저 `equals()`를 호출하므로 나중 검사가 보호하지 못한다. Null은 빈 문자열도 보장된 물리 주소 0도 아니다. 나이 예는 검증 동기이지 공식 허용 구간은 아니다.
 
-**확인 기준:** 관례/문법과 선택적 권한, 미정 age 범위를 구별한다.
+**확인 기준:** 관례·parameter 구별·선택적 공개·평가 순서 네 항목을 확인한다.
 
 </details>
 
-#### 확인 Q07 · `null` guard의 순서
+#### 확인 Q07 · 기록의 부작용
 
-`name==null || name.equals("")`이면 메시지만 출력하고 아니면 field에 저장한다. `null`,빈문자열,Code의 경로와 condition을 반대로 쓸 때의 문제를 설명하라.
+`ChangableVar`에서 첫 조회, `setValue(52)`, `setValue(53)`, 둘째 조회의 값과 counters를 추적하라. 같은 값을 두 번 설정할 때와 자료의 실행 가능성도 설명하라.
 
 <details><summary>해설 보기</summary>
 
-`null`은 왼쪽 true로 equals를 생략하고 저장하지 않는다. 빈 String은 왼쪽 false, equals true라 역시 저장하지 않는다. Code는 둘 다 false여서 저장한다. `equals`를 먼저 두면 null receiver 호출이 먼저 실패하여 뒤 guard가 보호하지 못한다. `null` 여부와 String 내용은 다른 검사이며 null을 물리 주소0으로 설명할 필요는 없다.
+첫 읽기는 값 0/history 1, 두 설정은 change #1과 #2, 둘째 읽기는 값 53/history 2다. Getter도 `readHistory`를 바꾸므로 부작용이 있다. Setter는 값 비교 없이 호출마다 증가하므로 같은 값 두 번도 두 번 센다. 이는 실제 값 변경 횟수와 다르다. P.23에서 쓰는 `getReadHistory()`가 p.22에 정의되어 있지 않으므로 의도된 trace이지 완성 코드의 실행 입증은 아니다. 녹음도 긴 trace는 생략했다.
 
-**확인 기준:** 세 경로·이전 field 보존·short-circuit 순서를 설명한다.
+**확인 기준:** 값·읽기 수·설정 호출 수를 분리하고 누락 method를 지적한다.
 
 </details>
 
-#### 확인 Q08 · 읽기·쓰기 counter
+#### 확인 Q08 · Book의 거부 경로
 
-ChangableVar는 getValue마다 readHistory++, setValue마다 값을 대입하고 countOfChange++한다. Default0에서 get, set52, set53, get 후 상태는? 같은53을 한 번 더 set하면? 자료의 실행 한계도 설명하라.
+새 `Book`의 제목을 조회한 뒤 `setTitle("Java")`, `setTitle("")`, `setTitle(null)`, `setTitle(" ")`를 차례로 호출한다. 각 단계의 값과 거부 조건을 설명하라.
 
 <details><summary>해설 보기</summary>
 
-첫 get은0/history1, set52는값52/change1, set53은값53/change2, 둘째 get은53/history2다. 다시53을 set해도 비교가 없어 change3이 된다. Getter도 side effect가 있고 change counter는 값이 달라진 횟수보다 호출 횟수다. P23이 부르는 getReadHistory의 정의가 p22에 없어 이 trace는 의도된 자료 분석이며 두 페이지가 완전 실행된 결과라는 뜻은 아니다.
+처음은 field 기본값 `null`이다. 이후 `"Java"`, `"Java"`, `"Java"`, `" "`가 된다. 빈 문자열과 null은 오류 branch에 들어가 대입하지 않아 이전 값이 남는다. Null은 short-circuit로 안전하게 거부된다. 공백은 `equals("")`가 아니므로 허용된다. 이 getter는 값을 바꾸지 않으며, trim이나 공백 거부를 추가한 코드로 해석하지 않는다. Lab04의 자료 복습이며 새 녹음의 사례는 아니다.
 
-**확인 기준:** 두 counters와 재대입의 count, 누락 method 한계를 모두 적는다.
+**확인 기준:** 초기값과 실패 뒤 보존, 공백 통과를 모두 맞힌다.
 
 </details>
 
 ### 적용 연습
 
-#### 연습 P01 · 검사 추가 후 연속 요청
+#### 연습 P01 · 접근 가능한 변경인가
 
-**새로 작성한 강의 기반 일반 연습; 직접 대응 기출 유형 근거 없음.** 본문 판매 예를 바꾸어 num<=0 또는 num>stock이면 false와 상태 유지, 그 외에는 가격2000으로 판매한다고 정했다. 초기 balance10000,stock3에서 sell(0),sell(2),sell(2)를 순서대로 요청한다. 매 return·상태와 변경 전 검사해야 할 이유를 설명하라.
+새로 만든 강의 기반 일반 연습이다. 후보의 package·subclass 접근 문제는 Inheritance에서 다루며, 이 상태 보존 연습의 직접 기출 형식 근거로 사용하지 않는다. 선수 개념은 Q03–Q05다. 같은 package의 별도 `Cashier`가 원본 `AppleStore`의 `stock`에 직접 대입하거나 `sell(50)`을 호출하려 한다. 어느 경로가 허용되는지, 허용된 호출이 실패하면 무엇이 남는지 설명하라.
 
 <details><summary>해설 보기</summary>
 
-첫0은 새 positivity 조건에 걸려 false,10000/3 유지다. 다음2는 통과하여 true,14000/1이다. 마지막2는 현재 stock1보다 커 false,14000/1 유지다. 각 호출은 갱신된 상태를 기준으로 검사한다. 검사를 쓰기 뒤에 하면 실패한 요청도 이미 stock·balance를 바꿀 수 있어 실패 불변 계약을 깬다. 새 positivity 검사는 연습의 명시적 변경이지 원래 source가 이미 구현한 조건이 아니다.
+직접 field 대입은 `private`라 금지된다. Modifier 없는 `sell(50)`은 같은 package라 호출 가능하지만 stock 30에서는 `false`이고 balance 10000, stock 30이 유지된다. 접근 가능성은 요청의 성공 여부와 별개다. 원본의 다른 package subclass 표 전체를 해결했다는 뜻은 아니다.
 
-**확인 기준:** 순차 상태·새 조건의 출처·실패 불변을 모두 확인한다.
+**확인 기준:** 접근 판정과 상태 판정을 따로 쓰고 두 field를 확인한다.
 
 </details>
 
-### 복습 순서
+#### 연습 P02 · 이름 검증과 접근 기록
 
-Q01–Q04로 설계 목적과 접근을 설명한다. Q05의 성공·실패·음수 상태를 계산하고 Q06–Q08에서 validation과 counter를 추적한 뒤 P01의 각 호출을 확인한다.
+새로 만든 강의·자료 기반 일반 연습이다. 해당 검증·기록 조합의 직접적인 기출 형식 근거는 없다. 동료가 “getter는 항상 상태를 보존하고, null/empty 검사면 공백도 거부된다”고 주장한다. Q06–Q08의 서로 다른 두 예로 각각 반박하고, 확인할 관찰값을 제시하라.
+
+<details><summary>해설 보기</summary>
+
+`ChangableVar.getValue()` 뒤에는 watched value가 같아도 `readHistory`가 1 늘어 첫 주장이 깨진다. `Book.setTitle(" ")`은 빈 문자열 비교가 거짓이라 공백을 저장해 둘째 주장이 깨진다. 같은 getter 이름이나 안전해 보이는 조건만으로 동작을 일반화하지 말고 실제로 바뀌는 field와 predicate를 확인한다.
+
+**확인 기준:** 두 반례마다 관찰값과 코드상의 이유를 연결한다.
+
+</details>
+
+### 짧은 복습 계획
+
+Q03·Q05·Q08을 표 없이 다시 추적하고 Q04로 접근 가능성을 설명한다. 다음 날 Q07과 P02를 풀어 이름만 보고 부작용을 추측하지 않는지 확인한다.
 
 ## 출처
 
-### 날짜별 강의와 녹음
+9월 15일의 접근·검증 설명과 9월 17일의 OOP 소개를 연결한다. Lab04의 Book 확장은 녹음 없는 자료 복습이다. 불명확한 비율·생물학 표현은 확정하지 않으며, `ChangableVar`의 누락 method와 AppleStore의 음수 주문 한계를 남긴다.
 
-- [[courses/computer_programming/lectures/2026-09-15-lecture-05|2026-09-15 · Computer Programming 강의·원자료]]
-- [[courses/computer_programming/lectures/2026-09-17-lecture-06|2026-09-17 · Computer Programming 강의·원자료]]
-- [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 보정 녹음문]] — 01:08:56, 01:04:10, 01:16:32, 01:14:06, 01:21:14, 01:24:58, 01:29:46.
-- [[courses/computer_programming/transcripts/2026-09-17|2026-09-17 보정 녹음문]] — 00:55–01:51.
+### 날짜별 노트와 녹취
 
-### 강의자료와 해당 페이지
+- [[courses/computer_programming/lectures/2026-09-15-lecture-05|2026-09-15 · 강의 노트]]
 
-- [4 oop.pdf](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/4.oop.pdf) — [p.58](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/4.oop/page-058), [p.59](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/4.oop/page-059), [p.60](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/4.oop/page-060), [p.61](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/4.oop/page-061).
-- [5 encapsulation.pdf](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/5.encapsulation.pdf) — [p.3](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-003), [p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-006), [p.7](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-007), [p.9](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-009), [p.10](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-010), [p.11](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-011), [p.12](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-012), [p.14](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-014), [p.16](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-016), [p.18](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-018), [p.21](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-021), [p.22](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-022), [p.23](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-023).
-- [Lab03 v2.pdf](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab03.v2.pdf) — [p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-004).
+- [[courses/computer_programming/lectures/2026-09-17-lecture-06|2026-09-17 · 강의 노트]]
 
-상속·다형성은 동기 소개이며 구체적인 override·dispatch나 cross-package protected receiver 규칙의 완전한 설명은 이후 범위다. AppleStore의 modifier 없는 methods는 같은 package 전제다. ChangableVar의 getReadHistory 구현은 자료에 없어 의도된 trace만 분석하며 상세 설명은 강의에서 생략되었다.
+- [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 · 보정 녹취 · 01:03:16–01:04:10; 01:08:56–01:09:54; 01:16:32–01:18:17; 01:20:14–01:22:07; 01:24:58–01:29:46]]
 
+- [[courses/computer_programming/transcripts/2026-09-17|2026-09-17 · 보정 녹취 · 00:55–01:51]]
 
----
+### 자료와 해당 페이지
 
-[[courses/computer_programming/units/objects-references|← 이전: Objects·Constructors·Static과 Reference 전달]] · [[courses/computer_programming/units/index|단원 목차]] · [[courses/computer_programming/units/lab-applications|다음: 입력 검증·Board 판정·객체 상호작용 실습 →]]
+- [4 oop · PDF](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/4.oop.pdf) — [p.58](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/4.oop/page-058), [p.59](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/4.oop/page-059), [p.60](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/4.oop/page-060), [p.61](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/4.oop/page-061)
+
+- [5 encapsulation · PDF](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/5.encapsulation.pdf) — [p.3](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-003), [p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-004), [p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-005), [p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-006), [p.7](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-007), [p.9](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-009), [p.10](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-010), [p.11](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-011), [p.12](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-012), [p.13](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-013), [p.14](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-014), [p.15](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-015), [p.16](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-016), [p.18](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-018), [p.20](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-020), [p.21](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-021), [p.22](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-022), [p.23](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/5.encapsulation/page-023)
+
+- [Lab03 v2 · PDF](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab03.v2.pdf) — [p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-004)
+
+- [Lab04 v2 · PDF](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab04.v2.pdf) — [p.8](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v2/page-008)
+
+- [Lab04 v4 · PDF](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab04.v4.pdf) — [p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-004), [p.9](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-009)
+
+이 단원과 직접 대응하는 기출 형식 근거가 없어 P 문제는 강의·자료 기반 일반 연습으로 제시한다.

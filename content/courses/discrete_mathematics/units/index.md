@@ -20,7 +20,7 @@ cssclasses: ["unit-index"]
 
 4. **Algorithm 명세와 Searching·Sorting의 실행** · [[courses/discrete_mathematics/units/algorithms-search-and-sort|한국어]]
 
-   Fibonacci, maximum, 검색과 정렬을 상태 추적과 invariant로 확인한다.
+   Pseudocode, 검색과 두 정렬 절차를 명세·상태·불변식으로 복습한다.
 
 5. **Algorithmic Paradigms·Greedy와 계산 가능성** · [[courses/discrete_mathematics/units/paradigms-greedy-and-computability|한국어]]
 
@@ -28,7 +28,7 @@ cssclasses: ["unit-index"]
 
 6. **Asymptotic Analysis와 Cost Model** · [[courses/discrete_mathematics/units/asymptotic-analysis-and-cost-models|한국어]]
 
-   Big-O·Ω·Θ의 증명과 시간·공간·데이터 이동·평균 분석의 조건을 점검한다.
+   Big-O·Omega·Theta의 증명과 비용 모델·입력 분포의 차이를 복습한다.
 
 7. **Searching·Matrix Multiplication의 Complexity** · [[courses/discrete_mathematics/units/search-and-matrix-complexity|한국어]]
 
@@ -44,15 +44,31 @@ cssclasses: ["unit-index"]
 
 10. **Congruence Classes와 Modular Inverse** · [[courses/discrete_mathematics/units/modular-arithmetic-and-inverses|한국어]]
 
-   대표원 독립성, inverse의 modulo 유일성과 GCD 조건을 계산·증명으로 확인한다.
+   합동류·역원의 증명과 binary modular exponentiation의 상태를 복습한다.
 
 11. **Hash Function과 데이터 분산** · [[courses/discrete_mathematics/units/hashing-and-data-distribution|한국어]]
 
-   Hash의 고정 길이 출력과 저장·조회 규칙, collision과 분포 의존성을 복습한다.
+   Modulo hash, collision과 데이터 분포를 작은 bucket 예제로 복습한다.
 
 12. **Pseudorandom Generation과 Cryptographic 요구** · [[courses/discrete_mathematics/units/pseudorandomness-and-security|한국어]]
 
-   Seed expansion의 한계, LCG trace·LSB·cycle과 cryptographic 요구를 확인한다.
+   Seed support·LCG·암호학적 요구와 공유 prime의 GCD 위험을 복습한다.
+
+13. **공개키 암호와 RSA** · [[courses/discrete_mathematics/units/public-key-cryptography-and-rsa|한국어]]
+
+   키의 역할·RSA 계산·Euler 조건과 자료 시점의 한계를 복습한다.
+
+14. **다항식 보간과 Secret Sharing** · [[courses/discrete_mathematics/units/polynomial-secret-sharing|한국어]]
+
+   Field 위 보간, threshold 복구와 균등·독립 계수의 privacy 논증을 복습한다.
+
+15. **오류 검출·복구와 Check Digits** · [[courses/discrete_mathematics/units/error-detection-and-check-digits|한국어]]
+
+   오류 위치와 개수에 따라 parity, repetition, UPC, ISBN-10이 보장하는 검출·복구를 비교한다.
+
+16. **Reed–Solomon 부호화와 다항식 Decoding** · [[courses/discrete_mathematics/units/reed-solomon-encoding-and-decoding|한국어]]
+
+   Reed–Solomon의 소실·오류 복구 조건과 Berlekamp–Welch의 선형화·몫 유일성을 계산과 증명으로 점검한다.
 
 ## 자료별로 단원 찾기
 
@@ -61,7 +77,8 @@ cssclasses: ["unit-index"]
 - **00. Introduction.pdf** — [[courses/discrete_mathematics/units/logic-and-proof|Discrete Mathematics의 언어와 Logic·Proof]] · [[courses/discrete_mathematics/units/sets-functions-sequences|Sets·Functions·Sequences로 구조 표현하기]]
 - **01. Vectors and Matrices.pdf** — [[courses/discrete_mathematics/units/matrices-and-linear-maps|Matrices와 Linear Maps의 대응]]
 - **02. Algorithms.pdf** — [[courses/discrete_mathematics/units/algorithms-search-and-sort|Algorithm 명세와 Searching·Sorting의 실행]] · [[courses/discrete_mathematics/units/paradigms-greedy-and-computability|Algorithmic Paradigms·Greedy와 계산 가능성]] · [[courses/discrete_mathematics/units/asymptotic-analysis-and-cost-models|Asymptotic Analysis와 Cost Model]] · [[courses/discrete_mathematics/units/search-and-matrix-complexity|Searching·Matrix Multiplication의 Complexity]]
-- **03. Number Theory.pdf** — [[courses/discrete_mathematics/units/prime-distribution|Prime Number Theorem과 소수 분포의 추정]] · [[courses/discrete_mathematics/units/gcd-euclid-and-bezout|GCD·Euclidean Algorithm·Bézout의 구성]] · [[courses/discrete_mathematics/units/modular-arithmetic-and-inverses|Congruence Classes와 Modular Inverse]]
+- **03. Number Theory.pdf** — [[courses/discrete_mathematics/units/prime-distribution|Prime Number Theorem과 소수 분포의 추정]] · [[courses/discrete_mathematics/units/gcd-euclid-and-bezout|GCD·Euclidean Algorithm·Bézout의 구성]] · [[courses/discrete_mathematics/units/modular-arithmetic-and-inverses|Congruence Classes와 Modular Inverse]] · [[courses/discrete_mathematics/units/pseudorandomness-and-security|Pseudorandom Generation과 Cryptographic 요구]] · [[courses/discrete_mathematics/units/public-key-cryptography-and-rsa|공개키 암호와 RSA]] · [[courses/discrete_mathematics/units/polynomial-secret-sharing|다항식 보간과 Secret Sharing]] · [[courses/discrete_mathematics/units/reed-solomon-encoding-and-decoding|Reed–Solomon 부호화와 다항식 Decoding]]
+- **04. Number Theory Applications.pdf** — [[courses/discrete_mathematics/units/hashing-and-data-distribution|Hash Function과 데이터 분산]] · [[courses/discrete_mathematics/units/pseudorandomness-and-security|Pseudorandom Generation과 Cryptographic 요구]] · [[courses/discrete_mathematics/units/public-key-cryptography-and-rsa|공개키 암호와 RSA]] · [[courses/discrete_mathematics/units/polynomial-secret-sharing|다항식 보간과 Secret Sharing]] · [[courses/discrete_mathematics/units/error-detection-and-check-digits|오류 검출·복구와 Check Digits]] · [[courses/discrete_mathematics/units/reed-solomon-encoding-and-decoding|Reed–Solomon 부호화와 다항식 Decoding]]
 
 ## 원자료와 강의 기록
 

@@ -1,6 +1,6 @@
 ---
 title: "C Objects, Types, Addresses, and Pointers"
-description: "Check pointer code and memory sizes through types, addresses and lifetimes."
+description: "Check types, pointer assignments, array conversions, and dynamic storage size and lifetime."
 course: "system_programming"
 unit_id: "objects-pointers"
 lang: "en"
@@ -9,139 +9,95 @@ source_kind: "unit_chapter"
 review_status: "approved"
 draft: false
 cssclasses: ["unit-textbook"]
-source_assets: ["00.Introduction.pptx", "02.CPointers_24a7628c.pptx", "06.MM.Variable.and.Memory.Recap.pptx"]
+source_assets: ["00.Introduction.pptx", "02.CPointers_24a7628c.pptx", "06.MM.Variable.and.Memory.Recap.pptx", "08.MM.Dynamic.Memory.Allocation.I.pptx", "09.MM.Dynamic.Memory.Allocation.II.pptx"]
 private_source_assets: []
 source_lectures: ["courses/system_programming/lectures/en/2026-09-02-lecture-01", "courses/system_programming/lectures/en/2026-09-07-lecture-02", "courses/system_programming/lectures/en/2026-09-09-lecture-03", "courses/system_programming/lectures/en/2026-09-23-lecture-06"]
 ---
 
-Separate an object holding a value from a pointer holding its address. Write down types and lifetimes before tracing declarations, indirect stores and sizes.
+Draw the pointer object separately from the object it designates. Establish type, bounds, and lifetime before calculating sizes or tracing assignments.
 
-## C objects and types: interpreting stored bytes
+## Objects, types, and addresses answer different questions
 
-To understand `int n = 5;`, distinguish the name `n`, the value 5, and the object holding that value. A C object is storage for a value; a variable name provides a way to refer to it. A type determines the required size and interpretation. Assignment, introduced in [[courses/system_programming/units/en/systems-c-build|C state changes and building programs]], changes an object's stored value.
+Changing a value requires storage and a rule for interpreting that storage. An object holds a value; a variable supplies a name for it. A type determines interpretation and required size. Building on [program state in C](systems-c-build.md), distinguish what a value is, where it resides, and the type through which it is accessed.
 
-Numerical sizes in this unit use the course's x86-64 Linux target.
+Numerical examples here use the material's x86-64 Linux target: `char`, `short`, `int`, and `long` occupy 1, 2, 4, and 8 bytes; `float` and `double` occupy 4 and 8; an object pointer occupies 8. These are not fixed C requirements across ABIs. Floating-point uses a sign, exponent, and significand; a finite representation rounds many real numbers. An eight-byte `double` cannot represent every real value exactly, and sixteen bytes of `long double` storage do not mean 128 bits of effective precision. The [[courses/system_programming/lectures/en/2026-09-02-lecture-01|2026-09-02 types and arrays lecture]] and [[courses/system_programming/transcripts/2026-09-02|transcript]] at 01:15:55 introduce the distinction without establishing detailed IEEE 754 encoding work.
 
-| Type | Size in bytes |
-|---|---:|
-| `char` | 1 |
-| `short` | 2 |
-| `int` | 4 |
-| `long` | 8 |
-| `float` | 4 |
-| `double` | 8 |
-| Object pointer | 8 |
+### A pointer's value versus its own address
 
-Another ABI, or Application Binary Interface, can specify different sizes. In particular, a 64-bit OS does not universally imply an eight-byte `long`. [Introduction slides 51–54](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/00.Introduction.pptx)
+Byte-addressed memory gives each byte an address; a multi-byte object's address identifies its first byte. These source numbers are an abstract address relationship, not a literal layout of eight-byte pointers at four-byte intervals.
 
-Floating-point representations use a sign, exponent, and significand, also called a mantissa. A finite number of bit patterns cannot represent every real number exactly, so rounding is unavoidable. The [[courses/system_programming/transcripts/2026-09-02|September 2 lecture, 01:15:55]] introduces IEEE 754 without establishing detailed encoding calculations as covered material. Likewise, sixteen bytes of `long double` storage do not imply 128 bits of numerical precision.
+| Object | Own address | Stored value | Type |
+|---|---:|---:|---|
+| `a` | 16 | 5 | `int` |
+| `ap` | 28 | 16, namely `&a` | `int *` |
+| `app` | 4 | 28, namely `&ap` | `int **` |
 
-## Addresses, pointers, and pointed-to objects
+`*app` designates `ap`, whose value is 16; `**app` designates `a`, whose value is 5. In a declaration, `*` forms a pointer type. In an expression, `*` dereferences a pointer, while `&` takes an address. Assigning to `*app` can change pointer object `ap`; assigning `**app = 9` changes `a`.
 
-In byte-addressed memory, each byte has an address. A multibyte object's address is the address of its first byte. A pointer is a separate object whose value is an address. The `*` in `int *ap` constructs a pointer declaration; in the expression `*ap` it performs indirection, or dereferencing. `&a` obtains the address of `a`.
-
-Memory recap slide 15 illustrates these relationships. Its small address numbers are schematic, not a literal layout satisfying the full size of every eight-byte pointer.
-
-| Object | Schematic address of the object | Stored value |
-|---|---:|---:|
-| `a` | 16 | 5 |
-| `ap` | 28 | 16 |
-| `app` | 4 | 28 |
+The address-printing discussion in the [[courses/system_programming/transcripts/2026-09-07|2026-09-07 transcript]] at 54:41 can be applied to initialized objects as follows, with `<stdio.h>` available:
 
 ```c
 int a = 5;
 int *ap = &a;
-int **app = &ap;
-```
-
-Both `ap` and `&a` have address value 16, while `&ap` is 28. Following `app` once reaches the pointer object `ap`, whose value is 16. Following it twice reaches `a`, whose value is 5. Assigning through `*app` changes the pointer `ap`; assigning through `**app` changes the `int` currently reached along that path. [Memory recap slide 15](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/06.MM.Variable.and.Memory.Recap.pptx)
-
-The [[courses/system_programming/transcripts/2026-09-07|September 7 lecture, 54:41]] distinguishes `%p` for an address from `%d` for an integer value. With the valid initialization above:
-
-```c
 printf("%p\n", (void *)ap);
 printf("%p\n", (void *)&ap);
 printf("%d\n", *ap);
 ```
 
-These print the pointed-to object's address, the pointer object's own address, and 5. Converting an object pointer to the `void *` argument required by `%p` is a portability qualification. Actual address numbers can vary between executions.
+The first two calls print the target address and the pointer object's own address; the third prints 5. Supplying `void *` to `%p` is a portability qualification. Neither the actual addresses nor their printed form is fixed. The suggestion at 55:31 to print an uninitialized pointer must not be adopted as safe inspection. Likewise, M004's diagram of value 102 at address 2 is distinct from uncertain spoken numbers.
 
-`sizeof(ap)` is eight; `sizeof(*ap)` is four, the size of `int`. A `void *k` also occupies eight bytes, but `void` is not a complete object type, so standard C does not provide a pointed-to size through `sizeof(*k)`. A cast changes a type interpretation; it does not create valid storage, lifetime, or alignment. Printing or dereferencing an uninitialized pointer is not made safe by its declaration. An accidental absence of a crash does not establish valid access.
+`sizeof(ap)` is 8 and `sizeof(*ap)` is 4 on this target. A `void *k` also occupies eight bytes, but `void` is not a complete object type, so standard C does not obtain a target size with `sizeof(*k)`. A cast changes the type used for interpretation; it creates neither valid storage nor lifetime nor alignment.
 
-## Assigning a pointer versus assigning a pointed-to value
+## What arrays and strings actually contain
 
-Identify the object on the left of an assignment before tracing its effect.
+An array stores consecutive objects of one type. `T a[N]` occupies `N * sizeof(T)` bytes. Here, `char c[10]` occupies 10 bytes and `double pi[5][2]` occupies `5 * 2 * 8 = 80`. `int a[10]` is a 40-byte array object; `int *p = a` introduces a separate eight-byte pointer object.
 
-```c
-int i = 1, j = 2;
-int *p = &i, *q = &j;
-*q = *p;
-q = p;
-```
+In many expressions, `a` converts to a pointer to its first element. Then `a + i` corresponds to `&a[i]`, and `*(a + i)` designates `a[i]`. However, `sizeof(a)` measures the whole array, and `&a` points to the whole array. The array name cannot be assigned another address or incremented with `a++`; use a separate traversal pointer. Determine the operand's type before answering a `sizeof` question. That is also the demand of Q1(a), [EX:sp_2025_1_midterm_q01 p.2], available through the [[exam_questions/sp_2025_1_midterm_q01|existing question-only preview]]. For a non-VLA type, `sizeof(*p)` does not perform an ordinary read of the pointee. It therefore does not justify actually dereferencing an uninitialized `p`.
 
-`*q = *p` copies the value 1 from `i` into `j`, leaving `p→i` and `q→j` unchanged. The subsequent `q = p` copies an address, making both pointers refer to `i`. Now `*p=1; *q=2;` changes the same object twice, leaving `i` equal to 2. [Pointers slides 13–15](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
+### NUL, length, and capacity
 
-The `%d` conversion in `scanf` similarly needs the address of an `int` into which it can store a result. For `int i`, supply `&i`; for `int *p=&i`, supply `p`. `&p` has type `int **` and does not meet the same contract. The rule is “supply the address of the required destination object,” not “always add `&`.”
-
-`int a[10]` allocates storage for ten elements. `int *a` allocates only a pointer object. Immediately writing `*a=0` after the second declaration does not magically create a valid element.
-
-## Arrays and strings have their own storage
-
-An array contains consecutive objects of one type. Its total size is `N * sizeof(T)`: `char c[10]` occupies ten bytes, and `double pi[5][2]` occupies `5*2*8=80` bytes on this target. `int a[10]` is a forty-byte array, not an eight-byte pointer object.
-
-In many expressions an array converts to a pointer to its first element. Thus `a+i` corresponds to `&a[i]`, and `*(a+i)` to `a[i]`. A byte-address calculation uses `base + i*sizeof(T)`, but typed pointer addition `a+i` already scales by element size. Multiplying again would apply the scale twice. Contexts such as `sizeof(a)` and `&a` must be distinguished from this conversion. An array cannot be advanced with `a++`; use a separate traversal pointer. Traversal until NUL is valid only when the terminator occurs within the array's bounds. [Pointers slides 18–25](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
-
-### A literal's address and a writable character array
-
-A C string is a character sequence terminated by the NUL byte, `'\0'`. These declarations establish different storage relationships.
+A C string is a character sequence terminated by a NUL byte. These declarations create different storage:
 
 ```c
-char *s = "hello world\n";
-char text[20] = "SNU CSE00800";
+char *p = "hello world\n";
+char s[20] = "SNU CSE00800";
 ```
 
-`s` holds the address of a literal's first character. `text` stores characters in a separate twenty-byte array. The length of `SNU CSE00800` is `3+1+3+5=12`; its first NUL is `text[12]`, and the remaining array elements are also initialized to zero. Capacity twenty, string length twelve, and one terminator byte measure different things.
+`p` stores the address of the first character in a literal; `s` is itself a twenty-byte array. `SNU` contributes three characters, the space one, `CSE` three, and `00800` five, giving length 12. The first NUL is `s[12]`; partial array initialization also makes every element through `s[19]` zero. String length excludes the terminator, but the storage must include it.
 
-The elements of `text` may be changed. Modifying a string literal is undefined behavior, which does not promise any particular crash. Conversely, being reached through a pointer does not make every object read-only. In `struct student { int id; char *name; };`, `name` stores an address, not an embedded copy of all the characters. Copying the structure does not independently copy the string or extend its lifetime. [[courses/system_programming/transcripts/2026-09-02|September 2 lecture, 01:29:10–01:34:38]], [Introduction slide 54](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/00.Introduction.pptx)
+The writable array permits changing `s[0]`; modifying the literal through `p[0]` has undefined behavior. This does not make every pointer target read-only, nor does undefined behavior guarantee a particular crash. A `struct student { int id; char *name; };` groups heterogeneous members. Its `name` member stores an address, not an embedded copy of the characters, so the pointed-to string has its own lifetime.
 
 ### Function designators and structure pointers
 
-Given `void foo(void)`, both `void (*fp)(void)=foo` and `void (*fp)(void)=&foo` designate the same function. In the first case, the function designator converts to a function pointer. The function itself is not a pointer variable, and `sizeof(foo)` does not measure its machine code. Function pointers and object pointers are distinct categories; converting arbitrary function pointers to `void *` for `%p` is not a portable general rule.
+For `void foo(void)`, the function designator `foo` converts to a function pointer in ordinary value contexts. Both `void (*fp)(void) = foo;` and `void (*fp)(void) = &foo;` identify that function. The function itself is not a pointer variable, and `sizeof(foo)` does not measure its machine-code length. Converting an arbitrary function pointer to `void *` for `%p` is not a portable rule for all C implementations.
 
-In the memory recap example, `shared` points to `struct __shared`. `sizeof(shared)` is eight, whereas `sizeof(*shared)` includes `sem_t m`, `int shared_int`, and padding. Without a concrete `sem_t` size, the complete structure size cannot be invented. With a valid pointed-to structure, `&shared->shared_int` is a member address; `&shared` is the address of the pointer object. [[courses/system_programming/transcripts/2026-09-23|September 23 lecture, 05:36–06:37]], [Memory recap slide 4](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/06.MM.Variable.and.Memory.Recap.pptx)
+The incomplete decay wording at 05:36–06:37 in the [[courses/system_programming/transcripts/2026-09-23|2026-09-23 transcript]] should be read alongside the declarations. The same material declares `shared` as `struct __shared *`. `sizeof(shared)` is eight, while `sizeof(*shared)` includes `sem_t m`, `int shared_int`, and padding. Without the size of `sem_t`, a numerical structure size cannot be invented. For a valid `shared`, `&shared->shared_int` addresses a member; `&shared` addresses the pointer object.
 
-## Pointer arithmetic and object lifetime
+## Tracing address copies and value copies
 
-Read pointer movement in elements, not raw bytes. The examples on slides 21–24 **reset their starting state independently**.
+With `p = &i` and `q = &j`, `q = p` redirects `q` to `i`. In contrast, `*q = *p` copies the value of `i` into the existing target `j`. This regularized example develops the distinction from the [[courses/system_programming/lectures/en/2026-09-07-lecture-02|2026-09-07 pointer lecture]].
 
-| Initialization | Operations | Result |
-|---|---|---|
-| `p=&a[2]` | `q=p+3; p+=6;` | `q=&a[5]`, `p=&a[8]` |
-| `p=&a[8]` | `q=p-3; p-=6;` | `q=&a[5]`, `p=&a[2]` |
-| `p=&a[5]; q=&a[1];` | `p-q`, `q-p` | 4, -4 |
-| Same third initialization | `p<=q`, `p>=q` | 0, 1 |
+```c
+int i = 1, j = 7;
+int *p = &i, *q = &j;
+*q = *p;
+q = p;
+*p = 1;
+*q = 2;
+```
 
-Carrying `p=&a[2]` from the second example into the third changes the answer. Differences within one array are measured in elements. A pointer one position past the last element may be formed but cannot be dereferenced as an element. Do not extend these array-order comparisons to arbitrary addresses of unrelated objects. [Pointers slides 21–24](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
+After the first assignment, `j = 1` and both targets are unchanged. After `q = p`, both pointers designate `i`. The final two assignments therefore update the same object, leaving `i = 2`, `j = 1`.
 
-When returning a pointer, the target's lifetime matters more than the surviving address number. The source's `max(int *a,int *b)` can return the address of a caller object containing the larger value, usable while that object lives. In contrast, returning `&a` or `&b` from `max(int a,int b)` returns an address of an automatic parameter whose lifetime ends on return. Keeping its address does not keep the object alive.
+`scanf` with `%d` needs the address of a valid `int` destination. For this `i`, either `&i` or `p` supplies it. `&p` has type `int **` and does not satisfy that contract. Declaring `int a[10]` reserves element storage; declaring `int *a` reserves only pointer storage. An uninitialized-pointer dereference remains invalid even if execution happens not to crash.
 
-Similarly, `find_middle(a,n)` returning `&a[n/2]` requires `n>0`, an existing element, and a still-live caller array. [Pointers slides 16–18](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
+### Which pointer does a pointer-to-pointer change?
 
-## Array parameters and double pointers
-
-A function parameter declared `int a[]` is adjusted to `int *a`. Passing it copies an address rather than all `N` elements, so the act of passing it does not take time proportional to `N`. A `find_largest` scan still examines the elements and takes time proportional to `N`.
-
-For `find_largest(&b[5],10)`, the callee's `a[0]` is the caller's `b[5]`, and `a[9]` is `b[14]`. Those ten elements must exist. An implementation initialized from `a[0]` requires nonempty input. `const int a[]` prevents element changes through that access path. Changing `a[i]` affects caller storage, but assigning a different address to the local pointer `a` does not change the caller's pointer variable. Passing an entire structure containing an array by value is different: the structure value, including its array member, is copied. [[courses/system_programming/transcripts/2026-09-09|September 9 lecture, 03:08–10:32]], [Pointers slides 26–30](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
-
-### Which object does a double pointer change?
-
-An `int **k` holds the address of an `int *` object. The source trace changes `k`'s target along the way.
+The [[courses/system_programming/lectures/en/2026-09-09-lecture-03|2026-09-09 multiple-pointer lecture]] and M006 slides 31–35 extend the state trace:
 
 ```c
 int i, j;
 int *p = &i, *q = &j;
 int **k = &p;
-
 *p = 1;
 *q = 2;
 *k = q;
@@ -151,267 +107,344 @@ k = &q;
 **k = 4;
 ```
 
-The first two stores give `i=1,j=2`. `*k=q` writes into `p`, making `p→j`. `k=&q` then makes `k` refer to `q`; `*k=&i` therefore establishes `q→i`. Finally `*p=3` changes `j`, while `**k=4` follows `k→q→i` and changes `i`. The result is `i=4,j=3`. Update the relationships after every assignment rather than merely counting asterisks. [Pointers slides 31–35](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx), [[courses/system_programming/transcripts/2026-09-09|September 9 lecture, 15:26–19:25]]
+`*k = q` writes the value of `q` into `p`, producing `p → j`. After `k = &q`, `*k = &i` produces `q → i`. Thus `*p = 3` changes `j`, while `**k = 4` changes `i`. The final relationships are `p → j`, `q → i`, `k → q`, with `i = 4`, `j = 3`. Counting stars is insufficient: update the designated object after each statement. Q1(b) at [EX:sp_2025_2_midterm_q01 p.3] demands the same separation between pointer movement and array-element updates. The transferable method is identifying the object on each assignment's left side, rather than memorizing a private exam output.
 
-## Deriving types from complex declarations
+## Pointer arithmetic and lifetime
 
-Start at the identifier and work outward. Postfix `[]` and function `()` bind before `*`, unless grouping parentheses change the order.
+Typed pointer arithmetic moves in elements, not bytes. Within a permitted range, `p + k` has byte displacement `k * sizeof(*p)`. Scaling already occurs, so `p += sizeof(int)` for an `int *` skips four integers on this target rather than advancing to the next one.
 
-| Independent declaration | Meaning |
+| Independently initialized source example | Result |
 |---|---|
-| `int *p[10];` | Array of ten `int *` objects |
-| `int (*p)[10];` | Pointer to an `int[10]` array |
-| `int *(*p)[10];` | Pointer to an array of ten `int *` objects |
-| `int (*pf)(void);` | Pointer to a no-argument function returning `int` |
-| `int *pf(void);` | No-argument function returning `int *` |
-| `int (*pf[10])(void);` | Array of ten pointers to no-argument, `int`-returning functions |
-| `int pf[](void);` | Invalid: requests an array of functions themselves |
+| `p = &a[2]; q = p + 3; p += 6;` | `q = &a[5]`, `p = &a[8]` |
+| `p = &a[8]; q = p - 3; p -= 6;` | `q = &a[5]`, `p = &a[2]` |
+| `p = &a[5]; q = &a[1];` | `p-q = 4`, `q-p = -4`, `p<=q` is 0, `p>=q` is 1 |
 
-After conversion, `p+1` for the first declaration advances one pointer element, eight bytes on the target. The second advances one complete `int[10]`, forty bytes. [Pointers slide 36](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
+These subtraction and ordering examples concern valid elements of the same array. Do not carry one row's final state into the next. A one-past pointer can represent a boundary but cannot be dereferenced as an extra element. Equality and relational ordering should not be reduced to one undifferentiated rule.
 
-The following table uses non-VLA types on the same target.
+Lifetime also controls returned addresses. A `max(int *a, int *b)` returning `a` or `b` can identify a caller-owned object for as long as that object remains alive. A `max(int a, int b)` returning `&a` or `&b` instead exposes a parameter whose lifetime ends on return. Leftover bytes do not authorize access. A source `find_middle(a, n)` returning `&a[n/2]` needs `n > 0`, sufficient array bounds, and a still-live caller array.
+
+### Array parameters are still passed by value
+
+An `int a[]` parameter adjusts to `int *a`. Passing one address is different from scanning N elements. `find_largest` takes work proportional to N if it examines them all, but the call does not copy the array. In `find_largest(&b[5], 10)`, local `a[0]` designates `b[5]` and `a[9]` designates `b[14]`; all ten elements must exist. Initializing the maximum from the first element also requires `n > 0`.
+
+C copies pointer parameter values. Writing `a[i]` can change a caller element, but assigning a new address to local parameter `a` does not change the caller's pointer variable. `const int a[]` prevents modification through this access path, not through every possible alias. Passing a whole structure containing an array by value is different: the structure value, including that member array, is copied.
+
+## Reading size and access units from declarators
+
+Start at the identifier and follow grouping parentheses, `[]`, function `()`, and `*`. Brackets and function parentheses bind more tightly than `*`.
+
+| Declaration | Meaning |
+|---|---|
+| `int *p[10]` | Array of ten `int *` objects |
+| `int (*p)[10]` | Pointer to `int[10]` |
+| `int *(*p)[10]` | Pointer to `int *[10]` |
+| `int (*pf)(void)` | Pointer to a no-argument function returning `int` |
+| `int *pf(void)` | No-argument function returning `int *` |
+| `int (*pf[10])(void)` | Array of ten such function pointers |
+| `int pf[](void)` | Invalid array of functions themselves |
+
+For `int (*p)[10]`, `p + 1` advances forty bytes on the target. For a pointer array converted to an element pointer, the element is one pointer, occupying eight bytes. Reading the type first also resolves M006 slides 38–39:
 
 | Declaration | `sizeof(A)` | `sizeof(*A)` | `sizeof(**A)` |
 |---|---:|---:|---:|
-| `int A1[3]` | 12 | 4 | Type error |
+| `int A1[3]` | 12 | 4 | Invalid expression |
 | `int *A2[3]` | 24 | 8 | 4 |
 | `int (*A3)[3]` | 8 | 12 | 4 |
 
-`*A3` has type `int[3]`. After that array converts to an element pointer, another dereference reaches its first `int`. Slide 38's label `**A3: A3[0]` is inconsistent with these types; `A3[0][0]` is the correct correspondence. Also, non-VLA `sizeof(*A3)` does not evaluate its operand. Its validity does not make an evaluated access through an uninitialized pointer safe.
+Here `A` stands for the identifier in each row. Slide 38's label `**A3: A3[0]` is inconsistent with the type: the explicit correction is `A3[0][0]`. In the source example with `A = {1,2,3}`, `B = {4,5,6}`, `A3 = &A`, and `B3 = &B`, `*A3 = *B3` is invalid array assignment. `**A3 = **B3` copies only the first integer, yielding `A = {4,2,3}`. `pA = *A3` stores the first element's address. Non-VLA `sizeof` reasoning is not permission for actual uninitialized-pointer access.
 
-With `A={1,2,3}, B={4,5,6}` and `A3=&A, B3=&B`, `*A3=*B3` attempts forbidden whole-array assignment. `**A3=**B3` copies just the first element, yielding `A={4,2,3}`. `pA=*A3` stores the address of the first element. [Pointers slides 38–39](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
+## Dynamic allocation size and lifetime
 
-The indexed `sizeof` question demands the same first step: decide whether the expression denotes a pointer object, a pointed-to object, or an entire array. A string literal's stored size includes its NUL terminator and differs from its string length. This type reasoning transfers; a report that some code did not crash is not a C validity rule. [EX:sp_2025_1_midterm_q01 p.2]
+The [[courses/system_programming/lectures/en/2026-09-23-lecture-06|2026-09-23 dynamic-array explanation]] and [system_programming:M016 slide 17](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/06.MM.Variable.and.Memory.Recap.pptx) separate pointer `A` at `0xffffc1a4` from the allocated base address `0x56550004` stored in it. The figure's useful distinction is the pointer box versus the separate 1024-element region. With four-byte integers, the region occupies `4096 = 0x1000` bytes. Thus `A[1]` is at `0x56550008`, `A[2]` at `0x5655000c`, and `A[1023]` at `base + 4092 = 0x56551000`. This follows the slide, not a reconstruction of uncertain numbers at STT 24:43.
 
-## Dynamic allocation: capacity, initialization, and lifetime
+`char buf[512] = {'A','B','C'};` zero-initializes the remaining elements. Writing the first three bytes after `malloc` does not zero the rest. `calloc` supplies zero-initialization. Allocation failure checks, eventual `free`, and avoiding access after release are separate responsibilities. Uninitialized memory is not a reliable random-number source.
 
-`malloc` returns the start address of requested storage. The pointer variable's address differs from the allocated region's address. On memory recap slide 17, `A` itself is schematically at `0xffffc1a4` and holds heap address `0x56550004`. The allocation is `1024 * sizeof(int)=4096=0x1000` bytes.
+I/O lengths expose the same distinction. `sizeof(buf)` is 512 for that array but eight for a pointer to a heap buffer. Keep and pass the actual allocated length separately. Reading into one `char` requires its address, `&buf`, rather than its character value. OS resource reclamation at process exit does not justify accumulated leaks in a long-running program.
 
-| Element | Starting address |
+### Resizing and independent allocation lifetimes
+
+RM002 slides 5–27 and RM003's error examples are optional materials-only review. They do not establish that the complete allocation decks were taught on September 28. `malloc`/`free` are libc requests; libc can interact with the OS through `brk`/`sbrk` or `mmap`. Not every allocation belongs to one contiguous `brk` heap. The material also introduces `alloca` and `sbrk(0)` as alternatives or observations, without making their implementation the task here.
+
+For a positive-size `realloc` request, failure returns NULL and leaves the old allocation intact. The source's direct overwrite of the existing pointer can lose access to that allocation on failure. After success, use the returned pointer and do not reuse an old base or interior alias; an old allocation should not be presumed valid merely because the numerical address did not change. Contents fitting within the new size are preserved, while newly added bytes are not initialized automatically. Zero-size behavior is not adopted as a universal rule without standard and implementation conditions.
+
+The source's growth from 256 integers to 512 means 1024 → 2048 bytes. After initially storing `0..255`, it initializes the additional elements `256..511` separately. This resizing example is distinct from the independent allocation sequence on RM002 slides 15–25. Assuming every request succeeds:
+
+| Calls completed | Live allocations |
 |---|---|
-| `A[0]` | `0x56550004` |
-| `A[1]` | `0x56550008` |
-| `A[2]` | `0x5655000c` |
-| `A[1023]` | `0x56550004 + 1023*4 = 0x56551000` |
+| `p1 = malloc(3); p2 = malloc(1); p3 = malloc(4);` | `p1`, `p2`, `p3` |
+| `free(p2);` | `p1`, `p3` |
+| `p4 = malloc(6);` | `p1`, `p3`, `p4` |
+| `free(p3);` | `p1`, `p4` |
+| `p5 = malloc(2);` | `p1`, `p4`, `p5` |
+| `free(p1); free(p4); free(p5);` | None |
 
-The one-past address is `0x56551004`. The [[courses/system_programming/transcripts/2026-09-23|September 23 transcript, 24:43]] contains confused size and address wording; these values follow the slide's expression and diagram. [Memory recap slides 16–20](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/06.MM.Variable.and.Memory.Recap.pptx)
+Allocation and release order need not match. Freed space may be reused, but the API does not promise that `p5` receives the former address of `p2`. This table follows the call sequence and does not assert uninspected graphical placement.
 
-`char buf[512]={'A','B','C'}` initializes all remaining elements to zero. Allocating with `malloc(512)` and assigning only the first three bytes does not zero the rest. `calloc` zero-initializes allocated bytes. The unclear discussion at 26:45–28:44 does not establish zeroed `malloc` storage or a trustworthy source of random values.
+### Classifying memory errors by their causes
 
-Check allocation failure, use storage only during its lifetime, and call `free` when it is no longer needed. OS reclamation when the process exits does not justify accumulating leaks in a long-running program.
+RM003 slides 33–45 connect pointers to diagnosis. Applying `+=` to uninitialized `y[i]` is not accumulation from zero. Allocating `N * sizeof(int)` for N pointer slots of an `int **p` is insufficient when pointers are larger than integers. Reading nine characters without a bound into `char s[8]` overflows, with the terminating NUL requiring further space. `*size--` groups as `*(size--)`, not `(*size)--`, so it moves the pointer instead of decrementing the pointed-to count.
 
-Finally, `sizeof` does not consult an allocation record. For an actual `char buf[512]` array, `sizeof(buf)` is 512. For `char *buf` pointing to 512 allocated bytes, it is eight. Thus `read(fd,buf,sizeof(buf))` requests only eight bytes in the pointer case. Keep the real capacity separately, for example in `BUFSIZE`. To read one `char` object, supply `&buf` rather than its value. These distinctions underpin [[courses/system_programming/units/en/io-streams|requested and returned I/O lengths]].
+Returning a local address, use-after-free, double free, and losing the last owning pointer are different lifetime errors. Freeing a linked structure's head does not automatically free separately allocated successors. Debuggers, `mtrace`/`muntrace`, and Valgrind are observation tools; naming them is not evidence of an executed check. Allocator lists, coalescing, and binning remain later material. Object size and lifetime now provide the foundation for [memory layout and calls](memory-layout.md).
 
 ## Key Takeaways
 
-- Pointer value, pointer-object address and pointee value are distinct.
-- Pointer sizeof does not encode array capacity or string length.
-- Mark each store’s target and preserve example resets.
-- Continue to [[courses/system_programming/units/en/memory-layout|alignment and memory layout]].
+- `sizeof` concerns a type; a pointer does not remember the allocation's length.
+- Separate address copying, copying a pointee value, and changing a pointer through a pointer-to-pointer.
+- An array is an object that converts to its first-element address in many contexts.
+- Valid address reasoning needs element scaling, array bounds, and a live object.
+- Allocation, initialization, resizing, and release are separate responsibilities.
 
 ## Recall and Practice
 
-### Recall and reasoning
+### Recall and explanation
 
 #### Recall Q01 · Size and precision
 
-Give the target sizes of char, short, int, long, float, double and pointers. What do eight-byte double and sixteen-byte long double not establish?
+Give the chapter target's sizes for `char/short/int/long/float/double` and distinguish type, object, and variable. Do 8-byte `double` and 16-byte `long double` imply exact real values or 128-bit precision?
 
 <details><summary>Show solution</summary>
 
-Sizes are 1, 2, 4, 8, 4, 8 and 8 bytes on this target, not every ABI. Sign, exponent and significand encode finitely many values, so rounding is unavoidable. Sixteen storage bytes do not establish 128-bit precision.
+The sizes are 1/2/4/8/4/8 bytes. An object provides storage, a variable names it, and a type governs interpretation and size. Floating-point uses sign, exponent, and significand; finite states require rounding. Storage size is not effective precision. These are the material's x86-64 Linux assumptions, not universal C sizes.
 
-**Check:** Separate size, ABI and numerical precision.
+**Checking points:** Check all six sizes, storage versus precision, and the target qualification.
 
 </details>
 
-#### Recall Q02 · An object storing an address
+#### Recall Q02 · Pointer box and target
 
-Let `a=5`, `ap=&a`, `app=&ap` with schematic object addresses 16, 28 and 4. Explain pointer expressions, indirect assignments and printf formats.
+In the abstract diagram, `a=5` is at 16, `ap=&a` at 28, and `app=&ap` at 4. Explain `ap/&ap/*app/**app` and the targets of `*app=...` and `**app=9`. Give address/int print formats and interpret `sizeof(ap)`, `sizeof(*ap)`, and `sizeof(*k)` for `void *k`.
 
 <details><summary>Show solution</summary>
 
-`ap` is 16, `&ap` is 28 and `*ap` is 5. `*app` designates ap and has value 16; `**app` reaches a’s 5. `*app=&b` redirects ap, after which `**app=9` changes b; app itself stays unchanged. Use `%p` with `(void *)ap`/`(void *)&ap` and `%d` with `*ap`. Pointer size is 8, int size 4; `void *` is 8 but standard C has no `sizeof(void)`. Casts do not create valid lifetime/alignment/storage; non-crashing uninitialized pointers are not safe. Small addresses are schematic, not a packed eight-byte layout.
+The values are 16/28/16/5. Assigning through `*app` changes `ap`; through `**app` it changes the current integer target. Print `(void *)ap` or `(void *)&ap` with `%p`, and `*ap` with `%d`. The sizes are 8/4; standard C disallows `sizeof(*k)` because `void` is incomplete. Casting creates neither storage, alignment, nor lifetime. Printing an uninitialized pointer is not safe inspection, and the diagram's spacing is not physical pointer layout.
 
-**Check:** Distinguish address, pointer object, value and each assignment target.
+**Checking points:** Check all four values, both assignment targets, print argument types, and the void restriction.
 
 </details>
 
-#### Recall Q03 · Array, function and struct pointers
+#### Recall Q03 · Array size and conversion
 
-Calculate sizes and a+2 for `int a[10]; int *p=a;`, plus `char[10]`/`double[5][2]`. Compare foo/&foo and struct-pointer/object sizes.
+For `int a[10]; int *p=a; double pi[5][2];`, compute the three object sizes and the displacement of `a+2`. Explain `a++`, `&a`, and `sizeof(a)` relative to ordinary array conversion.
 
 <details><summary>Show solution</summary>
 
-`sizeof(a)=40`, `sizeof(p)=8`, and `a+2` addresses the third int, eight bytes ahead. The char and double arrays occupy 10 and 80 bytes. Arrays usually convert to element pointers, with exceptions including sizeof/address-of; `a++` is invalid. Typed addition already scales. For `void foo(void)`, foo and &foo can initialize `void (*fp)(void)`; function sizeof and portable object-pointer-style printing are not established. `sizeof(shared)=8`, but `sizeof(*shared)` includes members and padding and cannot be guessed without `sem_t` size. A member address also differs from the pointer variable’s address.
+The sizes are 40/8/80 bytes; `a+2` is the third integer, eight bytes from the base. Typed arithmetic already scales. In many expressions `a` converts to the first-element pointer, but `sizeof(a)` measures the array and `&a` points to the whole array. `a++` is invalid; use a separate pointer. The pointer value does not also store the count ten.
 
-**Check:** Check 40/8/eight-byte movement, 10/80, function pointers and unknown struct size.
+**Checking points:** Check 40/8/80, the eight-byte displacement, and both conversion exceptions.
 
 </details>
 
-#### Recall Q04 · Three string-related sizes
+#### Recall Q04 · Function and structure pointers
 
-Find length, NUL index and capacity of `char s[20]="SNU CSE00800"`. Compare `char *p="abc"`, a writable `char a[4]="abc"` array and copying a struct’s name pointer.
+For `void foo(void)`, compare initializing a function pointer with `foo` and `&foo`. Does `sizeof(foo)` measure code? For `struct __shared {sem_t m; int shared_int;} *shared;`, distinguish the two sizes and the addresses `&shared` and `&shared->shared_int`.
 
 <details><summary>Show solution</summary>
 
-Length is 12, first NUL index 12, capacity 20, with s[12]..s[19] zeroed. `p` stores an address; its literal occupies four bytes including NUL. `char a[4]="abc"` is writable; changing the literal through p is undefined behavior, not a guaranteed crash. Copying a struct’s `char *name` copies the address, sharing character storage without a deep copy or extended lifetime.
+Both initializations designate the same function; the function is not itself a pointer variable. Standard C rejects `sizeof(foo)` because a function type is not an object type; it does not measure code, and converting a function pointer to `void *` for `%p` is not a general portability rule. `sizeof(shared)=8`; `sizeof(*shared)` includes members and padding and cannot be numerically determined without `sem_t`. The two addresses designate the pointer object and, for a valid target, its integer member.
 
-**Check:** Check 12/12/20 and distinguish pointer storage, character storage and lifetime.
+**Checking points:** Separate function conversion from structure size and do not invent an unknown size.
 
 </details>
 
-#### Recall Q05 · Copying values and addresses
+#### Recall Q05 · String length, storage, and lifetime
 
-Trace `*q=*p; q=p; *p=1; *q=2;` with i=1, p=&i, q=&j. Which of &i, p and &p suits scanf’s `%d`?
+Compare storage for `char *p="abc"; char s[20]="SNU CSE00800";`. Give s's length, first NUL, capacity, and remaining initialization. Discuss modifying `p[0]`/`s[0]` and the lifetime of a `char *name` structure member.
 
 <details><summary>Show solution</summary>
 
-The first assignment makes j=1 without redirecting pointers. After q=p both reach i, so the last stores set i to 1 then 2. Final i=2, j=1. `scanf` `%d` needs `int *`: &i and p fit, &p is `int **`. Declaring a pointer does not allocate its target int.
+p stores only the address of separate literal storage. s is a writable twenty-byte array with 3+1+3+5=12 characters; index 12 is the first NUL and indices 12–19 are zero. The literal separately stores three characters plus NUL. Modifying s is allowed; modifying the literal through p is undefined behavior, without a guaranteed crash. `name` likewise stores an address rather than copied characters, so the string's lifetime must be managed separately.
 
-**Check:** Check retained j, redirected q and scanf argument types.
+**Checking points:** Check 12/12/20 and distinguish pointer, literal, and array storage.
 
 </details>
 
-#### Recall Q06 · Lifetime and pointer arithmetic
+#### Recall Q06 · Address assignment and value assignment
 
-Compare returning a local int address and a caller-owned array element. Trace the three separately reset pointer examples over one sufficiently large array.
+Trace `*q=*p; q=p; *p=1; *q=2;` starting with `i=1,j=7,p=&i,q=&j`. Which of `&i`, `p`, and `&p` satisfies scanf's `%d` destination, and does declaring `int *a` allocate integer storage?
 
 <details><summary>Show solution</summary>
 
-A local object’s lifetime ends on return; its remaining address bits do not keep it alive. A caller-owned element can remain valid with a live array, n>0 and valid bounds. The first example ends q=a+5, p=a+8; the reset example ends q=a+5, p=a+2. After the final reset, p−q=4, q−p=−4, p<=q=0, p>=q=1. Differences count elements, not bytes. These require the same valid array; one-past may be formed but not dereferenced.
+First j becomes 1; then q is redirected to i. The final writes set i to 1 then 2. Thus i=2, j=1, and both pointers target i. `&i` and p are valid `int *` destinations; `&p` is `int **` and mismatches. A pointer declaration allocates only the pointer object, not a valid integer destination.
 
-**Check:** Keep all resets separate and justify lifetime and element units.
+**Checking points:** Check final values 2/1, aliasing, and scanf destination types.
 
 </details>
 
-#### Recall Q07 · Actual array-parameter passing
+#### Recall Q07 · Pointer arithmetic and returned lifetime
 
-For `find_largest(&b[5],10)`, identify a[0]/a[9], passing/search cost, const restrictions, rebinding and a struct containing an array.
+Starting independently within a sufficiently large array, trace (a) `p=&a[2];q=p+3;p+=6;`, (b) `p=&a[8];q=p-3;p-=6;`, and (c) `p=&a[5];q=&a[1];` followed by `p-q`, `q-p`, `p<=q`, and `p>=q`. Explain one-past access and compare returning a local parameter's address with `&a[n/2]`.
 
 <details><summary>Show solution</summary>
 
-a[0] is b[5] and a[9] is b[14], requiring ten valid elements and n>0. An array parameter adjusts to a pointer whose value is copied: passing is O(1), scanning for a maximum O(N). Const restricts writes through that access path. Rebinding local a does not rebind the caller’s pointer, though element writes reach original storage. Passing a struct by value copies its array member too.
+(a) p→a[8], q→a[5]; (b) p→a[2], q→a[5]; (c) 4, -4, 0, 1. Differences count elements of the same array, and each case resets state. One-past may mark a boundary but is not dereferenceable. A value parameter's lifetime ends on return; a pointer to a caller-owned live object can remain usable. `&a[n/2]` requires n>0, adequate bounds, and a live caller array.
 
-**Check:** Check slice bounds, both costs, and pointer versus object copying.
+**Checking points:** Check independent initialization, all comparison results, and caller/local lifetime.
 
 </details>
 
-#### Recall Q08 · Two-level indirection
+#### Recall Q08 · Array parameters and slices
 
-Trace all seven statements from p=&i, q=&j, k=&p: `*p=1; *q=2; *k=q; k=&q; *k=&i; *p=3; **k=4;`.
+Where do local `a[0]` and `a[9]` refer in `find_largest(&b[5],10)`? Compare argument-passing cost with search cost, element writes with reassigning a, `const int a[]`, and passing a structure containing an array by value.
 
 <details><summary>Show solution</summary>
 
-1 sets i=1; 2 sets j=2; 3 changes p to q’s value &j because k reaches p; 4 redirects k to q; 5 sets q=&i; 6 sets j=3 through unchanged p; 7 sets i=4 through k→q→i. Final p→j, q→i, k→q, i=4, j=3. Re-evaluate which pointer object `*k` designates at each step.
+They designate b[5] and b[14]. The parameter adjusts to `int *`, so passing copies one address; scanning reads all ten elements. Initializing a maximum from the first element requires n>0 and valid slice bounds. Writing `a[i]` changes caller storage, but reassigning local a does not change the caller's pointer. const restricts this access path, not every alias. Passing an entire structure by value also copies its array member.
 
-**Check:** Identify the changed target at every step, not just final values.
+**Checking points:** Include the slice endpoint, value passing, const access path, and structure-copy distinction.
 
 </details>
 
-#### Recall Q09 · Reading compound declarations
+#### Recall Q09 · Complete double-pointer trace
 
-Classify the seven independent declarations listed and compare p+1 for the first two: `int *p[10]`; `int (*p)[10]`; `int *(*p)[10]`; `int (*pf)(void)`; `int *pf(void)`; `int (*pf[10])(void)`; `int pf[](void)`.
+Initially `p=&i,q=&j,k=&p`. Identify each assignment target and final relationships for `*p=1;*q=2;*k=q;k=&q;*k=&i;*p=3;**k=4;`.
 
 <details><summary>Show solution</summary>
 
-In order: array of ten int pointers; pointer to an array of ten ints; pointer to an array of ten int pointers; pointer to a no-argument int-returning function; function returning int pointer; array of ten such function pointers; invalid array of functions. After conversion, the first p+1 advances one pointer (8 bytes); the second advances int[10] (40 bytes). Function pointers are objects; functions themselves cannot be array elements.
+The targets are i, j, p, k, q, j, i. After initializing i=1, j=2, `*k=q` redirects p to j, `k=&q` redirects k to q, and `*k=&i` redirects q to i. Finally p→j, q→i, k→q, with i=4, j=3. The last write does not affect j because k no longer targets p.
 
-**Check:** Check every declaration and both 8/40 strides.
+**Checking points:** Show the three pointer-changing steps, not just final values.
 
 </details>
 
-#### Recall Q10 · sizeof and valid assignment
+#### Recall Q10 · Reading seven declarators
 
-Tabulate each variable and one/two dereferences for `int A1[3], *A2[3], (*A3)[3]`. Compare sizeof to reading uninitialized A3 and whole-array versus first-element assignments.
+Interpret these independent declarations: `int *p[10]`, `int (*p)[10]`, `int *(*p)[10]`, `int (*pf)(void)`, `int *pf(void)`, `int (*pf[10])(void)`, `int pf[](void)`. What are the first two traversal strides?
 
 <details><summary>Show solution</summary>
 
-|Expressions|Types and bytes|
-|---|---|
-|A1, *A1, **A1|int[3]:12; int:4; invalid|
-|A2, *A2, **A2|int *[3]:24; int *:8; int:4|
-|A3, *A3, **A3|int (*)[3]:8; int[3]:12; int:4|
+In order: array of ten int pointers; pointer to int[10]; pointer to an array of ten int pointers; pointer to a no-argument int-returning function; function returning int pointer; array of ten such function pointers; invalid array of functions. Read from the identifier, respecting grouping and the tighter binding of []/(). Traversal through the first array's element pointer strides eight bytes; the second p strides forty. The array name itself cannot be incremented.
 
-Non-VLA `sizeof(*A3)` does not evaluate its operand and yields 12 without making runtime use of an uninitialized pointer safe. With A={1, 2, 3}, B={4, 5, 6}, `*A3=*B3` is invalid array assignment; `**A3=**B3` copies only the first int, yielding A={4, 2, 3}. `*A3` can convert to an element pointer where appropriate. The source’s **A3 equivalence must read `A3[0][0]`.
-
-**Check:** Check all types/sizes, evaluation rules and the array-assignment prohibition.
+**Checking points:** Check all seven interpretations and the 8/40-byte strides.
 
 </details>
 
-#### Recall Q11 · Allocation and capacity
+#### Recall Q11 · Type-based sizeof and array assignment
 
-For 1024 four-byte ints starting at 0x56550004, find A[1], A[2], A[1023] and one-past. Compare a 512-byte array and malloc pointer in size, initialization, read length and lifetime.
+With int=4 and pointer=8, tabulate the types/sizes of `int A1[3]`, `int *A2[3]`, `int (*A3)[3]` and one/two dereferences. For `A={1,2,3}`, `B={4,5,6}`, `A3=&A`, `B3=&B`, interpret `*A3=*B3`, `**A3=**B3`, and `pA=*A3`.
 
 <details><summary>Show solution</summary>
 
-The allocation is 4096=0x1000 bytes. Addresses are 0x56550008, 0x5655000c, 0x56551000 and 0x56551004. `&A` is separate pointer storage (schematically 0xffffc1a4). `char a[512]="ABC"` zeroes the remainder; malloc does not initialize, whereas calloc zeroes. Pointer sizeof is 8 versus array 512, so `read(fd,p,sizeof(p))` requests 8. Keep/pass capacity separately; a single char needs `&buf`. Check allocation, free after final use and avoid dangling access. Process-exit cleanup does not excuse runtime leaks.
+|Declaration|Object|One *|Two *|
+|---|---|---|---|
+|A1|int[3], 12|int, 4|Invalid|
+|A2|int *[3], 24|int *, 8|int, 4|
+|A3|int (*)[3], 8|int[3], 12|int, 4|
 
-**Check:** Check all four addresses, pointer storage, 8/512, initialization and lifetime.
+Non-VLA sizeof follows types and does not authorize reading an uninitialized pointer. The first assignment is invalid array assignment; the second changes only A[0], producing `{4,2,3}`; the third stores the first-element address in pA. `**A3` means `A3[0][0]`, correcting the source's inconsistent `A3[0]` label.
+
+**Checking points:** Supply types as well as sizes and distinguish invalid assignment from the source's label error.
 
 </details>
 
-### Practice
+#### Recall Q12 · Heap addresses, initialization, and I/O length
 
-#### Practice P01 · Size lost at an API boundary
-
-**Newly written synthetic practice.** On the target, consider `char text[7]="cat"; char *p=text; int a[3]={1,2,3}; int (*whole)[3]=&a;`. Find `sizeof(text)`, `sizeof(p)`, `sizeof(*whole)`, `sizeof(**whole)` and the string length of text; can a char-pointer parameter recover capacity 7 using sizeof?
-
-[EX:sp_2025_1_midterm_q01 p.2] Q1(a) contributes type/sizeof/NUL reasoning, extended to diagnosing information lost at a parameter boundary. Prerequisites: Q03/Q04/Q10/Q11; crash prediction is excluded. [[exam_questions/sp_2025_1_midterm_q01|Authorized related question preview]]
+A points to 1024 ints beginning at 0x56550004. Find the allocation size and addresses of A[1], A[2], A[1023]. Compare partial array initialization with writing three malloc bytes, for allocated `char *p`, interpret `read(fd,p,sizeof(p))`, and explain a one-char destination and failure/free duties.
 
 <details><summary>Show solution</summary>
 
-Values are 7, 8, 12, 4; string length is 3. NUL and remaining zero bytes belong to the capacity. A pointer parameter carries an address, so sizeof gives 8, not capacity 7 or length 3. Pass capacity separately: this combines type-based calculation with an API-design decision.
+The allocation is 4096=0x1000 bytes; the addresses are 0x56550008/0x5655000c/0x56551000. A's own object address is separate. Partial initialization of `char buf[512]={'A','B','C'}` zeros the remainder; malloc does not, while calloc zero-initializes. `sizeof(p)=8`, so that read requests eight bytes; retain the allocated length separately. For a separate `char c`, `read(fd,&c,1)` supplies its address and requests one byte. Check allocation failure, free when finished, and avoid use after release. Exit-time reclamation does not fix long-running leaks.
 
-**Check:** Check 7/8/12/4/3 and justify explicit capacity.
+**Checking points:** Verify all three addresses, 4096 bytes, initialization differences, and the eight-byte request.
+
+</details>
+
+#### Recall Q13 · Reallocation success and failure
+
+For resizing 256 ints to 512, give byte sizes and preserved/new ranges. Explain directly overwriting the old pointer on positive-size realloc failure, aliases after success, and libc versus OS roles.
+
+<details><summary>Show solution</summary>
+
+The sizes are 1024→2048 bytes. Existing values 0..255 are preserved within the new range; new elements 256..511 require initialization. Failure returns NULL while the old block survives, so overwriting the sole pointer can lose access. After success use the returned pointer and do not reuse old base/interior aliases. malloc/free are libc operations; libc may interact with the OS through brk/sbrk or mmap. Not all allocations lie in one contiguous heap. No universal zero-size rule or allocator implementation is inferred.
+
+**Checking points:** Separate failure preservation, successful pointer replacement, and initialization of growth.
+
+</details>
+
+#### Recall Q14 · Independent allocation lifetimes
+
+Assume success for `p1=malloc(3);p2=malloc(1);p3=malloc(4);free(p2);p4=malloc(6);free(p3);p5=malloc(2);`. List live allocations after each free and after p5. Is p5's address or the final release order prescribed?
+
+<details><summary>Show solution</summary>
+
+After free(p2): p1, p3; after free(p3): p1, p4; after p5: p1, p4, p5. Releasing those three separately finishes the sequence; release order need not match request order. Freed space may be reused, but p5 need not receive p2's former address. Old p2/p3 accesses remain invalid. These independent allocations are distinct from resizing one allocation.
+
+**Checking points:** Check all three live sets and the absence of an address-reuse guarantee.
+
+</details>
+
+#### Recall Q15 · Classifying memory errors
+
+Diagnose each: `+=` on uninitialized y[i], `N*sizeof(int)` for N int-pointer slots, nine characters plus NUL into `char s[8]`, `p+=sizeof(int)`, `*size--`, a returned local address, use-after-free, double free, and freeing only a head. Which diagnostic tools can help, and does an observed crash define C validity?
+
+<details><summary>Show solution</summary>
+
+Respectively: accumulation does not start from zero; four-byte int sizing is insufficient for eight-byte pointer slots; ten bytes are needed including NUL; pointer scaling advances four ints; `*size--` groups as `*(size--)`, moving the pointer rather than decrementing the count. Local lifetime ends on return; accessing freed storage and freeing twice are invalid. Separately allocated successors survive freeing the head and may become leaked. Debuggers can inspect state; mtrace/muntrace and Valgrind can help investigate allocation or access errors. Diagnostic observations help locate a defect, but absence of a crash does not make undefined behavior valid.
+
+**Checking points:** Identify all nine causes and do not equate C validity with whether a crash occurs.
+
+</details>
+
+### Apply and check
+
+#### Practice P01 · What is measured after an alias change?
+
+**Newly written synthetic practice.** Combine Q1(a)'s operand-type reasoning [EX:sp_2025_1_midterm_q01 p.2] with Q1(b)'s pointer/element trace [EX:sp_2025_2_midterm_q01 p.3]. Prerequisites are array conversion, aliases, and non-VLA sizeof; this is not an original exam question. Use int=4, pointer=8.
+
+```c
+int a[3]={2,4,6};
+int *p=a, *q=&a[2];
+int **r=&p;
+*r=q;
+**r=a[0]+1;
+q=a;
+*q=9;
+```
+Find a, the pointer relationships, and `sizeof(a)`, `sizeof(*r)`, `sizeof(**r)`. In an independent run replacing `*r=q` with `*p=*q`, what changes?
+
+<details><summary>Show solution</summary>
+
+Originally p is redirected to a[2], which receives 3; q later targets a[0], which receives 9. Final a is `{9,4,3}`, p→a[2], q→a[0], r→p; sizes are 12/8/4. In the modified run the first assignment sets a[0]=6 without moving p. The next sets a[0]=7, and the final write sets it to 9, yielding `{9,4,6}`. Types are unchanged, so all three sizes remain the same.
+
+**Checking points:** Track each left-hand object and verify both final arrays and unchanged sizeof results.
 
 </details>
 
 ### Review plan
 
-Draw arrows for Q02/Q05/Q08 and separate reset diagrams for Q06. Rebuild the Q09/Q10 type tables from memory, then use Q11/P01 to distinguish sizeof from capacity.
+Redraw object boxes for Q02, Q06, and Q09, then compare P01's two runs. Write types before sizes in Q10–Q11, and track size, initialization, and live allocations in separate columns for Q12–Q15.
 
 ## Sources
 
-### Dated lecture notes
+[[courses/system_programming/lectures/en/2026-09-02-lecture-01|2026-09-02 · lecture note]]
 
-- [[courses/system_programming/lectures/en/2026-09-02-lecture-01|2026-09-02 lecture notes]]
-- [[courses/system_programming/lectures/en/2026-09-07-lecture-02|2026-09-07 lecture notes]]
-- [[courses/system_programming/lectures/en/2026-09-09-lecture-03|2026-09-09 lecture notes]]
-- [[courses/system_programming/lectures/en/2026-09-23-lecture-06|2026-09-23 lecture notes]]
+[[courses/system_programming/lectures/en/2026-09-07-lecture-02|2026-09-07 · lecture note]]
 
-### Materials and lecture passages
+[[courses/system_programming/lectures/en/2026-09-09-lecture-03|2026-09-09 · lecture note]]
 
-- [Introduction slides 51–54](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/00.Introduction.pptx)
-- [Memory recap slide 15](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/06.MM.Variable.and.Memory.Recap.pptx)
-- [Pointers slides 13–15](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
-- [Pointers slides 18–25](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
-- [Introduction slide 54](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/00.Introduction.pptx)
-- [Memory recap slide 4](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/06.MM.Variable.and.Memory.Recap.pptx)
-- [Pointers slides 21–24](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
-- [Pointers slides 16–18](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
-- [Pointers slides 26–30](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
-- [Pointers slides 31–35](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
-- [Pointers slide 36](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
-- [Pointers slides 38–39](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx)
-- [Memory recap slides 16–20](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/06.MM.Variable.and.Memory.Recap.pptx)
-- [[courses/system_programming/transcripts/2026-09-02|September 2 lecture, 01:15:55]]
-- [[courses/system_programming/transcripts/2026-09-07|September 7 lecture, 54:41]]
-- [[courses/system_programming/transcripts/2026-09-02|September 2 lecture, 01:29:10–01:34:38]]
-- [[courses/system_programming/transcripts/2026-09-23|September 23 lecture, 05:36–06:37]]
-- [[courses/system_programming/transcripts/2026-09-09|September 9 lecture, 03:08–10:32]]
-- [[courses/system_programming/transcripts/2026-09-09|September 9 lecture, 15:26–19:25]]
-- [[courses/system_programming/transcripts/2026-09-23|September 23 transcript, 24:43]]
+[[courses/system_programming/lectures/en/2026-09-23-lecture-06|2026-09-23 · lecture note]]
 
-The linked materials are the supplied public slide decks; no PDF page-cache link is available for these sources. Transcript timestamps are plain labels.
+[00.Introduction.pptx](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/00.Introduction.pptx) — slide 51; slide 54
 
-### Scope to retain
+[02.CPointers_24a7628c.pptx](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/02.CPointers_24a7628c.pptx) — slides 3, 9, 15, 17, 23–25, 28–29, 31–36, 38–39
 
-- Numbers apply to the lecture’s Linux x86-64 target or explicitly schematic addresses.
-- Uncertain speech is not recovered speech. The **A3 source typo is interpreted as A3[0][0].
-- Only Q1(a) size reasoning is connected. Supplied crash answers or writable placement do not legalize modifying const objects/literals.
+[06.MM.Variable.and.Memory.Recap.pptx](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/06.MM.Variable.and.Memory.Recap.pptx) — slide 15; slide 34; slide 4; slide 17; slide 20
 
+[[courses/system_programming/transcripts/2026-09-02|2026-09-02 · corrected transcript]] — 01:15:55, 01:21:23, 01:34:38, 01:29:10
 
----
+[[courses/system_programming/transcripts/2026-09-07|2026-09-07 · corrected transcript]] — 54:41
 
-[[courses/system_programming/units/en/systems-c-build|← Previous: System Programming and Building C Programs]] · [[courses/system_programming/units/index|Unit contents]] · [[courses/system_programming/units/en/state-machines|Next: Character Processing, DFAs, and Decommenter Boundaries →]]
+[[courses/system_programming/transcripts/2026-09-09|2026-09-09 · corrected transcript]] — 01:22–20:26, 21:19
+
+[[courses/system_programming/transcripts/2026-09-23|2026-09-23 · corrected transcript]] — 05:36, 06:37
+
+[08.MM.Dynamic.Memory.Allocation.I.pptx](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/08.MM.Dynamic.Memory.Allocation.I.pptx) — slides 5, 7–9, 15–25, 27
+
+[09.MM.Dynamic.Memory.Allocation.II.pptx](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/09.MM.Dynamic.Memory.Allocation.II.pptx) — slide 35; slide 38; slide 40; slide 44
+
+Numerical work uses the stated x86-64 Linux model. The A3 label/array-assignment errors and incomplete function-decay speech remain distinguished; non-VLA sizeof does not authorize uninitialized-pointer access. The allocation decks are optional materials-based review; allocator lists, coalescing, and binning are outside scope. Whole-slide layout has not been verified for the newer decks, so use the call sequence and stated types/sizes. Uncertain September 23 allocation numbers and initialization speech are not recovered. Historical supplied crash lists do not define all undefined behavior.
+
+Historical exam connections below use only the stated reasoning demands. Supplied answers are reference material, not independently certified solutions; current exam scope or frequency cannot be inferred.
+
+[[exam_questions/sp_2025_1_midterm_q01|2025-1 Midterm Q1 · C pointers (existing preview)]]
+
+[[exam_questions/sp_2025_2_midterm_q01|2025-2 Midterm Q1 · C programming (existing preview)]]

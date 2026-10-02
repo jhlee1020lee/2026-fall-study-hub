@@ -1,6 +1,6 @@
 ---
-title: "입력 검증·Board 판정·객체 상호작용 실습"
-description: "입력 검증·board 규칙·Player/Fight/Main 계약을 제한된 trace와 사례로 확인한다."
+title: "입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습"
+description: "입력 검증, board 판정, Player/Fight 계약과 Lab04 게임의 경계를 복습한다."
 course: "computer_programming"
 unit_id: "lab-applications"
 lang: "ko"
@@ -9,361 +9,463 @@ source_kind: "unit_chapter"
 review_status: "approved"
 draft: false
 cssclasses: ["unit-textbook"]
-source_assets: ["Lab02 v4.pdf", "Lab02 official assignment metadata", "Lab03 v2.pdf", "Lab03 skeleton.zip"]
+source_assets: ["Lab02 v4.pdf", "Lab02 official assignment metadata", "Lab03 v2.pdf", "Lab03 skeleton.zip", "Lab04 v2.pdf", "Lab04 v4.pdf"]
 private_source_assets: ["Lab02 official assignment metadata", "Lab03 skeleton.zip"]
 source_lectures: ["courses/computer_programming/lectures/2026-09-10-lecture-04", "courses/computer_programming/lectures/2026-09-17-lecture-06"]
 ---
 
-실습 명세를 입력·검사 순서·상태 변경·출력의 계약으로 나누어 읽는다. Board 판정과 객체 상호작용을 손으로 추적하며 구현 전에 확인할 사례를 고른다.
+입력 단위·판정 순서·객체 책임을 명세에서 찾아 결과와 상태를 추적한다. Lab02–04의 경계 사례를 비교하며 출력·반환·실제 round 수를 구분해 보자.
 
-## 한 줄 입력과 exit sentinel의 계약
+## Input validation: 값보다 먼저 입력의 계약 읽기
 
-실습을 설계할 때는 먼저 입력 단위와 각 입력의 처리 결과를 정해야 한다. [[courses/computer_programming/units/types-expressions|Scanner와 String]] 및 [[courses/computer_programming/units/control-flow|분기·반복]]을 사용하는 Lab02의 첫 단계는 한 줄을 읽어 그대로 출력하는 일을 반복하는 것이다. `exit`는 일반 데이터가 아니라 반복을 끝내는 sentinel(종료 신호)이다.
+프로그램이 무엇을 입력받고 어느 순서로 판단해야 하는지 명확하지 않으면, 문법이 맞는 코드도 다른 동작을 하게 된다. Input validation(입력 검증)은 허용할 값과 실패 경로를 정하는 일이다. Lab02는 한 줄 입력, 판정 순서, 배열에 저장한 board(보드)의 결과를 통해 이 책임을 나눈다. 기존 설명은 [[courses/computer_programming/lectures/2026-09-10-lecture-04|2026-09-10 강의 노트 · Lab02]]와 연결된다.
 
-[Computer Programming M008, Lab02 PDF pp.16–17](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab02.v4.pdf)의 Input/Output 표시는 다음과 같이 읽는다.
+### 한 줄과 `exit` sentinel
 
-| 입력 한 줄 | 요구되는 반응 |
-| --- | --- |
-| `abc` | `abc`를 출력하고 계속 읽는다. |
-| `Computer Programming` | 공백을 포함한 전체 줄을 출력한다. |
-| `2018-12345` | 그 줄을 출력한다. |
-| `exit` | 종료한다. 원본 예에는 exit의 echo 출력이 없다. |
+첫 단계는 String 한 줄을 읽고 그대로 출력하는 일을 반복한다. `Computer Programming`처럼 공백이 있는 입력도 한 줄 전체가 단위다. 토큰 하나만 읽어서 `Computer`만 돌려주면 입력 계약을 바꾼 것이다. `Scanner(System.in)`은 입력 준비에 관한 hint이며, 한 줄을 어떻게 다룰지와 반복을 언제 끝낼지는 별도 판단이다. [Computer Programming M008 PDF pp.16–17]
 
-원본 그림의 마지막 exit에는 Input 표시만 있고 이어지는 Output이 없다. 따라서 무조건 먼저 echo한 다음 종료를 판단하면 예제와 달라진다. [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 STT]] 09:38의 설명과 함께, 입력 읽기·일반 처리·종료를 별개의 경로로 생각하면 된다. `Scanner(System.in)`은 입력 준비의 hint이며, 한 줄 안의 공백은 종료 신호가 아니다.
+Sentinel(종료 표식)인 `exit`는 일반 데이터와 다른 경로로 간다. [p.17의 console 예](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-017)는 `abc`, `Computer Programming`, `2018-12345`를 각각 되풀이해 출력하지만 마지막 `exit` 뒤에는 echo가 없다. 입력 행과 출력 행을 구별해서 읽어야 한다. [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 STT 09:38]]도 한 줄을 읽고 `exit`에서 종료하는 흐름을 설명한다.
 
-## Ordered validation과 첫 실패의 우선순위
+### 길이 → 구분자 → digit의 순서
 
-Student ID Validator의 다음 단계는 `XXXX-XXXXX` 형태의 문자열을 검사한다. 이 숫자 문자열들은 과제 자료의 예시이지 특정 학생의 신원 정보가 아니다. M008 PDF p.18(인쇄 slide 19)은 다음 **순서**를 요구한다.
+다음 단계의 `XXXX-XXXXX` 형식은 세 조건을 순서대로 검사한다. 모두 틀린 조건을 한꺼번에 출력하는 것이 아니라 **첫 실패**를 보고한다. [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 STT 15:25–18:22]]는 순서가 오류 메시지를 결정하며, 뒤의 검사 예시는 앞 조건을 통과해야 한다고 강조한다.
 
-| 순서 | 검사 | 실패 또는 성공의 의미 |
-| --- | --- | --- |
-| 1 | 길이가 10인가 | 아니면 `The input length should be 10.` |
-| 2 | 다섯 번째 문자, index 4가 `'-'`인가 | 아니면 구분자 오류 메시지 |
-| 3 | Index 4를 제외한 모든 문자가 digit인가 | 아니면 `Contains an invalid digit.` |
-| 4 | 앞의 검사를 모두 통과했는가 | 입력 뒤에 ` is valid.`를 붙인다. |
+| 단계 | 검사 | 자료의 사례 | 판정 |
+|---|---|---|---|
+| 1 | 전체 길이가 `10`인가? | `2018-1234` | `The input length should be 10.` |
+| 2 | 다섯 번째 문자, index `4`가 `'-'`인가? | `2018_12345` | `Fifth character should be` 뒤에 `'-'`를 표시하는 오류 |
+| 3 | index 4를 제외한 문자가 모두 digit인가? | `e018-12345` | `Contains an invalid digit.` |
+| 통과 | 세 조건 모두 만족 | `2018-12345` | `2018-12345 is valid.` |
 
-여러 조건에 동시에 어긋나도 먼저 실패한 검사에 대응하는 메시지가 우선한다. 길이를 먼저 확인하면 너무 짧은 문자열에서 `charAt(4)`를 성급히 읽는 문제도 막는다. 따라서 validation(유효성 검사)은 조건 집합뿐 아니라 안전한 평가 순서와 보고 순서의 계약이다. [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 STT]] 15:25
+길이를 먼저 검사하면 너무 짧은 문자열에서 `charAt(4)`를 성급하게 호출하는 문제도 피한다. 구분자 오류 메시지의 hyphen 주변 인용부호는 M008 PDF pp.18·20에서 다르게 인쇄되어 있으므로 여기서 하나를 새로운 공식 채점 문자열로 결정하지 않는다. 물리 PDF p.18은 인쇄된 slide 번호 19라는 점도 구별한다.
 
-`charAt(index)`는 한 문자를 반환한다. 자료의 첫 번째 AND 조건은 양끝 문자 `'0'`과 `'9'`를 포함하는 digit 구간을 판정하고, 두 번째 OR 조건은 De Morgan 법칙에 따라 첫 번째 조건을 부정하여 그 여집합인 범위 밖을 판정한다.
+M008 p.19의 문자 범위는 다음과 같다. 이는 완성 validator가 아니라 한 문자에 대한 원본 조건이다.
 
 ```java
-ch >= '0' && ch <= '9'  // within the required digit range
-ch < '0' || ch > '9'    // outside that range
+ch >= '0' && ch <= '9'  // digit
+ch < '0' || ch > '9'    // outside the digit range
+ch >= 'a' && ch <= 'z'  // lowercase English letters
+ch >= 'A' && ch <= 'Z'  // uppercase English letters
 ```
 
-두 줄은 `char ch`의 값을 분류하는 expression 예이며 완성 validator가 아니다. `'0'`은 숫자 0 자체가 아니라 문자다. 이 조건은 ASCII digit 구간에 해당하며, 모든 숫자 모양 Unicode 문자를 허용하지 않는다. 같은 자료는 소문자 `'a'`…`'z'`, 대문자 `'A'`…`'Z'`도 별도 연속 범위로 소개한다.
+문자 `'0'`은 정수 `0`과 다르다. 이 조건은 연속된 문자 코드 범위를 검사하며, 숫자처럼 보이는 모든 Unicode 문자를 허용하는 규칙은 아니다. Digit 범위의 안쪽은 두 경계를 모두 만족해야 하므로 `&&`, 바깥쪽은 어느 한 경계를 벗어나면 되므로 `||`다. 길이, 위치, 문자 범위를 분리하면 어느 단계에서 실패했는지 이유까지 설명할 수 있다.
 
-원본 사례를 순서대로 적용하면 `2018-1234`는 길이, `2018_12345`는 구분자, `e018-12345`는 digit에서 실패한다. `2018-12345`는 통과하여 `2018-12345 is valid.`를 출력한다. Digit 실패 예는 먼저 길이와 구분자를 통과해야 세 번째 검사에 도달한다.
+## Board evaluation: 저장된 표식과 판정 우선순위
 
-구분자 메시지는 PDF p.18에서 `Fifth character should be` 뒤 hyphen을 backticks로 감싸고 p.20(인쇄 slide 21)에서는 곡선 인용부호로 감싼다. 두 페이지의 차이는 남아 있으므로 어느 표기를 새로운 공식 채점 문자열로 확정하지 않는다.
+Lab02의 TicTacToe는 입력으로 받은 board를 판단한다. 아홉 정수는 `3×3` int array에 행 순서로 저장한다. 여기서 `0`, `1`은 각각 Player 0과 Player 1의 표식이며 **0은 빈칸이 아니다**. `0 1 0 1 0 0 1 1 1`을 저장하면 세 행은 `[0,1,0]`, `[1,0,0]`, `[1,1,1]`이다. 자료의 `printBoard`는 이 저장 배치를 확인하도록 돕는다. [M008 PDF pp.22–23]
 
-## 3×3 board의 저장과 판정
+승리 후보는 같은 플레이어의 표식이 가로·세로·대각선 한 줄 전체를 채운 경우다. 그러나 승리한 줄 하나를 발견했다고 바로 유효한 승리로 결정해서는 안 된다. 두 플레이어가 모두 승리하거나 표식 수 차이가 1보다 크면 `Invalid game.`이다. 유효한 board에서 한 명만 승리하면 해당 `Player 0 win.` 또는 `Player 1 win.`, 아무도 승리하지 않으면 `Tie.`다. [M008 PDF p.24] [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 STT 38:21–39:19]]
 
-다음 실습은 아홉 정수를 [[courses/computer_programming/units/arrays|2D array]]에 저장한다. 입력은 0 또는 1이며 각각 Player 0·Player 1의 표식이다. **0은 빈칸이 아니다.** M008 PDF p.23(인쇄 slide 25)의 입력 순서는 다음 board를 만든다.
+### 다섯 board가 보여 주는 다른 이유
 
-```text
-input: 0 1 0 1 0 0 1 1 1
+[M008 PDF p.25](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-025)의 예를 행별로 읽으면 다음과 같다. `/`는 표 안에서 행을 나누는 설명 표기다.
 
-0 1 0
-1 0 0
-1 1 1
-```
+| 세 행 | 판정 | 결정적인 근거 |
+|---|---|---|
+| `0 1 0 / 1 0 0 / 1 1 1` | Player 1 승리 | 마지막 가로줄 전체가 `1`이다. |
+| `0 1 1 / 1 0 0 / 1 1 0` | Player 0 승리 | 왼쪽 위부터 오른쪽 아래까지 `0`이다. |
+| `0 1 0 / 1 0 0 / 1 0 1` | Tie | 완성된 승리 줄이 없다. |
+| `0 0 0 / 0 0 0 / 0 0 1` | Invalid | 표식 수가 8 대 1이다. |
+| `0 1 1 / 0 1 1 / 0 0 1` | Invalid | 첫 열의 `0`과 마지막 열의 `1`이 모두 완성된다. |
 
-한 행을 채운 뒤 다음 행으로 이동한다. `printBoard`는 판정 전에 이 배치가 맞는지 관찰하는 수단이다. 잘못 저장한 board에서 판정 조건만 고쳐도 문제의 원인은 사라지지 않는다.
+그림에서 첫 두 board의 표시된 행·대각선과 마지막 board의 두 세로줄을 구분해 보면, “같은 표식이 많다”와 “한 줄이 완성되었다”가 다른 조건임을 알 수 있다. STT의 불명확한 `role` 표현을 새로운 규칙으로 해석하지 않고 줄의 의미는 PDF로 확인한다. 어느 플레이어가 선공인지, 과거의 모든 수 순서가 실제로 가능한지까지 검사하는 규칙은 주어지지 않았다. 이 과제의 입력 가정과 판정 조건을 넘어서는 게임 이력을 추가하지 않는다.
 
-### Winning line과 invalid 상태를 함께 보기
+### `N×N`에서 바뀌는 경계
 
-가로·세로·대각선 한 줄 전체가 같은 player의 표식이면 winning line(승리 줄)이다. 하지만 한 줄을 발견했다고 즉시 최종 winner를 선언할 수는 없다. 두 player가 모두 winning line을 갖거나, 표식 개수 차이가 1보다 크면 `Invalid game.`이다. 유효한 board에서 한 player만 이기면 `Player 0 win.` 또는 `Player 1 win.`, 누구도 이기지 않으면 `Tie.`다. [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 STT]] 38:21 및 M008 PDF pp.24–25
+확장은 먼저 `N`을 읽고 이어 `N²`개의 표식을 받는다. M008 p.26의 가정은 `N >= 3`이다. 승리 줄의 길이가 N, 행·열의 수가 N으로 바뀌므로 입력량, loop bounds, index 범위를 함께 바꿔 읽어야 한다. 단순히 모든 숫자 3을 무작정 바꾸는 작업이 아니다. Player 표식의 의미, 양쪽 승리의 충돌, 표식 수 차이 조건은 유지된다.
 
-PDF p.25의 다섯 board를 행 단위로 나누어 읽으면 다음과 같다. `/`는 행 구분이며 실제 입력 기호가 아니다.
+P.27의 첫 예는 `N = 4`이고 세 번째 행 `1 1 1 1`로 Player 1이 이긴다. 둘째는 **`N = 5`**이며 첫 행이 전부 0, 다음 행이 전부 1이어서 무효다. 마지막은 `N = 4`로 0이 7개, 1이 9개여서 차이 2로 무효다. [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 STT 50:11–51:05]]의 하한 표현은 손상되어 있고 세 예를 모두 “four by four”라고 부르므로, `N >= 3`과 실제 `4/5/4` 크기는 PDF 근거로 명시한다. 손상된 발화를 복원한 것이 아니다.
 
-| Board의 세 행 | 확인할 근거 | 판정 |
-| --- | --- | --- |
-| `010 / 100 / 111` | 마지막 행 전체가 1 | `Player 1 win.` |
-| `011 / 100 / 110` | 주대각선 전체가 0 | `Player 0 win.` |
-| `010 / 100 / 101` | 어느 player도 완성 줄이 없고 개수 차이는 1 | `Tie.` |
-| `000 / 000 / 001` | 0이 8개, 1이 1개 | `Invalid game.` |
-| `011 / 011 / 001` | 첫 열은 모두 0, 마지막 열은 모두 1 | `Invalid game.` |
+## Player의 state와 동작을 분리하는 객체 설계
 
-첫 board의 개수는 0이 4개, 1이 5개다. 세 번째는 0이 5개, 1이 4개이고, 각 행·열·두 대각선을 확인해도 완성 줄이 없다. 마지막은 표식 수 차이만 보면 1이지만 **양쪽 승리**라는 별도 무효 조건에 걸린다. 두 검사를 하나로 뭉치면 이런 차이를 놓친다.
+Lab03의 Fighting Game Simulation은 앞의 조건·반복·입력 개념을 객체들의 책임으로 나눈다. `Player`는 개별 ID·health와 행동, `Fight`는 두 플레이어의 상호작용과 round, `Main`은 입력과 전체 진행을 담당한다. [[courses/computer_programming/lectures/2026-09-17-lecture-06|2026-09-17 강의 노트 · Lab03]]의 녹음은 Player 설명 도중인 마지막 `17:39` 구간에서 끝난다. 아래의 정확한 선언과 후반 Fight/Main 요구는 **9월 19일 후취득한 공식 M014·M015로 확인한 자료 보충**을 포함한다. 녹음의 뒷부분을 새로 들었다는 뜻이 아니다.
 
-자료가 제시한 것은 이 board 판정 계약이다. 누가 선공인지, 중간에 승리가 났는데 계속 두었는지 등 모든 실제 게임 이력의 적법성을 검증하는 추가 규칙까지 임의로 넣지는 않는다.
+### 초기 상태와 constructor의 역할
 
-### N×N으로 일반화할 때 바뀌는 것
+M014 pp.20–22는 private `String userId`, private `int health = 50`, modifier 없는 `Random random`을 제시한다. `userId`와 `health`를 외부에서 임의로 바꾸는 구조로 읽지 않는다. 초기값과 유지해야 할 범위는 다음처럼 다르다.
 
-M008 PDF p.26은 먼저 `N`을 읽고, 이어 `N × N`개의 표식을 읽으며 `N >= 3`을 가정한다. Winning line의 길이는 3에서 N으로, 행·열의 수와 index bounds도 N에 맞게 바뀐다. Player 표식의 의미, 양쪽 승리 충돌, 표식 개수 차이에 관한 조건은 유지된다.
+\[
+h_{\text{initial}}=50,\qquad 0\le h\le50.
+\]
 
-PDF p.27에는 서로 다른 크기의 세 사례가 있다.
+`0`은 유효 상태 범위의 하한이면서 패배의 경계다. [[courses/computer_programming/transcripts/2026-09-17|2026-09-17 STT 15:41]]의 “health attribute should be and”는 type 부분이 잘린 표현이다. `int`는 후취득 자료로 확인하며 그 단어를 복원된 발화로 넣지 않는다. P.19의 설명 표기 `userID`와 실제 field `userId`, 오타 `attach()`와 선언 `attack(Player opponent)`도 구분한다.
 
-| 자료의 사례 | 계산·판정 근거 | 결과 |
-| --- | --- | --- |
-| 첫 4×4 | 세 번째 행이 `1 1 1 1` | `Player 1 win.` |
-| 5×5 | 첫 행은 모두 0, 둘째 행은 모두 1 | `Invalid game.` |
-| 마지막 4×4 | 0이 7개, 1이 9개라 차이가 2 | `Invalid game.` |
+`Player(String userId, int randomSeed)`는 ID와 seed를 받는다. PDF p.22의 예는 입력 ID를 field에 넣고 `new Random(randomSeed)`로 난수 객체를 초기화한다. 그러나 private skeleton의 Player constructor와 다섯 method bodies는 미구현이다. PDF의 초기화 예가 그 ZIP에 이미 완성되어 있다고 읽으면 안 된다. 추가 조회 methods를 만들 수 있지만 특정 getter 이름이나 개수는 지정되어 있지 않다.
 
-N=5에서 세 칸만 연속으로 같아도 된다고 보면 이전 3×3 규칙을 잘못 옮긴 것이다. 전체 길이 5의 줄이 필요하다. [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 STT]] 50:11 주변에서 세 예를 모두 4×4라고 부르는 표현과 손상된 N 하한 발화는 자료의 실제 4·5·4 크기 및 `N >= 3`과 구별한다. 일반화는 코드 안의 숫자 3을 모두 바꾸는 작업보다, 입력량·검사할 줄·각 index의 의미를 다시 맞추는 일이다.
+Seed는 초기 health나 round 수가 아니라 난수 생성기의 시작 상태를 정하는 입력이다. 각 Player의 `random` reference를 하나의 class-wide static 상태와 혼동하지 않는다. 같은 seed만 외워 결과를 예측할 수도 없다. 사용하는 generator, method와 인자, 호출 순서가 같아야 난수열을 같은 방식으로 비교할 수 있다. 여기서는 특정 seed의 출력을 만들거나 현재 과제의 구현을 완성하지 않는다.
 
-## Player·Fight·Main의 책임 분리
+### 다섯 method의 변경 대상과 반환값
 
-Lab03 Fighting Game Simulation은 [[courses/computer_programming/units/objects-references|Object 상태와 reference 전달]], [[courses/computer_programming/units/methods|Method 계약]], [[courses/computer_programming/units/encapsulation|Encapsulation]]을 하나의 상호작용에 연결한다. Player는 개별 ID·health와 행동, Fight는 두 players의 interaction과 rounds, Main은 입력과 전체 진행을 맡는다. 한 class에 모든 책임을 몰아넣지 않아야 변경 대상과 호출 관계를 추적하기 쉽다.
+| Method | 책임 | 경계 또는 반환 계약 |
+|---|---|---|
+| `public void attack(Player opponent)` | 상대에게 피해 | 무작위 정수 1–5, 양 끝 포함; 상대 health는 음수가 되면 안 된다. |
+| `private void getDamaged(int damage)` | 받은 지정량을 자기 health에 반영 | 별도 난수 피해를 다시 선택하는 책임이 아니다. |
+| `public void heal()` | 자기 health 회복 | 무작위 정수 1–3, 양 끝 포함; health는 50을 넘지 않는다. |
+| `isAlive()` | 생존 predicate | `health > 0`이면 `true`, 아니면 `false`다. |
+| `public char getTactic()` | 행동 선택을 알림 | 공격 70%는 `'a'`, 회복 30%는 `'h'`를 반환한다. |
 
-[[courses/computer_programming/transcripts/2026-09-17|2026-09-17 STT]] 14:47–17:39에는 Player 설명의 일부가 남아 있으며 17:39에서 character 반환 설명 도중 끝난다. 아래의 정확한 fields·수치·Fight·Main 계약은 **9월 19일 확보된 공식 Lab03 자료에 근거한 보충**이다. 녹음의 없는 후반부를 복원한 내용은 아니다. [M014, Lab03 PDF pp.18–28](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab03.v2.pdf)
+이 계약은 M014 p.21에 근거한다. PDF의 `public Boolean isAlive()`와 skeleton의 `public boolean isAlive()`는 type 철자가 다르다. `Boolean`은 wrapper, `boolean`은 primitive다. 생존 조건은 같지만 원본 선언까지 같다고 합치지 않는다.
 
-### Player의 초기 상태와 constructor
+**계약을 읽는 경계 예시**로, health `2`에서 damage `5`의 단순 차는 `-3`이지만 그 값을 최종 health로 두면 하한을 어긴다. Health `49`에서 회복 선택량 `3`의 합 `52`도 상한을 어긴다. 경계에서 멈추는 처리를 생각하면 각각 `0`, `50`이 되며 실제 변화량과 선택한 수는 다를 수 있다. 이 계산은 범위를 이해하는 설명이며 유일한 내부 구현을 지정하는 것은 아니다. `isAlive()`는 `1`에서 참, `0`에서 거짓이고 전체 게임의 진행이나 종료를 직접 수행하는 동작과도 구분한다.
 
-Player는 `private String userId`, `private int health = 50`, 접근 modifier를 생략한 `Random random`을 가진다. Health는 0≤health≤50을 유지해야 하고 0이면 패배 상태다. Constructor의 parameter 목록은 `Player(String userId, int randomSeed)`다. PDF p.22는 ID 대입과 `new Random(randomSeed)` 초기화를 보여 준다. 다만 제공 skeleton의 Player constructor body는 아직 미구현이며, field declaration의 health=50만 이미 들어 있다. PDF의 초기화 예가 skeleton에도 완성되어 있다는 뜻은 아니다.
+[[courses/computer_programming/transcripts/2026-09-17|2026-09-17 STT 16:37–17:39]]는 공격·피해·회복·생존과 tactic을 설명하지만 마지막 문자는 미완성이고 공격 확률의 “70”에는 percent가 명시되지 않았다. `70%`, `'a'`/`'h'`는 PDF가 확립하는 상세다. 확률 70%라고 열 번마다 반드시 일곱 번 공격하는 것도 아니며, `'a'`를 반환했다고 상대 health를 이미 바꾼 것도 아니다. `random.nextInt()`와 `random.nextFloat()`는 hint이지 유일하게 허용된 구현 규칙이 아니다.
 
-녹음의 “health attribute should be and”라는 끊긴 표현에서 `int`라는 발화를 복구하지 않는다. `int`는 자료에서 확인한 type이다. PDF p.19의 설명 표기 `userID`·`attach()`도 실제 declaration인 `userId`·`attack(Player opponent)`와 구별한다. 필요한 정보를 읽기 위한 추가 methods는 허용되지만 특정 getter 이름과 개수가 요구된 것은 아니다.
+## Fight: reference 연결과 한 round의 순서
 
-### Action·helper·predicate·tactic의 다른 계약
+Player가 자기 상태를 관리하면 Fight는 그 동작을 연결한다. 이후 상세는 녹음 종료 뒤 범위에 해당하는 M014 pp.23–26의 자료 설명이다. `int timeLimit = 100`은 **최대 round 수**이며 초나 분이 아니다. `int currRound = 0`은 시작 전 상태이며 첫 출력 round는 1이다. `Player p1`, `Player p2`와 `Fight(Player p1, Player p2)`에는 modifier가 없다.
 
-| Method | 대상과 효과 | 범위 또는 반환 |
-| --- | --- | --- |
-| `public void attack(Player opponent)` | 상대 health에 random damage를 적용 | 정수 1–5 inclusive, 최종 health는 음수 금지 |
-| `private void getDamaged(int damage)` | 자기 health에 지정된 피해를 적용하는 helper | Health의 하한을 지키는 행동 |
-| `public void heal()` | 자기 health를 random amount만큼 회복 | 정수 1–3 inclusive, 최종 health≤50 |
-| `isAlive()` | 현재 생존 여부를 질의하는 predicate | health>0이면 true, 아니면 false |
-| `public char getTactic()` | 다음 행동을 고른다 | Attack 70%는 `'a'`, heal 30%는 `'h'` |
+제공 constructor는 두 입력 references를 `this.p1`, `this.p2`에 저장한다. 내부에서 새로운 Player를 만들거나 복제하는 것이 아니다. Player constructor의 미구현 상태와 달리 이 reference 연결은 skeleton에 제공되어 있지만, 그것만으로 게임 진행 전체가 완성되지는 않는다. [M014 PDF p.26; M015의 private 구조 대조]
 
-표는 method body의 완성 코드가 아니라 각 호출이 지켜야 할 약속이다. Attack이 자기 health를 줄이거나 heal이 opponent를 회복시키면 변경 대상을 혼동한 것이다. Health=2에서 damage=5이면 최종값은 −3이 아니라 0으로 제한되어야 하고, health=49에서 heal amount=3이면 52가 아니라 50으로 제한되어야 한다. 이는 명세의 경계값을 풀어 쓴 예다.
+### 순차 행동에서 중간 상태가 중요한 이유
 
-PDF p.21은 `public Boolean isAlive()`, 실제 skeleton은 `public boolean isAlive()`로 type 표기가 다르다. 녹음의 “70”에는 percent 단위가 없고 마지막 반환 문장도 끊겼으므로 70% 및 `'a'`·`'h'`는 PDF에서 확인한 정보다. [[courses/computer_programming/transcripts/2026-09-17|2026-09-17 STT]] 16:37–17:39의 알려진 한계를 이 수치로 지우지 않는다.
-
-`Random.nextInt()`·`nextFloat()`는 자료의 hints다. 이를 유일한 구현 방식으로 정하거나, 자료에 없는 seed별 출력과 추가 분포 조건을 확정하지 않는다. Tactic을 선택하는 일과 실제 action을 실행하는 일도 구별해야 한다.
-
-## Fight의 reference 연결과 round 순서
-
-Fight의 `int timeLimit = 100`은 최대 rounds이지 초나 분이 아니다. `int currRound = 0`은 시작 전 상태이고 처음 출력하는 round는 1이다. Modifier 없는 `Player p1`·`Player p2`와 `Fight(Player p1, Player p2)`는 두 players를 연결한다. 제공 constructor는 전달받은 references를 fields에 저장한다. 안에서 새 Player를 만드는 것과 다르므로, Fight가 사용하는 player의 health 변화는 Main이 가진 reference로도 관찰된다.
-
-자료의 `public void proceed()`는 한 round를 진행한다. 먼저 `Round <Round_Number>`를 출력하고, p1의 tactic에 해당하는 행동을 수행한다. 이어 **p2가 살아 있을 때만** p2의 tactic과 행동으로 진행한다. p1의 attack으로 p2의 health가 0이 되었다면 p2는 attack뿐 아니라 heal도 하지 않는다. 두 action은 동시가 아니므로 이 순서와 생존 검사가 결과를 바꾼다.
-
-이후 두 health를 다음 형식으로 출력한다. Angle brackets 안은 실제 값이 들어갈 자리다.
+`public void proceed()`의 한 round는 먼저 `Round <Round_Number>`를 출력하고 p1의 tactic에 따른 행동을 진행한다. 그 뒤 p2가 살아 있으면 p2의 tactic에 따른 행동을 진행한다. 두 행동은 동시가 아니다. p1의 공격으로 p2의 health가 0이 되었다면 p2는 공격뿐 아니라 회복도 하지 않는다. 같은 round에서 회복해 되살아나도록 해석하면 명세가 달라진다. 마지막에 두 health를 다음 형식으로 출력한다. 꺾쇠 안은 실제 값이 들어갈 자리다. [M014 PDF p.25]
 
 ```text
 <Player1_userID> health : <Player1_health>
 <Player2_userID> health : <Player2_health>
 ```
 
-이 세부 순서는 M014 PDF pp.23–26의 자료 기반 명세다. 녹음의 Player 설명 이후를 들었다고 가정하지 않는다.
+이 순서를 이해하면 `currRound = 0`을 첫 출력 번호로 쓰거나, 행동 전 health를 최종 상태로 출력하는 실수를 피할 수 있다. 어느 getter로 읽을지는 별도 구현 선택이며 새로운 필수 이름을 만들 필요는 없다.
 
-### 종료 predicate와 winner reference
+### 종료와 승자는 다른 반환 계약이다
 
-`isFinished()`는 어느 player의 health가 0이 되거나 마지막 round가 끝나면 true다. 기본 설정은 rounds 1–100이며, health 조건을 만족하면 더 일찍 종료한다. 시작 전 currRound=0과 첫 round=1을 섞으면 총 회차가 달라지는 off-by-one 오류가 생긴다. 이 method도 PDF p.25에는 `Boolean`, skeleton에는 `boolean`으로 적혀 있다.
+`isFinished()`는 어느 한쪽 health가 0이 되거나 마지막 round가 완료되면 참이다. 두 조건을 동시에 요구하지 않는다. 둘 다 살아 있다면 round 99 완료는 아직 round 제한에 의한 종료가 아니고, round 100 완료는 종료다. Round 100을 건너뛰거나 101까지 진행하는 것은 다른 계약이다. PDF는 `Boolean`, skeleton은 primitive `boolean`으로 표기한다.
 
-`getWinner()`의 return type은 **Player**다. Health가 더 큰 player를 반환하며 같으면 p2가 이긴다. 자료는 p1이 먼저 행동한다는 것을 동점 처리 이유로 든다. 따라서 마지막 round 후 health가 같다고 draw를 만들거나 p1 승리로 바꾸지 않는다. 반환되는 Player reference와 나중에 출력하는 ID String은 서로 다른 값이다. 종료되었다는 사실은 그 object의 GC가 즉시 실행되었다는 뜻도 아니다.
+`public Player getWinner()`는 더 높은 health의 Player를 반환한다. Health가 같으면 **p2가 승자**다. 자료는 p1이 먼저 행동하는 것을 동점 처리 이유로 든다. 이는 draw나 p1 승리로 바꿀 수 없으며, 반환값은 ID String이나 참·거짓이 아니라 Player reference다. [M014 PDF p.25]
 
-## Main의 입력·구성과 관찰 가능한 출력
+`Main`의 `public static void main(String[] args)`는 Scanner로 두 `int` seeds를 읽고, 자료가 정한 가상 ID `Gryffindor`, `Slytherin`의 Players를 생성해 Fight에 연결한다. 종료할 때까지 진행한 뒤 승자의 ID로 `<userID> is the winner!`를 출력한다. 입력 두 개를 health나 round 수로 해석하지 않는다. M014 p.28의 제목에 Constructor가 있어도 실제 제시한 것은 `main`이므로 별도 Main constructor 요구를 추가하지 않는다. Main의 연결 loop와 과제 bodies는 학습자가 구현할 부분으로 남는다. [M014 PDF pp.27–28]
 
-Main의 `public static void main(String[] args)`은 전체 simulation을 연결한다. M014 PDF p.27의 두 int 입력은 각각 random seed이며 초기 health나 round 수가 아니다. IDs가 `Gryffindor`·`Slytherin`인 두 Players를 만들고, 그 references를 연결하는 Fight를 만든 뒤 종료 조건에 이를 때까지 진행한다.
+## Lab04의 package 구조와 공통 게임 호출
 
-마지막으로 winner Player의 ID를 사용하여 `<userID> is the winner!` 형식으로 출력한다. Seed가 random generator의 동작과 관련된다는 사실과 자료가 특정 seed의 정확한 전체 실행 결과를 제공한다는 주장은 다르다. Random 호출 순서도 관련되므로 여기서 임의의 승자나 출력 trace를 만들어 확정하지 않는다.
+Lab04는 [Packages](packages.md)와 [Encapsulation](encapsulation.md)을 게임 실행에 적용한다. **V4인 NM003이 최신 공급본**이며 live 확인이나 새 녹음에 근거한 순서는 아니다. V2인 NM002와 공통 요구는 유지하고 차이는 분리한다.
 
-PDF p.28 제목에는 Constructor라는 말이 들어 있지만 실제 제시된 것은 main이며 추가 Main constructor 요구가 아니다. Skeleton의 Main은 main signature와 미구현 표시만 있고, Fight의 constructor 외 진행·종료·승자 methods도 미구현이다. 반환값이 필요한 methods까지 비어 있으므로 skeleton은 완성 실행 프로그램이 아니다. 학습자가 채워야 할 것은 이 책임과 계약을 만족하는 구현이며, 여기의 설명은 전체 제출용 class bodies를 대신하지 않는다.
+소스 구조는 `Platform` package 안의 `Platform` class와, 별도 package `Platform.Games` 안의 `Dice`, `ChamChamCham`이다. 따라서 `Platform.Platform`의 앞 단어는 package이고 뒤 단어는 class다. 게임 class의 package 선언은 정확히 다음과 같다.
+
+```java
+package Platform.Games;
+```
+
+NM003 pp.27–32의 화면 흐름은 `src`에서 New → Package로 `Platform`을 만든 다음 그 안에 class `Platform`, 하위 package `Platform.Games`, 두 게임 class를 만드는 순서다. `Platform`과 `Platform.Games`는 서로 다른 package이므로 접근 가능한 public class/method와 import 또는 완전한 이름이 필요하다. 대문자 `Platform`, `Games`와 `ChamChamCham` 철자를 임의의 스타일로 바꾸지 않는다.
+
+| Class의 완전한 이름 | 제공해야 할 호출 |
+|---|---|
+| `Platform.Games.Dice` | `public int playGame()` |
+| `Platform.Games.ChamChamCham` | `public int playGame()` |
+| `Platform.Platform` | `public double run()`, `public void setRounds()` |
+
+P.33의 `return -1`과 `return -0.0`은 배치용 임시 body다. 모든 게임이 패배하도록 이미 구현되었다는 뜻이 아니다. V2 p.24는 `Lab04_skeleton.zip`, v4 p.26은 `Lab04.zip`을 지칭하지만 **어느 Lab04 ZIP도 여기에는 공급되지 않았다**. 테스트 이름은 확인할 수 있어도 그 내부 비교나 seed 규칙은 확인되지 않는다. 앞의 M015는 Lab03 ZIP이므로 이를 Lab04의 구현으로 대체하지 않는다.
+
+### Dice의 값·출력·반환을 분리하기
+
+Dice는 보통의 여섯 면 주사위와 달리 **0–99의 정수**를 사용자와 상대가 한 번씩 얻는다. 반환 전에 사용자 값, 상대 값 순서로 공백 하나를 사이에 두고 출력한다. 더 큰 사용자 값은 `1`, 더 작은 값은 `-1`, 같은 값은 draw `0`을 반환한다. [NM003 PDF pp.34–35; NM002 PDF pp.32–33]
+
+| 출력하는 두 값 | 비교 | 반환값 |
+|---|---|---|
+| 자료의 `47 11` | 사용자 승리 | `1` |
+| 자료의 `40 42` | 사용자 패배 | `-1` |
+| 같은 두 값 | 명세의 draw 조건 | `0` |
+
+출력된 두 수와 caller가 받는 `int` outcome은 서로 다른 정보다. `Math.random()` hint의 범위를 이해하려면 `0 ≤ r < 1`을 100칸으로 대응할 때 정수 결과가 `0`부터 `99`까지 총 100개라는 경계를 확인하면 된다. 이는 자료 hint의 수학적 설명이며 제출용 `playGame()`을 완성한 것이 아니다. V4의 `10mins`는 실습 시간 안내이지 난수 규칙이나 프로그램 실행 제한이 아니다.
+
+### ChamChamCham의 case-sensitive 입력
+
+ChamChamCham도 같은 `public int playGame()` 형태를 제공하지만 규칙은 다르다. 사용자는 정확한 소문자 `up`, `down`, `left`, `right` 중 하나를 입력하고 상대는 무작위 pose(방향)를 정한다. 유효한 두 pose가 같으면 승리 `1`, 다르면 패배 `-1`이다. `Up`처럼 다른 문자열은 유효한 입력이 아니므로 패배 `-1`이다. 자동으로 소문자로 고치면 자료의 case-sensitive 요구를 바꾼다. [NM003 PDF pp.36–37; NM002 PDF pp.34–35]
+
+유효한 입력일 때는 반환 전에 사용자 pose와 상대 pose를 공백으로 구분해 출력한다. 자료의 `up right`는 `-1`, `left left`는 `1`이다. Dice와 달리 **같은 값이 draw가 아니라 승리**이고 별도의 draw 반환 규칙이 없다. Invalid 입력에 대한 추가 오류 문구나 재입력 loop는 명시되지 않았다. “Similar interface”는 같은 호출 형태라는 뜻이지 골격에 Java `interface`와 `implements` 선언이 있다는 뜻은 아니다.
+
+## Platform의 한 번만 가능한 설정과 승률
+
+`setRounds()`는 단순히 원하는 값을 매번 덮어쓰는 setter가 아니다. 초기 round 수는 `1`이고, **첫 호출만 5–10 inclusive에서 무작위로 설정**한다. 이후 호출은 그 값을 다시 바꾸지 못한다. 예를 들어 첫 호출이 6을 정했다면 두 번째 호출 뒤에도 6이어야 한다. 처음부터 5–10으로 초기화되어 있다고 읽거나 매 호출마다 다시 뽑는 것은 다른 상태 계약이다. [NM003 PDF p.39; NM002 PDF p.37]
+
+`run()`은 먼저 console에서 정수 `0` 또는 `1`을 읽는다. `0`이면 Dice, `1`이면 ChamChamCham을 설정된 round 수만큼 실행하고 `double` 승률을 반환한다. 설정과 실행은 서로 다른 책임이다.
+
+\[
+\text{win rate}=\frac{\text{사용자가 이긴 round 수}}{\text{전체 수행 round 수}}.
+\]
+
+Dice의 draw는 승리는 아니지만 수행한 round이므로 분모에 포함된다. 예를 들어 **설명용 outcome trace**에서 네 round가 승리·패배·draw·승리이면 승률은 `2/4 = 0.5`다. Draw를 제외해 `2/3`으로 계산하면 다른 비율이다. 또 두 정수로 먼저 나누면 `4/6`이 `0`으로 잘릴 수 있으므로 `double` 비율 계산과 integer division을 구별해야 한다.
+
+0/1 이외 입력의 처리, 특정 seed, 정확한 private field 이름·getter 개수는 자료가 지정하지 않았다. Generalization(일반화)의 필요성을 후속 inheritance와 연결한다는 NM003 p.38의 설명도 새 상속 구조를 과제 필수조건으로 만들지는 않는다.
+
+### 두 console 예에서 실제 round 세기
+
+[NM003 PDF p.40](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-040)과 NM002 p.38은 같은 두 실행을 보여 준다.
+
+| Round | Dice 출력 쌍 | 사용자 결과 | ChamChamCham 출력 쌍 | 사용자 결과 |
+|---|---|---|---|---|
+| 1 | `73 38` | 승리 | `up left` | 패배 |
+| 2 | `58 10` | 승리 | `left up` | 패배 |
+| 3 | `95 26` | 승리 | `down right` | 패배 |
+| 4 | `69 39` | 승리 | `down down` | 승리 |
+| 5 | `2 65` | 패배 | `up right` | 패배 |
+| 6 | `38 77` | 패배 | `down up` | 패배 |
+
+첫 실행은 `4/6 = 2/3`이고 화면의 `0.6666667`은 그 근사 표시다. 둘째는 같은 pose가 네 번째 하나뿐이어서 `1/6`, 화면에는 `0.16666666666666666`이 보인다. 오른쪽 console의 단독 `down` 입력 행과 다음 `down down` 출력 행을 두 round로 세면 안 된다. 둘은 한 번의 입력과 그 결과다.
+
+두 예가 모두 여섯 round라는 사실은 허용 범위를 6으로 고정하지 않는다. 또한 서로 다른 소수 자릿수를 보고 특정 출력 formatter를 새 필수조건으로 만들지 않는다. 요구는 `double` 승률 반환이며, 예시 출력의 표시와 반환 계약을 분리해 읽어야 한다.
 
 ## 핵심 정리
 
-- Sentinel은 일반 입력과 다른 경로다. Validation은 조건뿐 아니라 첫 실패 순서도 정한다.
-- Board의0은 Player0 표식이며 invalid 검사를 winner보다 먼저 반영한다.
-- N×N 일반화는 입력량·line 길이·index 경계를 함께 바꾼다.
-- Player는 자기 상태·행동, Fight는 순서·round, Main은 입력·구성을 맡는다.
-- Tactic 선택·action 실행·종료 predicate·winner Player 반환을 서로 구별한다.
+- 첫 실패만 보고하는 validator에서는 검사 순서도 계약이다. Board에서는 승리 후보보다 invalid 조건을 먼저 확정한다.
+- Player는 자기 상태·행동, Fight는 순차 round, Main은 입력과 전체 흐름을 담당한다.
+- 확률적 행동 선택은 실제 행동 수행이나 열 번 중 정확한 횟수 보장이 아니다.
+- Dice의 같은 수는 draw지만 ChamChamCham의 같은 유효 pose는 승리다. 입력 대소문자도 명세다.
+- `setRounds()`는 첫 호출만 설정하고 `run()`은 승리/전체 round를 double로 돌려준다. Draw도 분모에 포함한다.
 
 ## 확인·연습문제
 
-### 개념과 실행을 확인하기
+### 입력과 board
 
-#### 확인 Q01 · 한 줄과 sentinel
+#### 확인 Q01 · 한 줄과 종료 신호
 
-입력이 abc, Computer Programming, exit 순서로 들어온다. Lab02 echo 단계의 출력과 종료 위치는? 공백이나 exit를 먼저 출력해도 되는가?
+`Computer Programming`과 `exit`를 입력할 때 echo 단계가 어떻게 다른가? Scanner를 준비했다는 사실만으로 한 줄 계약을 충족하는가?
 
 <details><summary>해설 보기</summary>
 
-출력은 abc와 공백을 보존한 Computer Programming이다. `exit`는 자료의 입력 label만 있고 다음 output이 없어 echo 없이 종료한다. Scanner로 한 줄을 읽은 뒤 sentinel인지 분기하고 일반 데이터일 때만 그대로 출력한다. 공백은 종료 신호가 아니므로 뒷부분을 버리면 계약과 다르다.
+첫 문자열은 공백까지 포함한 한 줄 전체를 그대로 출력하고 반복한다. `exit`는 종료 신호라 자료 예에서 다시 echo하지 않는다. 토큰 하나만 읽어 Computer만 출력하면 계약이 달라진다. Scanner(System.in)은 입력 준비 hint이며 읽는 단위·종료 조건·echo 순서를 별도로 맞춰야 한다.
 
-**확인 기준:** 두 출력·공백·sentinel 전용 종료 경로를 확인한다.
+**확인 기준:** 공백 보존과 exit 비echo를 확인한다.
 
 </details>
 
-#### 확인 Q02 · 첫 실패의 우선순위
+#### 확인 Q02 · 첫 실패와 문자 범위
 
-Length10→index4의hyphen→나머지digit 순으로 검사한다. `2018-1234`, `2018_12345`, `e018-12345`, `2018-12345`의 결과와 이 순서가 안전성·보고에 미치는 효과를 설명하라.
+길이·구분자·digit의 검사 순서를 적고 원본 `2018-1234`, `2018_12345`, `e018-12345`, `2018-12345`를 분류하라. Digit 안/밖 및 영문 소문자·대문자 조건을 설명하라.
 
 <details><summary>해설 보기</summary>
 
-첫째는 `The input length should be 10.`, 둘째는 separator 오류, 셋째는 `Contains an invalid digit.`, 넷째는 `2018-12345 is valid.`다. 첫 실패만 보고하므로 digit 오류를 관찰할 입력은 length·separator를 먼저 통과해야 한다. Length를 먼저 보면 짧은 문자열의 charAt(4) 접근도 막는다. Separator 메시지의 인용부호는 두 원본 페이지가 달라 한쪽을 새 채점 정답으로 지정하지 않는다.
+길이 10→index 4의 '-'→나머지 모두 digit 순서다. 네 입력은 길이 오류, 구분자 오류, digit 오류, 성공이다. 길이 오류는 `The input length should be 10.`, digit 오류는 `Contains an invalid digit.`, 성공은 입력 뒤 `is valid.`를 붙인다. 첫 실패만 보고하므로 digit 검사를 시험할 입력은 앞 둘을 통과해야 한다. 길이 선검사는 짧은 문자열의 charAt(4)도 피한다. Digit는 `ch>='0' && ch<='9'`, 밖은 `ch<'0' || ch>'9'`; 소문자/대문자는 각각 'a'–'z'/'A'–'Z'의 두 경계를 모두 만족한다. 문자 '0'은 정수 0이 아니며 모든 Unicode 숫자가 아니다. 구분자 메시지의 인용부호 충돌은 그대로 남긴다.
 
-**확인 기준:** 네 분류와 우선순위·safe access를 연결한다.
+**확인 기준:** 순서·첫 오류·&&/||의 논리와 문자 상수를 확인한다.
 
 </details>
 
-#### 확인 Q03 · ASCII digit의 경계
+#### 확인 Q03 · 다섯 board의 판정
 
-`charAt`의 반환과 ASCII digit 조건·반대 조건을 적어라. `'0'`, `'9'`, `'A'`, 숫자 모양이지만 ASCII0…9 밖인 문자를 비교하고 alphabet 범위도 설명하라.
+0/1 표식과 행 우선 저장을 설명하라. 다음 boards를 순서대로 판정하고 이유를 적어라: `010/100/111`, `011/100/110`, `010/100/101`, `000/000/001`, `011/011/001`.
 
 <details><summary>해설 보기</summary>
 
-`charAt`은 char를 반환한다. `'0'<=ch && ch<='9'`가 허용 조건, `ch<'0'||ch>'9'`가 그 밖이다. 0·9 경계 문자는 통과하고 A나 해당 범위 밖 문자는 실패한다. 문자'0'은 정수0 자체가 아니다. Lowercase는'a'…'z', uppercase는'A'…'Z'의 별도 범위다. 일반 Unicode 숫자 전부를 허용하는 검사로 확대하지 않는다.
+0과 1은 두 플레이어 표식이며 0은 빈칸이 아니다. 아홉 입력을 3개씩 행으로 저장하고 `printBoard`로 배치를 확인한다.
 
-**확인 기준:** 양끝 포함·AND/OR·char와int·ASCII 한정을 설명한다.
+| Board | 판정 | 이유 |
+|---|---|---|
+| `010/100/111` | Player 1 win | 마지막 행 111; count 4/5 |
+| `011/100/110` | Player 0 win | 주대각선 000; count 4/5 |
+| `010/100/101` | Tie | 완성 줄 없음; count 5/4 |
+| `000/000/001` | Invalid | count 8/1로 차이 7 |
+| `011/011/001` | Invalid | 첫 열 000과 마지막 열 111이 모두 승리 |
+
+승리에는 가로·세로·대각선 전체가 같아야 한다. 양쪽 승리 또는 count 차이>1이면 무효가 우선하므로 한 줄을 찾자마자 승리를 확정하지 않는다. 선공·전체 수 이력 규칙은 추가하지 않는다.
+
+**확인 기준:** 저장·다섯 판정·서로 다른 무효 원인을 확인한다.
 
 </details>
 
-#### 확인 Q04 · Board 저장과 다섯 판정
+#### 확인 Q04 · N에 따른 경계
 
-입력 `0 1 0 1 0 0 1 1 1`을3×3으로 저장하라. 이어 별도 boards `010/100/111`, `011/100/110`, `010/100/101`, `000/000/001`, `011/011/001`의 결과와 근거를 적어라. Slash는 row 구분이다.
+`N=5`에서 행의 앞 세 값만 같은 경우 승리인가? 입력량·index·승리 길이에서 바뀌는 것과 유지되는 규칙, p.27의 4/5/4 예를 설명하라.
 
 <details><summary>해설 보기</summary>
 
-입력은 첫 board의 세 rows010,100,111이 된다. 0도 Player0의 표식으로 빈칸이 아니다.
+승리는 N개 전체가 같아야 하므로 앞 세 값만으로는 부족하다. N부터 읽고 N² 표식을 저장하며 N행·N열과 각 줄의 N개를 검사한다. 자료는 N>=3이고 표식 0/1, 양쪽 승리, count 차이 규칙은 유지된다. 첫 N=4 예는 세 번째 행 1111로 Player 1 승리, 둘째 N=5는 완성 0행·1행으로 Invalid, 마지막 N=4는 0이 7개/1이 9개라 Invalid다. 모두 4×4라고 한 말과 손상된 하한 대신 크기·N>=3은 PDF에 근거한다.
 
-| Board | 근거 | 판정 |
-| --- | --- | --- |
-| 010/100/111 | 0이4개,1이5개; 마지막 row1승리 | Player 1 win. |
-| 011/100/110 | 0이4개,1이5개; 주대각선0승리 | Player 0 win. |
-| 010/100/101 | 0이5개,1이4개; 행·열·두 대각선에 승리 없음 | Tie. |
-| 000/000/001 | 개수8대1 | Invalid game. |
-| 011/011/001 | 개수4대5지만 첫 열0·마지막 열1 동시 승리 | Invalid game. |
-
-한 줄을 찾자마자 winner를 출력하면 개수 차이>1 또는 양쪽 승리를 놓친다. `printBoard`는 저장 순서를 확인하며 추가 선공·게임 이력 규칙은 이 명세에 없다.
-
-**확인 기준:** 입력 배치와 다섯 결과·독립 invalid 두 조건을 검산한다.
+**확인 기준:** N² 입력·N개 줄·유지 규칙·세 예의 다른 이유를 확인한다.
 
 </details>
 
-#### 확인 Q05 · N에 따라 바뀌는 경계
+### 객체와 round
 
-N×N 확장에서 입력량·최소 N·승리 줄 길이·유지 규칙을 말하라. 다음 완성 boards를 각각 판정하라. Slash는 row 구분이다.
+#### 확인 Q05 · Player 상태와 생성
 
-- 4×4: `0100/1001/1111/1000`
-- 5×5: `00000/11111/00011/11100/10100`
-- 4×4: `0101/1010/0101/1011`
+Player/Fight/Main의 책임, Player fields의 정확한 선언·초기 상태·constructor 입력을 설명하라. PDF의 초기화 예와 ZIP의 완성 상태는 같은가?
 
 <details><summary>해설 보기</summary>
 
-N을 먼저 읽고 N²개 표식을 읽으며 N ≥ 3이다. 행·열 수와 indices, winning line의 길이는 N을 따른다. 0/1 의미, 양쪽 승리와 개수 차이 > 1의 invalid 규칙은 유지된다.
+Player는 ID·health·행동, Fight는 상호작용·round, Main은 입력·전체 진행이다. Player는 private String userId, private int health=50, modifier 없는 Random random을 둔다. Health 범위는 0–50이고 0은 패배 경계다. Player(String userId,int randomSeed)는 ID와 난수 초기화 입력을 받는다. PDF는 ID 대입/new Random(randomSeed)를 보여 주지만 ZIP의 constructor와 다섯 body는 미구현이다. 설명 userID/attach와 선언 userId/attack도 구별한다. Getter는 추가 가능하지만 필수 이름·개수는 없다. 끊긴 STT의 health type을 복원한 발화로 만들지 않는다.
 
-첫 board는 0과 1이 각각 8개이고 셋째 row만 1의 winning line을 만들어 `Player 1 win.`이다. 둘째는 개수가 13/12로 허용 범위지만 첫 row의 0과 둘째 row의 1이 모두 이겨 `Invalid game.`이다. 셋째는 개수가 7/9여서 차이 2만으로 `Invalid game.`이다. N = 5이면 전체 다섯 칸이 같아야 하며 세 칸만으로는 승리하지 않는다. 원래 발화가 셋을 모두 4×4라고 해도 PDF의 크기 4·5·4를 구별한다.
-
-**확인 기준:** 바뀌는 bounds와 유지 규칙, 서로 다른 invalid 원인을 설명한다.
+**확인 기준:** 책임·field type/access·50과 0의 의미·자료/골격 차이를 확인한다.
 
 </details>
 
-#### 확인 Q06 · Player 초기화와 책임
+#### 확인 Q06 · 다섯 method의 계약
 
-Player·Fight·Main의 책임, Player fields와 constructor parameters·health 범위를 설명하라. PDF의 초기화 예와 skeleton의 완료 상태, userID/attach 표기는 어떻게 읽어야 하는가?
+(a) `attack`·`getDamaged`·`heal`의 변경 대상·범위·반환을 구별하라. (b) Health 2에 피해 5, health 49에 회복 3의 경계와 `isAlive()`를 설명하라. (c) `getTactic()`의 반환과 확률 70%, 자료별 type 차이는?
 
 <details><summary>해설 보기</summary>
 
-Player는 ID·health·행동, Fight는 interaction·round, Main은 입력·전체 구성을 맡는다. Fields는 private String userId, private int health=50, modifier 없는 Random random이다. Constructor는 Player(String userId,int randomSeed), health범위0…50이며0이면 패배다. PDF는 ID와 seeded Random 초기화를 보이지만 skeleton constructor는 미구현이고 field health50만 이미 있다. Descriptive userID·attach와 실제 userId·attack 선언을 구별하고 특정 getter 이름·개수를 새로 요구하지 않는다. 이 정확한 정보는9월19일 자료 보충이다.
+(a) `public void` attack(Player opponent)는 상대에 1–5의 선택 피해를 주고 private void getDamaged(int damage)는 지정량을 자기 상태에 적용하며 다시 난수를 뽑는 역할이 아니다. `public void` heal은 자기 health를 1–3만큼 회복시킨다. 
 
-**확인 기준:** 세 책임·fields·seed·skeleton 미구현과 자료 범위를 설명한다.
+(b) 경계에서 멈추는 해석이면 두 사례는 0과 50으로 제한되며 -3/52는 불가다. `isAlive()`는 health>0, 즉 1에서 참/0에서 거짓인 predicate다. 
+
+(c) PDF Boolean과 skeleton boolean 차이는 남긴다. `public char` getTactic은 70% 'a'/30% 'h' 선택을 반환할 뿐 공격을 수행하지 않는다. 열 번에 꼭 일곱 공격도 아니다. 비율·문자는 PDF로 확립되며 nextInt/nextFloat는 hints다.
+
+**확인 기준:** 대상·범위·경계·predicate·선택 반환을 모두 구별한다.
 
 </details>
 
-#### 확인 Q07 · 다섯 method의 다른 계약
+#### 확인 Q07 · Reference 연결과 한 round
 
-`attack`·getDamaged·heal·isAlive·getTactic의 접근·대상·범위·반환을 정리하라. Health2/damage5,health49/heal3의 결과, Boolean/boolean과 녹음의70·character 한계도 설명하라.
+Fight constructor, timeLimit=100, currRound=0의 뜻은? 첫 round의 출력·행동 순서와 p1 뒤 p2가 죽었을 때를 설명하라.
 
 <details><summary>해설 보기</summary>
 
-`public void` attack(Player opponent)는 상대에게1…5 damage를 적용하고 private void getDamaged(int damage)는 자기 health를 지정 피해만큼 낮추되0 아래로 두지 않는다. `public void` heal은 자기 health를1…3 회복하되50을 넘지 않는다. 두 경계 결과는0과50이다. `isAlive`는 health>0의 predicate이며 PDF는 Boolean, skeleton은 boolean이다. `public char` getTactic은70% attack에'a',30% heal에'h'를 반환하는 선택이며 그 자체가 action 수행은 아니다. `nextInt()`/`nextFloat()`는 hints다. 녹음의70에는 단위가 없고 character 설명은17:39에 끊겨 정확한 수치·문자는 PDF 근거다.
+Constructor는 전달된 Player references를 저장해 기존 객체에 연결하며 생성·복제하지 않는다. Fields와 constructor에 modifier는 없다. `timeLimit`은 최대 round 수이지 시간이 아니고 currRound=0은 시작 전이라 첫 출력은 Round 1이다. 먼저 round 번호, p1 tactic에 맞는 행동, 그 뒤 살아 있는 p2의 행동, 마지막 두 health를 출력한다. p1이 p2를 0으로 만들면 p2는 공격·회복 모두 하지 않는다. 출력은 `<Player1_userID> health : <Player1_health>` 다음 Player2 형식으로 실제 값을 넣는다. Getter 이름은 명세가 정하지 않는다.
 
-**확인 기준:** 다섯 책임·target·두 clamp 결과·type/source 차이를 모두 적는다.
+**확인 기준:** Alias 연결, 첫 번호, 중간 생존 검사, 최종 상태 출력 순서를 확인한다.
 
 </details>
 
-#### 확인 Q08 · Reference 연결과 한 round
+#### 확인 Q08 · 종료와 승자 반환
 
-Fight constructor가 this.p1=p1,this.p2=p2를 저장한다. 새 Player가 생기는가? `timeLimit = 100`,currRound0의 의미와 proceed의 출력·행동 순서, p1 공격으로 p2가0이 되는 경우를 설명하라.
+둘 다 살아 있을 때 round 99/100 완료와 한쪽 health 0의 종료를 비교하라. 마지막 동점의 승자·반환 type, PDF/ZIP 차이는?
 
 <details><summary>해설 보기</summary>
 
-들어온 reference 값을 저장해 Main과 같은 Players를 쓰므로 health 변화가 Main에서도 보인다. 100은 최대 rounds이지 시간 단위가 아니며0은 시작 전, 첫 출력은 Round1이다. `proceed`는 `Round <Round_Number>`를 출력하고 p1 tactic/action을 먼저 수행한다. `p2`가 살아 있을 때만 p2 tactic/action을 수행하므로 p1이 p2를0으로 만들면 p2의 attack·heal 모두 생략한다. 뒤에 두 `<userID> health : <health>` 줄을 p1,p2 순서로 출력한다. 동시 행동이 아니며 이 세부는 materials-only 계약이다.
+종료는 한쪽 health=0 또는 마지막 round 완료 중 하나면 된다. 둘 다 살아 있으면 99 완료는 아직 아니고 100 완료는 종료이며 101까지 진행하지 않는다. Health가 높은 Player가 승자이고 같으면 선행 p1을 고려한 명세에 따라 p2다. `getWinner()`는 Player reference이지 ID나 boolean이 아니다. PDF의 isFinished는 Boolean, skeleton은 boolean이며 의미가 같아도 선언이 동일하지 않다. `isFinished()`의 참/거짓과 getWinner의 객체 반환은 별개다.
 
-**확인 기준:** 복사된 references·round 단위·순서·사망 후 action 금지를 확인한다.
+**확인 기준:** OR 종료·99/100 경계·p2 동점·Player 반환을 확인한다.
 
 </details>
 
-#### 확인 Q09 · 종료와 winner의 다른 반환
+#### 확인 Q09 · Main과 seed
 
-Health0 또는 마지막 round가 끝난 경우 isFinished는? 기본 round 범위와 getWinner의 return type·동점 규칙·Main 출력 ID의 차이를 설명하라.
+Main의 두 int 입력에서 승자 메시지까지의 연결을 설명하라. Seed만 같으면 임의 구현의 결과도 같다고 할 수 있는가?
 
 <details><summary>해설 보기</summary>
 
-둘 중 하나가 만족하면 true다. 시작 전0에서 rounds1…100을 진행하되 health 조건이면 더 일찍 끝난다. PDF의 Boolean과 skeleton boolean 차이는 유지한다. `getWinner`는 더 높은 health의 Player reference를 반환하며 같으면 p2다. 자료는 p1의 선행 행동을 동점 이유로 든다. 이 값은 ID String도 draw도 아니며 Main이 Player의 ID를 따로 출력한다. Simulation 종료는 즉시 GC 증거가 아니다.
+두 int는 Player별 random seeds다. 자료의 가상 ID Gryffindor/Slytherin으로 Players를 만들고 그 references를 Fight에 전달해 종료까지 진행한 뒤 승자 Player의 ID로 `<userID> is the winner!`를 출력한다. Seed는 health나 round가 아니며 Player별 Random reference를 하나의 static 상태와 혼동하지 않는다. 같은 난수 trace를 비교하려면 generator·호출 methods·인자·순서도 같아야 한다. P.28 Constructor 제목이 별도 Main constructor를 요구하지 않으며 ZIP main body도 미완성이다. 이는 녹음 cutoff 이후 자료 보충이다.
 
-**확인 기준:** Predicate와 Player 반환·동점p2·off-by-one·GC 구별을 설명한다.
+**확인 기준:** 입력 용도·객체 연결·reference에서 ID·seed 비교 조건을 확인한다.
 
 </details>
 
-#### 확인 Q10 · Main의 입력과 미구현 범위
+### 게임과 Platform
 
-Main의 두 int는 어디에 쓰이고 어떤 objects를 연결하는가? 최종 메시지·p28의 Constructor heading·skeleton 상태와 특정 seed 승자를 확정할 수 없는 이유를 설명하라.
+#### 확인 Q10 · Lab04의 정확한 소속
+
+Platform.Platform과 Platform.Games의 구조·생성 순서·methods를 적고 placeholder 및 ZIP 한계를 설명하라.
 
 <details><summary>해설 보기</summary>
 
-두 int는 Players의 random seeds이며 초기 health나 round 수가 아니다. Gryffindor·Slytherin IDs의 Players를 만들고 두 references로 Fight를 구성해 종료될 때까지 진행한다. Winner Player의 ID로 `<userID> is the winner!`를 출력한다. P28 heading과 달리 코드는 main이지 추가 Main constructor 요구가 아니다. Main과 Player constructor, Fight의 진행·종료·winner 등은 skeleton에서 미구현이므로 return 필요한 빈 bodies도 완성 실행 프로그램이 아니다. Random 호출 순서와 구현이 결과에 관련되고 자료에 특정 seed trace가 없어 승자를 꾸며낼 수 없다.
+`src`에서 package Platform→그 안 class Platform→별도 package Platform.Games→Dice/ChamChamCham 순서다. 완전한 이름은 Platform.Platform, Platform.Games.Dice, Platform.Games.ChamChamCham이고 games 선언은 `package Platform.Games;`다. Games와 Platform은 별도 package라 접근 가능한 public class/method와 import 또는 완전한 이름이 필요하다. 두 게임은 public int playGame(), Platform은 public double run()/public void setRounds()를 제공한다. -1/-0.0 body는 배치 placeholder이지 완성 결과가 아니다. V2의 Lab04_skeleton.zip과 v4의 Lab04.zip 모두 미공급이며 M015는 Lab03다. 보이는 Test 이름으로 내부 검사를 추측하지 않는다.
 
-**확인 기준:** Seed→Players→Fight→winner ID 흐름과 미구현 상태를 구별한다.
+**확인 기준:** 소속 대소문자·signature·별도 package·미공급 archive를 확인한다.
+
+</details>
+
+#### 확인 Q11 · Dice의 출력과 반환
+
+Dice의 값 범위와 사용자/상대 순서를 설명하고 `47 11`, `40 42`, 같은 수의 반환을 구하라. Math.random hint의 양끝은?
+
+<details><summary>해설 보기</summary>
+
+양쪽은 각각 0–99 정수 한 개를 얻고 반환 전에 사용자 값 먼저, 공백 하나, 상대 값을 출력한다. 세 경우의 반환은 1,-1,0이다. 0은 출력 숫자 자체가 아니라 동점 outcome일 수도 있으므로 역할을 구별한다. 0≤r<1을 100칸에 대응하면 정수 후보는 0부터 99이고 100은 포함하지 않는다. 보통 주사위의 1–6 규칙을 쓰지 않는다. V4 10mins는 실습 시간이며 TestDice의 seed·내부 비교는 제공되지 않았다.
+
+**확인 기준:** 두 경계·출력 순서·세 반환·hint 범위를 확인한다.
+
+</details>
+
+#### 확인 Q12 · Pose의 대소문자와 일치
+
+`Up`, 유효 `up/right`, `left/left`의 결과를 구하고 Dice의 동점과 비교하라. Similar interface가 Java interface 선언을 뜻하는가?
+
+<details><summary>해설 보기</summary>
+
+`Up`은 정확한 소문자 up/down/left/right가 아니므로 -1이다. 유효 up/right도 다르므로 -1, left/left는 같아서 1이다. 상대 pose는 무작위이며 유효 입력에서는 사용자/상대 pose를 공백으로 출력한 뒤 반환한다. 같은 pose는 승리라 Dice의 같은 값 draw 0과 다르며 별도 draw는 없다. 자동 소문자 변환·추가 오류 메시지·재시도를 필수로 만들지 않는다. 공통 public int playGame() 호출 형태라는 뜻이지 공급 골격에 interface/implements가 선언되었다는 뜻은 아니다.
+
+**확인 기준:** Invalid·다름·같음의 세 경로와 추정하지 않을 동작을 확인한다.
+
+</details>
+
+#### 확인 Q13 · 한 번 설정과 비율
+
+최초 round 수, 첫·둘째 setRounds 효과와 run의 0/1 선택을 설명하라. 승리·패배·draw·승리의 비율과 int division 함정은?
+
+<details><summary>해설 보기</summary>
+
+최초는 1, 첫 호출만 5–10 inclusive에서 무작위 설정하고 그 뒤에는 변경하지 않는다. 첫 결과가 6이면 둘째 뒤에도 6이다. `run()`은 0이면 Dice, 1이면 ChamChamCham을 설정 횟수만큼 실행하고 double 승률을 반환한다. 네 결과에서 2승/4회=0.5이며 draw도 분모에 남아 2/3이 아니다. 4/6을 int끼리 먼저 나누면 0으로 절단되어 뒤늦게 double로 바꿔도 복원되지 않는다. 범위 밖 선택 처리·seed·필드명·getter 수는 새로 정하지 않고 상속 구조도 필수화하지 않는다.
+
+**확인 기준:** 일회 설정·게임 선택·draw 분모·나눗셈 type을 확인한다.
+
+</details>
+
+#### 확인 Q14 · Console에서 round 세기
+
+자료의 Dice 쌍 `73/38,58/10,95/26,69/39,2/65,38/77`와 pose 쌍 `up/left,left/up,down/right,down/down,up/right,down/up`의 비율을 구하라. 입력 down과 출력 down down을 어떻게 세는가?
+
+<details><summary>해설 보기</summary>
+
+Dice는 앞 네 승리/전체 여섯=4/6=2/3, pose는 네 번째만 같아 1/6이다. 단독 down과 뒤의 down down은 한 round의 입력과 출력이지 둘이 아니다. 표시 0.6666667과 0.16666666666666666은 비율의 예시 표현이며 특정 반올림 formatter를 필수화하지 않는다. 두 예 모두 6회여도 설정 범위가 6으로 고정되지 않는다. V2 p.38과 v4 p.40의 값은 같으며 새 수치 규칙이 도입된 것은 아니다.
+
+**확인 기준:** 4/6·1/6, 입력/출력 한 쌍, 근삿값과 계약 차이를 확인한다.
 
 </details>
 
 ### 적용 연습
 
-#### 연습 P01 · 실패 단계만 드러내는 사례
+#### 연습 P01 · 실패 단계 격리
 
-**새로 작성한 강의 기반 일반 연습; 직접 대응 기출 유형 근거 없음.** Validator를 검사하려 한다. `A`, `1234_56789`, `1234-56A89`, `1234-56789`, `exit`에 대해 최초 검사 결과를 적어라. 왜 `A`만으로 digit 검사가 맞는지 알 수 없는가?
-
-<details><summary>해설 보기</summary>
-
-A는 length 실패로 끝나 index4나 digit 검사에 도달하지 않는다. 두 번째는 length10이나 separator 실패다. 세 번째는 length·hyphen 통과 후 A 때문에 digit 실패다. 네 번째는 통과, exit는 일반 검증/echo 전에 종료 경로다. Digit 검사를 확인하려면 세 번째처럼 앞 조건을 만족한 반례가 필요하다. Exact separator quotes는 원문 차이를 유지하고 이 연습이 새 채점 문자열을 정하지 않는다.
-
-**확인 기준:** 다섯 경로·첫 실패·단계별 test 설계 이유를 설명한다.
-
-</details>
-
-#### 연습 P02 · 지정된 사건으로 한 round 추적
-
-**새로 작성한 강의 기반 일반 연습; 직접 대응 기출 유형 근거 없음.** Seed에서 추정한 결과가 아니라 이번 연습에서 p1의 선택을 attack,damage5로 지정한다. Round 시작 전 currRound0,p1 health4,p2 health3이며 IDs는 Gryffindor/Slytherin이다. 한 round의 health·출력·종료·winner를 구하라. `p2`가 heal을 미리 준비했다고 가정해도 실행할 수 있는가?
+새로 만든 강의·자료 기반 일반 연습이다. 후보의 날짜 계산 문제는 윤년·날짜 계약이고 파일 입력 문제는 예외·자원 처리가 필요하여 이 실습의 직접 기출 형식으로 삼지 않는다. `x`로 digit 검사를 검증했다는 주장과, N=5 행의 앞 세 표식만 같아서 승리라는 주장을 평가하라. 각 주장의 문제와 이를 드러낼 확인 방법만 제시하라.
 
 <details><summary>해설 보기</summary>
 
-Round1에서 p1이 p2에게5를 적용하면 p2는 하한0, p1은4다. `p2`는 이미0이라 tactic/action 단계로 가지 않고 heal도 못 한다. Health 조건으로 종료하며 winner는 p1 Player이고 Main은 그 ID를 출력한다.
+`x` 입력은 길이가 1이라 첫 단계에서 끝나 digit 검사를 관찰하지 못한다. 길이 10·index 4 hyphen을 만족하면서 다른 위치에 영문자가 있는 `e018-12345`로 digit 단계만 드러낼 수 있다. N=5에서 앞 세 값만 검사하면 길이 조건을 누락한다. `[0,0,0,1,1]` 행은 첫 셋이 같아도 전체 줄은 아니므로 그 행 자체는 승리 줄이 아니다. 전체 board 판정은 다른 줄·counts까지 따로 확인해야 한다.
 
-```text
-Round 1
-Gryffindor health : 4
-Slytherin health : 0
-Gryffindor is the winner!
-```
-
-마지막 줄은 proceed 자체가 아니라 종료 뒤 Main의 출력이다. 미리 준비한 heal도 사망 후 행동 금지 계약을 바꾸지 않는다. 이 결과는 지정한 사건의 trace이며 실제 seed 결과나 전체 구현은 아니다.
-
-**확인 기준:** 하한0·p2 생략·출력 주체·Player/ID 구별과 지정 사건 범위를 설명한다.
+**확인 기준:** 도달 조건과 전체 길이를 설명하며 완성 validator나 board 구현으로 확장하지 않는다.
 
 </details>
 
-### 복습 순서
+#### 연습 P02 · 행동 전후의 판정
 
-Q01–Q03에서 입력·오류별 사례를 직접 만든 뒤 Q04–Q05의 board를 행·열·대각선·개수로 검산한다. Q06–Q10은 책임과 return type을 말하고 P01–P02로 검사 순서와 round 순서를 확인한다.
+새로 만든 자료 기반 일반 연습이며 이 round 계약의 직접 기출 근거는 없다. p1 행동 직전 p2 health는 2이고 선택된 공격 피해는 5다. 검토자가 p2의 예정 heal을 먼저 실행하거나, 둘 다 살아 있는 round 99 직후 종료하거나, getWinner에서 ID만 반환하려 한다. 세 변경이 왜 명세와 다른지 설명하라.
+
+<details><summary>해설 보기</summary>
+
+원래 순서는 p1 뒤 p2이며 피해 하한을 적용하면 p2는 0이다. 중간 생존 검사에서 탈락해 heal까지 하지 않으므로 먼저 회복시키면 순서와 생존 조건을 바꾼다. 둘 다 살아 있는 99 완료는 최종 100 완료가 아니므로 제한 종료 조건이 아니다. `getWinner()`는 Player reference를 반환하고 Main이 ID를 읽어 메시지를 만든다. ID만 반환하면 책임과 return type이 달라진다. 선택 피해는 설명 입력이지 seed에서 계산한 결과가 아니다.
+
+**확인 기준:** 순서·중간 상태·100 경계·반환 책임 네 항목을 확인한다.
+
+</details>
+
+#### 연습 P03 · 같은 결과처럼 보이는 다른 계약
+
+새로 만든 자료 기반 일반 연습이다. 이 두 게임과 일회 설정을 함께 다루는 기출 형식 근거는 없다. 첫 setRounds가 5를 정한 뒤 다시 호출했다. Dice의 다섯 outcome이 `1,0,-1,1,0`이라면 횟수·승률은? 같은 두 pose에 draw 0을 반환하거나 입력/출력 줄을 각각 round로 세는 제안도 평가하라.
+
+<details><summary>해설 보기</summary>
+
+둘째 설정은 변경하지 않아 5회이고 승리 둘/전체 다섯=0.4다. 두 draw도 분모에 포함한다. 같은 유효 pose는 ChamChamCham에서 1이지 Dice처럼 0이 아니다. 두 게임의 playGame signature가 같아도 결과 조건까지 같지는 않다. Console 입력과 그 결과 출력은 한 round라 각 줄을 세면 분모가 잘못된다. 완성 게임 body나 미공급 Test의 내부를 정할 필요는 없다.
+
+**확인 기준:** 일회 설정·5회·0.4·게임별 equality 의미·round 단위를 확인한다.
+
+</details>
+
+### 짧은 복습 계획
+
+Q02–Q04를 실패 이유별로 다시 분류한 뒤 Q06–Q09를 상태·반환 표로 회상한다. 다음 날 Q13–Q14와 P03을 계산해 draw·입력 행·둘째 설정 호출을 잘못 세지 않는지 확인한다.
 
 ## 출처
 
-### 날짜별 강의와 녹음
+Lab02는 9월 10일, Lab03의 일부는 9월 17일 녹음과 연결된다. 9월 17일 녹음은 Player 설명의 17:39 구간에서 끝나며, 정확한 type·확률·문자와 Fight/Main의 후반 요구는 9월 19일 얻은 공식 자료로 보충했다. 끊긴 말은 복원된 발화가 아니다. Lab04 v2/v4는 새 녹음 없는 자료 복습이다. 원본 과제 ZIP과 행정 metadata는 공개 링크를 제공하지 않으며 Lab04 ZIP/Test 내부는 미공급이다. 실습 전체 구현은 다루지 않는다.
 
-- [[courses/computer_programming/lectures/2026-09-10-lecture-04|2026-09-10 · Computer Programming 강의·원자료]]
-- [[courses/computer_programming/lectures/2026-09-17-lecture-06|2026-09-17 · Computer Programming 강의·원자료]]
-- [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 보정 녹음문]] — 09:38, 15:25, 38:21, 50:11.
-- [[courses/computer_programming/transcripts/2026-09-17|2026-09-17 보정 녹음문]] — 15:41, 16:37.
+### 날짜별 노트와 녹취
 
-### 강의자료와 해당 페이지
+- [[courses/computer_programming/lectures/2026-09-10-lecture-04|2026-09-10 · 강의 노트]]
 
-- [Lab02 v4.pdf](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab02.v4.pdf) — [p.16](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-016), [p.17](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-017), [p.18](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-018), [p.19](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-019), [p.20](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-020), [p.23](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-023), [p.24](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-024), [p.25](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-025), [p.26](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-026), [p.27](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-027).
-- [Lab03 v2.pdf](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab03.v2.pdf) — [p.18](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-018), [p.19](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-019), [p.20](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-020), [p.21](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-021), [p.22](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-022), [p.23](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-023), [p.24](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-024), [p.25](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-025), [p.26](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-026), [p.27](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-027), [p.28](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-028).
+- [[courses/computer_programming/lectures/2026-09-17-lecture-06|2026-09-17 · 강의 노트]]
 
-Lab02의 구분자 메시지는 PDF p18과 p20의 인용부호가 다르며 새로운 채점 문자열로 확정하지 않는다. Board 규칙은 주어진 완성 board 판정만이며 모든 게임 이력의 적법성을 증명하지 않는다. 9월17일 녹음은17:39에 끊긴다. Lab03의 정확한 선언·수치와 Fight/Main 상세는9월19일 확보 자료 보충이다. PDF의 Boolean과 skeleton의 boolean, userID/userId·attach/attack 표기 차이는 유지한다. 제공 skeleton에는 미구현 methods가 남아 있어 전체 실행 결과나 seed별 승자를 주장하지 않는다.
+- [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 · 보정 녹취 · 09:38; 15:25–18:22; 38:21–39:19; 50:11–51:05]]
 
+- [[courses/computer_programming/transcripts/2026-09-17|2026-09-17 · 보정 녹취 · 14:47–17:39 (녹음 마지막 구간)]]
 
----
+### 자료와 해당 페이지
 
-[[courses/computer_programming/units/encapsulation|← 이전: Encapsulation과 접근·상태 설계]] · [[courses/computer_programming/units/index|단원 목차]]
+- [Lab02 v4 · PDF](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab02.v4.pdf) — [p.16](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-016), [p.17](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-017), [p.18](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-018), [p.19](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-019), [p.20](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-020), [p.21](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-021), [p.22](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-022), [p.23](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-023), [p.24](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-024), [p.25](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-025), [p.26](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-026), [p.27](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab02.v4/page-027)
+
+- [Lab03 v2 · PDF](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab03.v2.pdf) — [p.18](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-018), [p.19](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-019), [p.20](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-020), [p.21](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-021), [p.22](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-022), [p.23](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-023), [p.24](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-024), [p.25](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-025), [p.26](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-026), [p.27](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-027), [p.28](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab03.v2/page-028)
+
+- [Lab04 v2 · PDF](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab04.v2.pdf) — [p.24](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v2/page-024), [p.32](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v2/page-032), [p.33](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v2/page-033), [p.34](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v2/page-034), [p.35](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v2/page-035), [p.36](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v2/page-036), [p.37](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v2/page-037), [p.38](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v2/page-038)
+
+- [Lab04 v4 · PDF](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab04.v4.pdf) — [p.26](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-026), [p.27](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-027), [p.28](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-028), [p.29](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-029), [p.30](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-030), [p.31](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-031), [p.32](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-032), [p.33](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-033), [p.34](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-034), [p.35](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-035), [p.36](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-036), [p.37](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-037), [p.38](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-038), [p.39](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-039), [p.40](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab04.v4/page-040)
+
+이 단원과 직접 대응하는 기출 형식 근거가 없어 P 문제는 강의·자료 기반 일반 연습으로 제시한다.

@@ -1,6 +1,6 @@
 ---
 title: "Dirtree Traversal, Filtering, Output Contracts, and Design"
-description: "Check Dirtree’s output contract, depth, filter and storage responsibilities."
+description: "Check Dirtree's traversal, fixed output fields, statistics, and pattern grammar."
 course: "system_programming"
 unit_id: "dirtree"
 lang: "en"
@@ -9,397 +9,279 @@ source_kind: "unit_chapter"
 review_status: "approved"
 draft: false
 cssclasses: ["unit-textbook"]
-source_assets: ["lab 2 input and output.pptx", "assign2_README.md"]
+source_assets: ["lab 2 input and output.pptx", "assign2_README.md", "lab 2 input and output_2b90a395.pptx"]
 private_source_assets: ["assign2_README.md"]
 source_lectures: ["courses/system_programming/lectures/en/2026-09-23-lecture-06"]
 ---
 
-Review traversal, display and statistics as distinct decisions. Trace which entries are visited, shown and counted when depth and pattern boundaries interact.
+Read the Dirtree specification as three decisions: visit, display, and count. Check the contract on small trees because depth and filtering change the included set independently.
 
 ## Traversing a directory tree under an output contract
 
-Dirtree connects [[courses/system_programming/units/en/files-metadata|Directory Entries and Metadata]] to the responsibilities of a real program. Reading names from one directory is insufficient to print a tree. The program must classify entries, establish an order, descend into appropriate subdirectories, and coordinate displayed information with totals. [Lab 2: Input and Output, slides 2–11](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx) combines recursive traversal, formatting, and statistics.
+Dirtree recursively examines directory entries and prints metadata and statistics. Beyond listing names, it must distinguish **what to visit**, **what to display**, and **what to count**. File metadata, [permissions](permissions.md), and [pointer/storage lifetimes](objects-pointers.md) support these decisions. The later part of the [[courses/system_programming/lectures/en/2026-09-23-lecture-06|2026-09-23 Dirtree lecture]] introduces the contract.
 
-With no root argument, the program uses the current directory, `.`. The detailed handout specification allows up to 64 roots. The option `-d <depth>` specifies maximum depth, `-f <pattern>` supplies a name filter, and `-h` requests help. Depth and filtering can be used separately or together. Multiple roots retain separate headers, trees, footers, and summaries, followed by aggregate totals; they are not merged into one artificial tree.
+Without root arguments, the root is `.`. The private official README M018 adds a materials-only maximum of 64 roots. `-d <depth>` limits depth, `-f <pattern>` filters names, and `-h` requests help; depth and filtering can be used independently or together. Within each directory, omit `.` and `..`, put directories first, and sort alphabetically within the categories. The source supplies a `dirent_compare` helper. Each root receives a header, entry tree, and summary; multiple roots additionally receive a final aggregate.
 
-Within each directory, `.` and `..` are excluded. Directories come first, with alphabetical ordering within the directory group and within the remaining entries. The source's `dirent_compare` helper serves this comparison responsibility. Sorting all names together alphabetically would incorrectly allow an early-named regular file to precede a directory.
+This discussion interprets the specification and general design principles rather than providing a complete traversal or current-assignment solution. It does not create public links to the private README or reference binary.
 
-Metadata selection matters as well. The distinction between [[courses/system_programming/units/en/files-metadata|stat and lstat]] explains why reporting a link's own type and size differs from reporting its target's properties. The contract below treats links as a separate type. Following a link unintentionally and classifying it as a directory would alter both output and statistics.
+### Fixed fields are a byte-level contract
 
-## Column widths and metadata representation
+Read M017 slides 6–8 together with M018's detailed format. Each depth level contributes two indentation spaces, included within the path/name field.
 
-### Indentation belongs inside the name field
+| Field | Width, alignment, and limit |
+|---|---|
+| Path/name | 54, left-aligned; replace the end with `...` when exceeded |
+| User | First 8 bytes, right-aligned |
+| Group | First 8 bytes, left-aligned |
+| Size | 10, right-aligned |
+| Disk blocks | 8, right-aligned |
+| Type | 1 |
+| Summary text | 68, left-aligned, ellipsis when exceeded |
+| Summary total size / blocks | 14 / 9, right-aligned |
 
-Each level adds two spaces of indentation. These spaces belong **inside** the 54-character path/name field rather than being prefixed outside it. A deeper entry therefore has less of that field available for its name. [Slides 6 and 11](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx) and the handout's Output format and FAQ 2 establish the following contract.
+The source's complete format, including separators, is a 100-character line. A path/name field exactly 54 units long is not truncated; truncation applies only when it exceeds the limit. UTF-8 byte counts and displayed glyph widths differ, and the source does not establish a complete display-column algorithm. Numeric field overflow is excluded from grading, but totals can exceed `int`, requiring an adequate integer type. Distinguish path-overflow questions from the FAQ's `MAX_PATH_LEN` guidance.
 
-| Field | Width | Alignment and length handling |
-| --- | ---: | --- |
-| Path/name | 54 | Left-aligned; truncate and end with `...` when too long |
-| User | 8 | First eight bytes, right-aligned |
-| Group | 8 | First eight bytes, left-aligned |
-| Size | 10 | Right-aligned, in bytes |
-| Blocks | 8 | Right-aligned |
-| Type | 1 | The specified character |
-| Summary text | 68 | Left-aligned; truncate with trailing `...` when too long |
-| Total size | 14 | Right-aligned |
-| Total blocks | 9 | Right-aligned |
+Type markers are blank for regular files, `d` for directories, `l` for symbolic links, `f` for FIFOs, and `s` for sockets. The assignment classifies character and block devices as regular. Its FIFO marker is `f`, not the `p` used by Unix `ls`; output spelling belongs to this program's contract.
 
-A colon separates user and group. The entry-field widths sum to 89; with separator spaces and the colon, the source format occupies 100 characters. Correct individual widths alone do not establish a correct complete line. A summary row uses its own 68-, 14-, and 9-character fields and spacing. A name or summary exactly equal to its maximum width remains intact: truncation applies only when the limit is **exceeded**.
+## Statistics describe the selected entry set
 
-The handout assumes UTF-8 filenames and explicitly illustrates the user/group byte limit with formatting such as `printf("%.8s")`. UTF-8 byte counts and displayed glyph widths need not coincide. This does not establish a new, detailed Unicode display-column algorithm as part of the assignment. First distinguish a field's intended width from a string's storage length.
+Do not count the root itself as an entry. Sum selected entries' type counts, byte sizes, and allocated disk blocks. A count of one uses a singular noun; zero and counts of two or more use plurals. Blocks are metadata in 512-byte allocation units, not simply the file size rounded up.
 
-Numeric values overflowing the displayed field width are outside the stated assessment scope. That is separate from totals exceeding the range of `int`. Accumulation still requires an integer type wide enough for the target. The handout's Linux `long`-family suggestion should not be assumed to have the same width under every ABI.
+The two-root example on [system_programming:M017 slide 10](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx) gives:
 
-### File-type characters belong to the tool's contract
+| Root/result | Type counts | Bytes | Blocks |
+|---|---|---:|---:|
+| `subdir2` | 2 files, 2 links | 3086 | 16 |
+| `subdir3` | 2 files, 1 pipe, 1 socket | 500 | 16 |
+| Aggregate | 4 files, 0 directories, 2 links, 1 pipe, 1 socket | 3586 | 32 |
 
-| Metadata category | Dirtree representation |
-| --- | --- |
-| Regular file | Blank |
-| Directory | `d` |
-| Symbolic link | `l` |
-| FIFO | `f` |
-| Socket | `s` |
-| Character or block device | Classified as a regular file in this assignment |
+There are `4+0+2+1+1=8` entries, without adding two for the roots. In the original table, compare the per-root footers with the final aggregate to see the accounting boundary. The separate source example `9192+14=9206` bytes/16 blocks and long-name example `256+8192+1000=9448` bytes/24 blocks use different fixtures. Another README demo has 4 files, 3 directories, 2 links, 1 pipe, and 1 socket, totaling 21497 bytes/56 blocks; an expanded tree has 9 files and 25325 bytes/96 blocks. These are not one combined execution.
 
-The FIFO marker `f` is Dirtree's convention. Copying the `p` marker seen in `ls` would violate this output format. Treating devices as regular files is likewise an assignment simplification, not Unix's general classification. Name, ownership, logical byte size, allocated blocks, and type are distinct metadata fields; one should not be guessed from another.
+## Depth and filtering govern different decisions
 
-## Entry statistics and totals across roots
+The root has depth zero and direct children depth one. `-d` sets the maximum included entry depth: valid values are 1–20, with default 20. Entries beyond it contribute neither traversal, display, nor statistics. M017's chain illustrates the consequence:
 
-A root anchors traversal and is not itself counted as an entry in the totals. Selected entries, subject to depth and filtering, contribute type counts, byte sizes, and block counts. These quantities must be accumulated separately. Summary nouns use the singular only when the count is exactly one, and the plural for zero or at least two.
+| Scope | Included objects | Statistics |
+|---|---|---|
+| `-d 1` | `b` | 1 directory, 4096 bytes, 8 blocks |
+| `-d 2` | `b`, `c`, file `f` | 2 directories, 1 file, 8192 bytes, 16 blocks |
+| `-d 3` | Previous objects plus `d` | 3 directories, 1 file, 12288 bytes, 24 blocks |
+| Complete source example | `b,c,d,e` and two files | 16384 bytes, 32 blocks |
 
-The two-root example in [slide 10](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx) makes the units explicit.
+Starting the root at one incorrectly excludes a level. Use the specification's root-zero convention rather than resolving the confused numerical wording at 01:11:03 in the [[courses/system_programming/transcripts/2026-09-23|2026-09-23 transcript]]. The source's `# depth N` annotations explain the example and are not required output.
 
-| Entries under the root | Bytes | Blocks |
-| --- | ---: | ---: |
-| `subdir2`: 2 files, 2 links | 3086 | 16 |
-| `subdir3`: 2 files, 1 pipe, 1 socket | 500 | 16 |
-| Combined | 3586 | 32 |
+### A nonmatching ancestor may still need traversal
 
-For the first root, `1024 + 2048 + 8 + 6 = 3086` bytes. For the second, `200 + 300 + 0 + 0 = 500` bytes. Together they contain 4 files, 0 directories, 2 links, 1 pipe, and 1 socket. The entry count is `4 + 0 + 2 + 1 + 1 = 8`, without adding the two roots again. The aggregate includes total entries; the source's one-line per-root summary does not acquire an additional entry-count field.
+Filtering is case-sensitive contiguous-substring matching on the basename. Pattern `b` matches within `abc`, but `/home/ta/abc/def` has basename `def`; a matching parent component does not make that basename match. The root is not filtered.
 
-Blocks use the source's 512-byte allocation units. Their count should not be reconstructed by rounding logical size up to a multiple of 512. Sparse files and short symbolic links demonstrate that logical bytes and allocated storage can differ. The distinction in [[courses/system_programming/units/en/files-metadata|File Size and Allocated Blocks]] prevents incorrect totals here.
+A matching entry receives detailed metadata and contributes to statistics. A nonmatching directory is still visited within the depth limit to find matching descendants. If it has such descendants, display its name only, without metadata or statistical contribution. If no descendant matches, omit that nonmatching subtree. Thus “does not match” is not equivalent to “stop traversing.” The transcript around 01:13 through just before 01:14:44 explains the distinction.
 
-The materials contain several different fixtures, or test-directory arrangements. Different totals do not imply that one printed run contradicts another.
+M018's Implementation section contains a conflicting bullet saying not to traverse a nonmatching directory. Here the rule supported by the lecture, M017 slide 18, the README's formal matching rule, and its detailed examples is continued traversal. This source conflict is not presented as newly resolved instructor guidance.
 
-| Separate source example | Calculation or result within that example |
-| --- | --- |
-| Earlier two-root example | `9192 + 14 = 9206` bytes, 16 blocks |
-| Three-file long-name example | `256 + 8192 + 1000 = 9448` bytes, 24 blocks |
-| Initial complete handout demo | 4 files, 3 directories, 2 links, 1 pipe, 1 socket; 21497 bytes, 56 blocks |
-| Expanded complete handout demo | 9 files; 25325 bytes, 96 blocks |
+The detailed results on slides 20–21 were skipped in the lecture and are materials-only examples. `a?c` retains files `aXc`, `abc`, and `axc`, totaling three bytes/24 blocks, with `subdir1` shown by name only. The `(ab)*c` example includes `c` and a substring inside `xababcx`, totaling six files/six bytes/48 blocks. `b(ab)*c` excludes `c`, giving five/five/40. M017's excluded name `zxc` and the README's `aZZc` belong to different fixtures.
 
-Combining the expanded demo's file count with the initial demo's byte total would destroy consistency. These numbers belong to the supplied examples; they are not promised filesystem-allocation results for a newly created tree.
+## Pattern units and grammar boundaries
 
-## Depth defines the traversal boundary
+In this assignment, `?` means exactly one arbitrary character, `*` repeats the immediately preceding character or group zero or more times, and parentheses form a group. Do not import shell-glob or unrelated regex semantics.
 
-The root is depth 0 and its immediate children are depth 1. The `-d` value is the **maximum included entry depth**, with valid values 1–20 and default 20. Entries beyond it are excluded from display, traversal, and statistics. Hiding deeper names while adding their sizes would violate the contract.
+| Pattern | Example matching structures |
+|---|---|
+| `a?c` | `abc`, `axc` |
+| `ab*` | `a`, `ab`, `abb`, … |
+| `(ab)*c` | `c`, `abc`, `ababc`, … |
+| `a(bc)*d` | `ad`, `abcd`, `abcbcd`, … |
+| `ab?(de)*f` | `abcf`, `abXf`, `abXdef`, `abXdedef` |
 
-[Slides 12–15](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx) show the depth rules and examples. The complete chain appears on slide 12 and in the handout's Option 1: Depth limit, Examples: root `a` is followed by directories `b`, `c`, `d`, and `e`. A file `f` occurs under `b` at depth 2, and another `f` occurs under `e` at depth 5. Each illustrated directory has size 4096 bytes and 8 blocks; the two files have size zero and zero blocks.
+`a(bc)*d` accepts `ad` because the group can repeat zero times. For M018's `abc?d*(ef)`, `abcdef` can match with `?` consuming one `d` and `d*` repeating zero times; `abcXddef` and `abcXef` also fit. Partial matching does not require consuming the entire basename.
 
-| Boundary | Principal included entries | Files / directories | Bytes / blocks |
-| --- | --- | ---: | ---: |
-| `-d 1` | `b` | 0 / 1 | 4096 / 8 |
-| `-d 2` | `b`, `c`, and the `f` under `b` | 1 / 2 | 8192 / 16 |
-| `-d 3` | The preceding entries plus `d` | 1 / 3 | 12288 / 24 |
-| Complete illustrated chain | `b,c,d,e` and both files | 2 / 4 | 16384 / 32 |
-
-Displaying `c` with `-d 2` does not imply descending to its children. The directory entry at depth 2 differs from its descendants at depth 3. The source's `# depth N` annotations explain the figure and are not additional strings to print.
-
-The [[courses/system_programming/transcripts/2026-09-23|September 23 STT, 01:11:03]] first describes root depth as 0 but later contains a conflicting reading of 2. The calculation here follows the formal specification and visual example, using root depth 0; it does not claim to recover the unclear utterance.
-
-## Basename filtering and the shape of the tree
-
-### Matching an entry and entering a directory are different decisions
-
-The filter is case-sensitive and applies to the basename, the final name component, rather than the full path. Pattern `b` can match within `abc`, but the basename `def` in `/home/ta/abc/def` does not contain `abc`. Searching ancestor names as well would change a file's matching behavior simply because it was moved beneath a differently named directory.
-
-Matching is partial: a contiguous substring of the basename may satisfy the pattern. Matching files, links, pipes, and sockets receive detailed output and contribute to statistics. A matching directory does too. However, **a non-matching directory must still be traversed within the permitted depth** to look for matching descendants.
-
-When such a directory contains a matching descendant, its name remains as a tree placeholder. Its ownership, size, blocks, and type are omitted, and it contributes nothing to statistics. If it has no matching descendants, the non-matching subtree is omitted. The root itself is not filtered. Consequently, “its name appears in the tree” and “it contributes to the totals” are not always equivalent.
-
-[Slide 18](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx) and the [[courses/system_programming/transcripts/2026-09-23|September 23 STT, 01:13:52]] support continued traversal through non-matching directories. A handout Implementation bullet says the opposite. The formal matching rule, slides, and lecture agree on continued traversal, which is the rule used here. This conflict is directly relevant to why display filtering and traversal should not be collapsed into one predicate.
-
-### Name-only ancestors and selected totals
-
-In the `a?c` example of [slides 20–21](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx), the selected files are `aXc`, `abc`, and `axc`. The ancestor `subdir1` does not match, but its name remains to locate a matching descendant. Each selected file has size one byte and eight blocks, producing 3 files, 3 bytes, and 24 blocks. The placeholder directory's 4096 bytes are not added. A different excluded name appears in the slide and the handout, so the two fixtures should not be treated as one identical listing.
-
-The `(ab)*c` example accepts the zero-repetition case `c` and a substring within `xababcx`, producing 6 files, 6 bytes, and 48 blocks. Requiring an initial `b` with `b(ab)*c` excludes `c` and gives 5 files, 5 bytes, and 40 blocks. Even `abc` can match the second pattern through its substring `bc`. Requiring the entire basename to have the pattern's matched length would miss this behavior.
-
-These detailed examples are materials-based supplementation. At [[courses/system_programming/transcripts/2026-09-23|September 23 STT, 01:14:44]], the lecturer explains operators and then skips some examples; the full calculations should not be described as all having been worked through in that speech.
-
-## The pattern language and its boundaries
-
-### Interpret the three operators independently
-
-This small pattern language is neither a complete general regex language nor the shell's entire wildcard language.
-
-| Element | Meaning | Source example |
-| --- | --- | --- |
-| `?` | Exactly one arbitrary character | `a?c` matches `abc` and `axc`. |
-| `*` | Zero or more repetitions of the immediately preceding character or group | `ab*` matches `a`, `ab`, and `abb`. |
-| `()` | Treat several elements as one group | `(ab)*c` matches `c`, `abc`, and `ababc`. |
-
-In `a(bc)*d`, the complete `bc` group repeats, allowing `ad`, `abcd`, and `abcbcd`. In `ab?(de)*f`, the `?` must consume one character while the `de` group may be absent, allowing `abcf`, `abXf`, `abXdef`, and `abXdedef`.
-
-The handout's `abc?d*(ef)` also becomes clearer when decomposed. In `abcdef`, `?` consumes `d`, `d*` repeats zero times, and the final group consumes `ef`. In `abcXddef`, `?` consumes `X` and `d*` consumes two `d` characters. In `abcXef`, the `d*` component is again absent.
-
-Quote a command-line pattern so that the shell does not interpret it first. Its maximum length is 64 including the terminating NUL. Matching operator characters as literal filename characters is outside the stated assessment scope; this does not authorize adding an invented escape syntax or other regex operators. Also distinguish this “one arbitrary character” `?` from the optional-element `?` used in the [[courses/system_programming/units/en/state-machines|Integer DFA's regular-expression notation]].
+Quote a command-line pattern so the shell does not process its metacharacters first. The maximum pattern length is 64 including the terminating NUL. Matching `?`, `*`, `(`, or `)` as literal filename characters is outside the grading domain. The optional-element meaning of `?` in another regex language does not apply here.
 
 ### Invalid syntax versus excluded complexity
 
-Before using a pattern as matching input, its syntax must be assessed.
+Invalid examples include an empty pattern, empty group `a()b`, leading `*abc`, consecutive `a**b`, prematurely closing `a)bc(`, and unclosed `(abc`. A star must follow a valid character or group. Thus `a*b` is not an invalid example under this rule; unclear pattern speech at 01:15:40 is not evidence to the contrary.
 
-| Invalid pattern | Structural problem |
-| --- | --- |
-| Empty pattern | No element |
-| `a()b` | Empty group |
-| `*abc` | No preceding element for `*` to repeat |
-| `a**b` | Disallowed consecutive `*` operators |
-| `a)bc(` | Closing parenthesis appears first |
-| `(abc` | Unclosed group |
+A star within a group, such as `a(b*c)d`, and nested groups are separately described as complexity excluded from grading. Do not merge that category into the required invalid-syntax list. An explicitly invalid pattern produces only `Invalid pattern syntax` on stderr and exits without listing or statistics. M018 excludes permission failures, nonexistent paths, concurrent rename/removal, and allocation failures from grading, but that does not make them irrelevant in ordinary programs. The precise scoring relationship between M017's “Error and overflow handling 5” rubric and the invalid-only clause remains unresolved.
 
-The pattern `a*b` is valid under these rules: it repeats the preceding `a` zero or more times. The [[courses/system_programming/transcripts/2026-09-23|September 23 STT, 01:15:40]] contains unclear or contradictory recognition around that example; it should not turn a valid pattern into an invalid one.
+### Searching start positions versus matching from one position
 
-A `*` inside a group, such as `a(b*c)d`, and nested groups are separately excluded complexities. “Not included in assessment” does not mean “must be rejected as invalid.” An invalid pattern uses the supplied `panic()` path to print only `Invalid pattern syntax` to `stderr` and terminate, without a directory listing or statistics.
+M017 slide 25 provides partial pseudocode for a star-only version. Outer `match` tries successive basename start positions; inner `submatch` decides whether the pattern continues from one position. In the original, notice the zero-repetition attempt and the unimplemented one-or-more branch below it. Repeated consumption, `?`, grouping, empty suffixes, and complete termination/backtracking conditions are not supplied. The hint is not a finished matcher.
 
-The handout excludes other errors from assessment, including permission denied, nonexistent paths, rename/removal during traversal, and allocation failure. Such errors still exist and matter in general filesystem programs. The slides' broader error/overflow label also does not establish a hidden, more detailed grading rule beyond the handout.
+[EX:sp_2025_2_midterm_q02 p.5] asks for related reasoning that separates start-position search from recursive matching at one position. However, its `*` is a wildcard for zero or more arbitrary characters; Dirtree's star repeats the **preceding item**. The exam also assumes initially nonempty input strings and patterns. What transfers is the method of identifying suffix meaning, zero-length choices, progress, and termination separately. Neither the private skeleton's blanks nor the current assignment's missing branches are completed here.
 
-### Searching for a starting position versus matching at that position
+## Storage responsibilities and development tools
 
-The hint in [slide 25](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx) is **partial pseudocode** for a `*`-only version. Its outer `match` moves through possible starting positions to seek a partial match; `submatch` examines whether the pattern continues from one chosen position. Separating these responsibilities distinguishes “where does matching begin?” from “how often is this element repeated?”
+Separate coordination of roots, options, headers, summaries, and aggregates from directory collection, sorting, filtering, printing, recursion, and closing. Formatting, summary construction, entry handling, and pattern validation have distinct contracts. This follows M018's materials-only advice to design the flow before examining the skeleton.
 
-One repetition branch first tries zero repetitions and checks the remaining pattern. If that fails, a path consuming further copies of the preceding character is needed. The source leaves the one-or-more branch at comment level and does not complete `?` handling, grouping, empty-suffix behavior, or every termination and backtracking condition. Transcribing the hint therefore does not yield a complete matcher.
+The number of entries in a directory has no stated upper bound. Depth twenty does not limit width, and a large local array in a recursive function consumes stack space at every active level. A supposedly large-enough fixed array therefore does not handle all permitted inputs. Account for width, depth, allocated storage, and release times together. These are design constraints; the complete storage-growth algorithm remains an implementation task.
 
-The historical question [EX:sp_2025_2_midterm_q02 p.5] is relevant to distinguishing an outer starting-position search from matching at one position. **Its `*` consumes an arbitrary sequence of zero or more characters, whereas the current assignment's `*` repeats the preceding character or group.** Responsibility separation and checking the zero-consumption path transfer; operator semantics and a completed historical function do not transfer unchanged to this assignment.
+The handout distinguishes `README`, `Makefile`, `src/dirtree.c`, reference, tools, and documentation. `make` builds and `make clean` removes build results; the directory structure must agree with the Makefile. `compare.sh` compares output against the reference, `gentree.sh` creates fixtures from `*.tree` descriptions, and `mksock` creates socket entries. The instructions say not to modify `mksock`. The FAQ's pipe/socket regeneration conflicts concern existing fixtures, not commands executed here.
 
-## Entry storage and separation of program responsibilities
+API roles also remain separate: `strcmp` compares; `strncpy` performs bounded copying; `strdup` creates a separately owned copy requiring `free`; `snprintf` formats within a bound; `opendir/readdir/closedir` traverse; `stat/lstat` obtain metadata; `getpwuid/getgrgid` find names; and `qsort` sorts. `strncpy` does not always terminate with NUL, and `snprintf` can truncate. `qsort` replaces neither collection nor filtering nor statistics, and its name does not guarantee a particular quicksort implementation. External regex libraries and `scandir` are prohibited by the specification.
 
-### Directory width and recursion depth consume different resources
-
-The handout recommends outlining a design before reading the skeleton. The conceptual role of `main` is to coordinate options and roots, per-root headers and summaries, and the final aggregate. Directory processing is responsible for opening, collecting entries, sorting, applying display/filter decisions, performing necessary recursive traversal, and closing. Separating formatting, statistics, and pattern validation makes it easier to trace which input condition affects which result.
-
-No upper bound on the number of entries in one directory is supplied. An arbitrarily “large enough” fixed array does not therefore cover every input. A large local array in a recursive function consumes stack storage at each active depth. Maximum depth 20 does not impose a small bound on directory **width** or total allocation.
-
-The distinction between [[courses/system_programming/units/en/memory-layout|Stack and Heap Storage]] also clarifies lifetime. Collected entries and owned copies of names must remain valid while used; dynamically allocated storage should be released when no longer needed. Storage still used by a descendant call must not be freed prematurely. These choices interact with where sorting and filtering responsibilities reside. The discussion establishes responsibilities and lifetime conditions without providing the assignment's complete traversal or matcher implementation.
-
-### Libraries and test tools have bounded roles
-
-The handout and [slides 27–30](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx) distribute useful operations across the following functions and tools.
-
-| Purpose | Function or tool | Boundary to remember |
-| --- | --- | --- |
-| String comparison | `strcmp` | Connect case-sensitive comparison to the required ordering. |
-| Limited copying | `strncpy` | NUL termination is not guaranteed when the source reaches the limit. |
-| Owning a name copy | `strdup`, `free` | Track ownership and the point at which the copy is no longer needed. |
-| Formatting into a bounded buffer | `snprintf` | Staying within the buffer does not prove that the desired text was not truncated. |
-| Reading a directory | `opendir`, `readdir`, `closedir` | Collect entries and release the directory resource. |
-| Metadata and owner names | `stat`, `lstat`, `getpwuid`, `getgrgid` | Distinguish links from their targets and numeric IDs from names. |
-| Sorting collected entries | `qsort` | It does not perform traversal, and its name does not guarantee a specific quicksort implementation. |
-
-The assignment prohibits `scandir` and external pattern-matching libraries such as `regex.h`. Knowing that a library can perform a related operation does not establish permission to substitute it for the required filter.
-
-In the handout, `README.md` defines the contract, `Makefile` drives the build, `src/dirtree.c` is the skeleton, `doc/` contains Doxygen-related documentation, `reference/` holds the comparison implementation, and `tools/` contains fixture utilities. The roles of `make` and `make clean` are building and removing build products; the directory structure must agree with the Makefile's expectations.
-
-The tool `gentree.sh` creates a directory fixture from a `*.tree` description, while `compare.sh` compares the student's output with the reference output. The `mksock` helper creates socket entries and is not to be modified. The FAQ's collision when recreating existing pipes or sockets illustrates that a test environment itself has state. Conversely, one matching output does not establish behavior at every depth boundary, non-matching ancestor, zero-repetition case, or column limit. Source fixtures and comparison tools provide concrete starting points for checking those distinct contracts.
+The latest supplied [system_programming:NM002 slide 32](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output_2b90a395.pptx) lists `dirtree.c`, extensionless `readme`, `Makefile`, and genuine compilation history in `history/` for submission. M017/M018's two-file lists are older versions. The supplied deadline is October 9 at 21:00; the later file list is not retroactively September 23 speech. Read the example student number only as `YourID`, and do not derive another deadline from the archive-command year discrepancy. The retained teaching in NM002 does not resolve the filter-bullet and error-rubric conflicts.
 
 ## Key Takeaways
 
-- Traverse nonmatching ancestors to find matching descendants.
-- Name-only placeholders contribute no statistics.
-- Current * repeats the preceding element and differs from the historical wildcard.
-- Connect [[courses/system_programming/units/en/files-metadata|files/directories]] and [[courses/system_programming/units/en/memory-layout|storage lifetime]].
+- Roots have depth zero and are excluded from entry totals.
+- A nonmatching directory can still need traversal to find matching descendants within depth.
+- Name-only ancestors differ from entries receiving details and statistical contribution.
+- `?` consumes one character; `*` repeats the preceding item. Invalid syntax differs from excluded complexity.
+- A depth limit does not bound directory width, and each tool serves a separate contract.
 
 ## Recall and Practice
 
-### Recall and reasoning
+### Recall and explanation
 
-#### Recall Q01 · Roots, sorting and output units
+#### Recall Q01 · Roots, options, and sorting
 
-Explain default/max roots and -d/-f/-h. How are multiple roots, per-directory sorting and symlink classification handled?
+Explain omitted roots, maximum root count, `-d/-f/-h`, handling of `.`/`..`, ordering, and output for one versus several roots.
 
 <details><summary>Show solution</summary>
 
-Omitted roots mean .; up to 64 roots are allowed. -d limits depth, -f filters names, -h requests help; depth/filter can combine. Each root keeps its own header/tree/footer/summary before a final aggregate. Exclude dot/dot-dot, place directories first, and alphabetize within each group. Sorting all names together is insufficient. Distinguish a symlink’s own type/size from target metadata to avoid counting it as a directory.
+Omission selects current directory `.`; the supplied README allows up to 64 roots. The options request depth, filter, and help; depth/filter may combine or stand alone. Ignore special entries, put directories first, and sort alphabetically within categories. Every root gets a header, tree, and summary; multiple roots also get a final aggregate. The 64-root limit is materials-based detail.
 
-**Check:** Check64, separate root output, directories-first sorting and link metadata.
+**Checking points:** Check the default, all options, sorting, and aggregate condition.
 
 </details>
 
-#### Recall Q02 · Field widths and types
+#### Recall Q02 · Widths and type markers
 
-Explain alignment/overflow for name54, user8, group8, size 10, blocks 8, type 1, summary fields and indentation. Include type codes, UTF-8 and large totals.
+Give indentation and widths/alignment for path, user, group, size, blocks, type, and summary. Explain exactly 54 path units, FIFO/device markers, byte versus glyph width, and large totals.
 
 <details><summary>Show solution</summary>
 
-Name is left-aligned with ... only on overflow, including two indentation spaces per depth inside54. User uses its first 8 bytes, right-aligned; group first 8, left-aligned; size 10/blocks 8 are right-aligned; type occupies 1. Widths total 89, with colon/spaces making100. Summary text68, left/truncated, total size 14 and blocks 9, right, use separate spacing. Exactly54/68 is not truncated. Types: regular blank, directory d, link l, FIFO f, socket s; devices are treated as regular here. UTF-8 bytes and displayed glyph widths differ without establishing a new Unicode algorithm. Excluded numeric field overflow does not prevent totals exceeding int; use a sufficiently wide target type.
+Two spaces per depth belong inside the left-aligned 54-unit path field; truncate only if exceeded. User uses the first eight bytes right-aligned, group the first eight left-aligned, size ten right-aligned, blocks eight right-aligned, and type one. Summary text is 68 left-aligned with ellipsis on overflow; totals use 14/9 right-aligned. The full source format including separators is 100. Exactly 54 is not truncated. Markers are blank/d/l/f/s; character/block devices count as regular for this assignment. UTF-8 bytes differ from glyph columns, and grading exclusions for numeric width do not eliminate totals exceeding int.
 
-**Check:** Check widths, alignment, boundaries, FIFO f, bytes/display and accumulation type.
+**Checking points:** Check every width/alignment, the exact boundary, and FIFO f.
 
 </details>
 
-#### Recall Q03 · Summary units
+#### Recall Q03 · Statistical scope and aggregation
 
-Combine roots with 2 files+2 links=3086 bytes/16 blocks and 2 files+pipe+socket=500/16. Explain roots, pluralization, separate fixtures and block totals.
+Two roots yield 2 files/2 links, 3086 bytes/16 blocks and 2 files/1 pipe/1 socket,500 bytes/16 blocks. Find the aggregate, entry count, and singular/plural labels. Also sum the separate fixtures 9192+14 and 256+8192+1000 and explain blocks versus byte size.
 
 <details><summary>Show solution</summary>
 
-Aggregate:4 files, 0 directories, 2 links, 1 pipe, 1 socket; 8 entries, 3586 bytes, 32 blocks. The byte sums are1024+2048+8+6 and 200+300+0+0. Do not add the roots. Only1 is singular; 0 and≥2 are plural; total entries is an aggregate field. Sum metadata block counts in 512-byte allocation units rather than rounding logical size. Separate fixtures yielding9206/16, 9448/24, 21497/56 and expanded-demo25325/96 must not be merged.
+The aggregate is 4 files, 0 directories, 2 links, 1 pipe, 1 socket: eight entries, 3586 bytes, 32 blocks. Do not add roots. Only one is singular; zero and two or more are plural. The separate sums are 9206 and 9448 bytes; their source block counts 16/24 are metadata. Blocks use 512-byte allocation units and are not computed by simply rounding file length. README totals 21497/56 and expanded 25325/96 belong to different fixtures.
 
-**Check:** Check8/3586/32, excluded roots and independent allocation totals.
+**Checking points:** Check 8/3586/32, root exclusion, both separate sums, and block meaning.
 
 </details>
 
-#### Recall Q04 · What depth excludes
+#### Recall Q04 · Depth boundaries
 
-Root a has directory chain b, c, d, e, plus a file under b at depth 2 and another under e at depth 5. Each directory is4096 bytes/8 blocks; files0/0. Explain `-d 1`/2/3/default totals and boundaries.
+Give root/child depths, valid `-d` range/default, and included objects/statistics in the source chain at depths 1/2/3. What happens beyond the limit?
 
 <details><summary>Show solution</summary>
 
-Root depth 0; valid limits 1..20, default 20. `-d 1` includes b:0 files/1 directory, 4096/8; `-d 2` adds c/f:1/2, 8192/16; `-d 3` adds d:1/3, 12288/24; full tree:2/4, 16384/32. Beyond-limit entries are excluded from traversal and totals, not just display. Showing c at depth 2 does not visit its children. Diagram #depth annotations are not output. Use formal depth 0 while retaining the transcript’s conflicting0/2 wording as uncertain.
+Root depth is zero, direct children one; valid values are 1–20, default 20. Depth 1 includes b: one directory/4096/8; depth 2 includes b, c, f: two directories and one file/8192/16; depth 3 adds d: three directories and one file/12288/24. The full example has b, c, d, e and two files, 16384/32. Beyond-limit entries are neither visited, printed, nor counted. `# depth N` is explanatory, not output.
 
-**Check:** Check all boundaries/totals and exclusion from traversal/statistics.
+**Checking points:** Check the depth origin and all three included sets/totals.
 
 </details>
 
-#### Recall Q05 · Separating filtering and traversal
+#### Recall Q05 · Nonmatching ancestors
 
-Does filtering use paths or basenames? Explain nonmatching directories, roots/placeholders and the a?c/group-pattern fixture totals.
+Does pattern b match basename `def` because its path is `/home/ta/abc/def`? Separate visit/display/count for a nonmatching parent with a matching file below, including the source conflict and the three detailed example totals.
 
 <details><summary>Show solution</summary>
 
-Matching is case-sensitive, partial and basename-only. Traverse nonmatching directories within depth to find descendants. A nonmatching ancestor with matches remains name-only, with no detailed metadata or statistical contribution; omit its subtree if none match. The root is not filtered. The a?c example selects aXc, abc, axc:3 files/3 bytes/24 blocks. (ab)*c yields 6/6/48; b(ab)*c yields 5/5/40. Even abc contains bc, using zero group repetitions in the latter. Slide zxc and handout aZZc belong to different fixtures. The Implementation bullet saying to stop at a nonmatch conflicts with formal rules, slides and lecture and is not adopted.
+No: match only a case-sensitive contiguous substring of the basename. Do not filter the root. Visit the parent within depth; if a descendant matches, show only its name and exclude its metadata/statistics. If none matches, omit the subtree. The stop-traversing bullet conflicts with speech, formal rules, and examples; continued traversal follows that evidence without claiming the conflict resolved. Materials-only totals are a?c:3 files/3 bytes/24 blocks with name-only subdir1; (ab)*c:6/6/48; b(ab)*c:5/5/40, excluding c.
 
-**Check:** Check basename, continued traversal, zero placeholder totals, 3/6/5 selections and the conflict.
+**Checking points:** Separate all three decisions and retain materials-only status for detailed examples.
 
 </details>
 
-#### Recall Q06 · The current pattern grammar
+#### Recall Q06 · Pattern consumption units
 
-Explain ?, *, () and decompose a(bc)*d, ab?(de)*f, abc?d*(ef). Why do abcdef, abcXddef and abcXef match the last pattern?
+Define `?`, `*`, and grouping, and explain zero-repeat examples for `ab*`, `(ab)*c`, `a(bc)*d`, `ab?(de)*f`, and `abc?d*(ef)`. Explain quoting, the 64 limit, and substring scope.
 
 <details><summary>Show solution</summary>
 
-? matches exactly one character; * repeats the immediately preceding character/group zero or more times; () groups. a(bc)*d permits ad. ab?(de)*f is ab+one character+repeated de+f. For abc?d*(ef), abcdef uses ?=d, d* zero; abcXddef uses ?=X, d* twice; abcXef uses ?=X, d* zero. Quote patterns against shell expansion. Maximum64 includes NUL, leaving63 payload bytes. No literal-operator escape or full regex language is introduced.
+? consumes exactly one arbitrary character; * repeats the preceding character/group zero or more times. Examples a, c, ad, abXf match the first four respectively. For the last, abcdef matches with ? consuming d, zero d* repetitions, and (ef) consuming ef; abcXef also matches. A contiguous substring need not consume the entire basename. Quote against shell processing; the 64 maximum includes NUL. Literal operator-character matching is excluded, and another regex's optional-? meaning does not apply.
 
-**Check:** Check each consumption path, zero repetition, quoting and 63-byte payload.
+**Checking points:** Check all five decompositions, zero repetition, and the NUL-inclusive bound.
 
 </details>
 
-#### Recall Q07 · Invalid versus excluded cases
+#### Recall Q07 · Invalid syntax versus excluded complexity
 
-Classify empty, a()b, *abc, a**b, a)bc(, (abc, a*b. Must a(b*c)d and ((ab)) be rejected? State the diagnostic and assessment scope.
+Classify empty pattern, `a()b`, `*abc`, `a**b`, `a)bc(`, `(abc`, `a*b`, `a(b*c)d`, and nested groups. Give invalid-pattern stream/message/output behavior and the rubric limit.
 
 <details><summary>Show solution</summary>
 
-The first six are invalid:empty pattern/group, star without a preceding element, repeated star, misplaced/unmatched parentheses. `a*b` is valid: zero or more a then b. Slides 22/24 and the handout identify `a**b` as invalid. The uncertain or contradictory `a*b` wording is in the September 23 STT at 01:15:40, not an invalid label on those slides. Star inside a group and nested groups are excluded complexities, not mandatory rejection cases. Invalid syntax uses panic to emit only `Invalid pattern syntax` on stderr and terminate without listing/statistics. Permission/path/race/allocation errors are outside the stated assessment, not nonexistent or evidence of invented hidden rules.
+The first six are invalid. a*b is valid preceding-item repetition; a star inside a group and nested groups are separately excluded complexity. Invalid syntax emits only `Invalid pattern syntax` to stderr and exits without listing/statistics. Excluding permission, missing-path, concurrent-change, and allocation failures from grading does not make them irrelevant to ordinary software. The broader error/overflow rubric's exact relationship to invalid-only grading remains unresolved.
 
-**Check:** Check valid a*b, excluded≠invalid and stderr-only output.
+**Checking points:** Do not classify a*b as invalid; distinguish syntax errors from excluded complexity.
 
 </details>
 
-#### Recall Q08 · Two matcher responsibilities
+#### Recall Q08 · Starting positions and suffixes
 
-Why separate outer match from submatch/matchat, and test zero repetition? Why is the hint incomplete, and how does historical * differ?
+What different questions do outer match and inner submatch answer? Explain zero versus one-or-more repetition and the supplied hint's missing scope.
 
 <details><summary>Show solution</summary>
 
-Outer match tries starting positions; submatch checks pattern consumption at one position. Zero repetition advances past the repeated element without consuming input; if it fails, positive repetition paths may be needed. The star-only hint leaves the positive branch at comment level and does not complete ?, groups, empty suffixes, termination or backtracking. In [EX:sp_2025_2_midterm_q02 p.5], * matches an arbitrary sequence; here it repeats the preceding element. Transfer only responsibility separation/zero-branch reasoning, retaining historical nonempty-input assumptions and distinct grammars.
+Outer match searches starting positions; inner submatch checks the remaining pattern at one fixed position. Zero repetition skips the preceding item and tests the remainder; one-or-more requires consumption and subsequent suffix decisions. The star-only hint omits the full repetition branch, ?, groups, empty-suffix handling, and complete termination/backtracking, so it is not a finished matcher. Exam Q2 uses a different arbitrary-sequence wildcard star.
 
-**Check:** Check starting-position versus local matching, zero consumption and missing mechanisms.
+**Checking points:** Explain both responsibilities and missing scope without completing the implementation.
 
 </details>
 
-#### Recall Q09 · Directory width and lifetime
+#### Recall Q09 · Depth versus memory width
 
-Does depth 20 justify a large fixed entry array? Explain recursive local storage, owned-name lifetime and separation of program responsibilities.
+Does a maximum depth of twenty make a large fixed entry array inside recursion sufficient for all inputs? Separate coordination, entry processing, and storage-release responsibilities.
 
 <details><summary>Show solution</summary>
 
-No entry-count bound is supplied, so depth 20 does not bound directory width. Large locals accumulate across active recursive calls. Entry/name storage must survive sorting, printing and descendant use; free owned copies after final use without prematurely freeing ancestors’ needed data. `main` coordinates options, roots, headers, summaries/aggregate; directory processing opens, collects, sorts, filters, recurses as required, and closes. Separate formatting, statistics and pattern validation to review their conditions. These are responsibilities, not a complete traversal implementation.
+No: directory width is unbounded, and large local arrays accumulate across active recursive calls. Separate root/option/header/summary/aggregate coordination from opening, collecting, sorting, filtering, printing, recursion, and closing. Formatting and validation have their own contracts. Plan width, depth, allocation volume, and lifetime together and release unneeded dynamic storage; depth alone does not imply a small memory bound.
 
-**Check:** Check width/depth, recursive stack, lifetime and responsibility separation.
+**Checking points:** Separate width/depth and explain responsibilities and release timing.
 
 </details>
 
-#### Recall Q10 · Tools and test scope
+#### Recall Q10 · Tools, APIs, and source versions
 
-Explain string, directory, metadata and sorting APIs plus README/Makefile/src/doc/reference/tools. Identify prohibited APIs and test-state/coverage limits.
+Separate make/clean, compare.sh/gentree.sh/mksock, and the main API roles. State copy/format pitfalls, prohibited APIs, and the latest supplied slide deck’s submission list versus older versions.
 
 <details><summary>Show solution</summary>
 
-strcmp compares; strncpy limits copying without guaranteeing NUL; strdup/free manage owned copies; snprintf bounds writes but may truncate. Use `opendir/readdir/closedir` for directories; stat/lstat differ on links, getpwuid/getgrgid resolve names, and qsort sorts collected entries without traversing or guaranteeing a particular quicksort algorithm. `scandir` and external matchers such as regex.h are prohibited. README is the contract, Makefile the build driver, src the skeleton, doc Doxygen material, reference the comparator, and tools fixture utilities. `gentree.sh` reads *.tree, compare checks output, mksock creates sockets and must remain unchanged. Make clean/build concern build state; recreated pipe/socket collisions concern fixture state. One matching run does not cover all depth/filter/width/zero-repeat boundaries.
+`make` builds; clean removes build results; compare checks against the reference; gentree creates .tree fixtures; mksock is the socket helper instructed not to be modified. strcmp compares; strncpy bounds copies without guaranteed NUL; strdup creates owned copies needing free; snprintf bounds formatting but may truncate; opendir/readdir/closedir traverse; stat/lstat inspect metadata; getpwuid/getgrgid find names; qsort sorts. Sorting does not replace collection/filtering/counting or promise quicksort. External regex and scandir are prohibited. The latest supplied list adds Makefile and genuine compilation history/ to dirtree.c and extensionless readme. Retain the supplied October 9, 21:00 deadline; do not infer a new date from the archive example's year.
 
-**Check:** Check API limits, prohibitions, tool roles and test state.
+**Checking points:** Check tool purposes, API limits, and both added items without claiming successful execution.
 
 </details>
 
-### Practice
+### Apply and check
 
-#### Practice P01 · A witness separating grammars
+#### Practice P01 · Checking a greedy choice with a counterexample
 
-**Newly written synthetic practice.** Apply current pattern a*b to basename zzb. Explain outer search and the zero-repeat branch. Does the same pattern under historical arbitrary-sequence-star semantics give the same result? Give consumption paths, not a matcher.
+**Newly written synthetic practice.** Connect start-position search and recursive suffix reasoning from [EX:sp_2025_2_midterm_q02 p.5]. That exam's star is an arbitrary-sequence wildcard; here it repeats the **preceding group** as in Dirtree. Prerequisites are substring matching, grouping, and zero repetition; no matcher code is completed.
 
-[EX:sp_2025_2_midterm_q02 p.5] transfers outer/local responsibility and zero-consumption reasoning into a witness distinguishing grammars. Prerequisites: Q06/Q08. Historical * semantics and nonempty assumptions are not copied into current requirements.
-
-<details><summary>Show solution</summary>
-
-At the final b, current matching takes zero repetitions of a and matches b. At preceding z positions the zero branch fails on b versus z, so starting-position search matters too. Historical semantics require literal a, then arbitrary-sequence star, then b; zzb contains no a, so fails. Both inputs are nonempty, within the historical assumption. This witness proves no completed handling of ?, groups or termination.
-
-**Check:** Justify current success, historical failure, starting position and zero consumption.
-
-</details>
-
-#### Practice P02 · Depth and filter together
-
-**Lecture-based general practice.** A new tree has nonmatching docs at depth 1 containing aXc at depth 2, size 1, blocks 8. Root also has abc at depth 1, size 5, blocks 8, and aZZc, size 9, blocks 8. With filter a?c, compare `-d 1` and `-d 2` display/totals.
-
-New general practice combining current lecture/handout rules. No indexed exam directly establishes this depth/filter/statistics style. Prerequisites: Q02–Q05; this is not a reference-program execution report.
+Consider basename `xabcdz` and Dirtree pattern `a(bc)*bcd`. Compare starting at x versus a, then zero versus one repetition after a. State the remaining characters/pattern and assess the rule 'consume as many groups as possible, then declare total failure if the suffix fails.'
 
 <details><summary>Show solution</summary>
 
-With `-d 1`, aXc is beyond traversal, so omit docs and print only abc in detail:1 file, 0 directories, 5 bytes, 8 blocks. With `-d 2`, docs becomes a name-only placeholder and aXc/abc are detailed:2 files, 0 directories, 6 bytes, 16 blocks. aZZc fails because ? cannot consume two characters. Neither root nor placeholder contributes to totals.
+Starting at x fails the initial literal a. Starting at a consumes it and leaves bcdz. With zero group repetitions, remaining pattern bcd matches the prefix bcd; trailing z is permitted by substring matching. With one repetition, consuming bc leaves dz, which fails the required bcd suffix. Declaring total failure from that path discards the valid zero-repetition path. Starting-position search and repetition choices at a fixed position must be separate.
 
-**Check:** Check1/5/8 versus2/6/16, placeholder handling and depth exclusion.
+**Checking points:** State the successful/failed suffixes and do not conflate exam and Dirtree star meanings.
 
 </details>
 
 ### Review plan
 
-Recompute Q01–Q05 using visit/display/count columns and field widths. Mark consumed characters in Q06–Q08 and compare grammars with P01. Record Q09–Q10 lifetime/test limits, then combine options in P02.
+Annotate a small tree with depth, visit, display, and count columns for Q01–Q05. Solve Q06–Q08 and P01 by writing consumed characters and remaining suffixes, then explain storage/tool responsibilities with Q09–Q10.
 
 ## Sources
 
-### Dated lecture notes
+[[courses/system_programming/lectures/en/2026-09-23-lecture-06|2026-09-23 · lecture note]]
 
-- [[courses/system_programming/lectures/en/2026-09-23-lecture-06|2026-09-23 lecture notes]]
+[lab 2 input and output.pptx](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx) — slide 5; slide 6; slide 9; slide 10, aggregate table; slide 12; slide 15; slide 19; slide 23; slide 25; slide 28; slide 30
 
-### Materials and lecture passages
+[[courses/system_programming/transcripts/2026-09-23|2026-09-23 · corrected transcript]] — 01:13:52–01:14:44
 
-- [Lab 2: Input and Output, slides 2–11](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx)
-- [Slides 6 and 11](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx)
-- [slide 10](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx)
-- [Slides 12–15](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx): depth rules and examples. The complete chain appears on slide 12 and in the private handout's Option 1: Depth limit, Examples.
-- [Slide 18](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx)
-- [slides 20–21](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx)
-- [slide 25](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx)
-- [slides 27–30](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx)
-- [[courses/system_programming/transcripts/2026-09-23|September 23 STT, 01:11:03]]
-- [[courses/system_programming/transcripts/2026-09-23|September 23 STT, 01:13:52]]
-- [[courses/system_programming/transcripts/2026-09-23|September 23 STT, 01:14:44]]
-- [[courses/system_programming/transcripts/2026-09-23|September 23 STT, 01:15:40]]
-- September 23 Assignment 2 handout: requirements are discussed as a materials supplement; the private original and complete implementation are not linked.
+[lab 2 input and output_2b90a395.pptx](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output_2b90a395.pptx) — slide 32; slide 30
 
-The linked materials are the supplied public slide decks; no PDF page-cache link is available for these sources. Transcript timestamps are plain labels.
+The official README and reference binary remain private. The stop-traversal bullet conflicts with formal rules/speech/examples, and the error/overflow versus invalid-only rubric relationship remains unresolved. Detailed filter fixtures and the updated slide deck’s submission list are materials-based, not retrospective September 23 speech. Uncertain root-depth/pattern speech is not recovered. No complete UTF-8 display-width algorithm, matcher, or assignment implementation is supplied. Source commands/tools are descriptions, not executed reference comparisons.
 
-### Scope to retain
-
-- September23 speech/slides and the private handout jointly support the unit; detailed material requirements are not all verified speech. No complete assignment implementation or original handout is supplied.
-- The uncertain root-depth 0/2 wording remains; formal depth 0 is used.
-- The Implementation bullet stopping nonmatching traversal conflicts with formal rules, slides and lecture. Slides 22/24 and the handout identify `a**b` as invalid; `a*b` is valid under preceding-element repetition. The uncertain or contradictory `a*b` wording is in the September 23 STT at 01:15:40, not an invalid label on those slides.
-- Star-in-group/nested groups are excluded complexity, not automatic invalidity. Different slide/handout fixtures and totals stay separate.
-- The hint is incomplete star-only pseudocode. The exam uses different star semantics and nonempty assumptions; provided answers are not authority. No new preview or private answer is supplied.
-
-
----
-
-[[courses/system_programming/units/en/memory-layout|← Previous: Process Memory, Alignment, and Parameter Passing]] · [[courses/system_programming/units/index|Unit contents]]
+Historical exam connections below use only the stated reasoning demands. Supplied answers are reference material, not independently certified solutions; current exam scope or frequency cannot be inferred.

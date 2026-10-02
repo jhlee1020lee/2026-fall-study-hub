@@ -1,6 +1,6 @@
 ---
 title: "Program Translation, Linking, and Loading"
-description: "Trace separate compilation, linking, loading, and the state changes of three instructions."
+description: "Trace symbols and relocation through loading into register and memory changes."
 course: "computer_architecture"
 unit_id: "program-translation-loading"
 lang: "en"
@@ -11,20 +11,19 @@ draft: false
 cssclasses: ["unit-textbook"]
 source_assets: ["lec 02.pdf"]
 private_source_assets: []
-source_lectures: ["courses/computer_architecture/lectures/en/2026-09-03-lecture-02"]
+source_lectures: ["courses/computer_architecture/lectures/en/2026-09-03-lecture-02", "courses/computer_architecture/lectures/en/2026-09-08-lecture-03"]
 ---
 
-Follow how separately translated files become an executable program. Distinguish connecting symbols, adjusting address references, and preparing a memory image to explain why machine code alone may not be ready to run.
+Translating each file still leaves names and addresses to connect. Separate linking, loading, and execution to track when values actually change.
 
-## Separate compilation and symbols across files
+## Separate compilation and symbol connections
 
-Splitting a program into files lets each file be translated independently. If one file uses a function or variable defined elsewhere, a later step must connect that reference to the correct definition. While the [ISA and architectural state](architecture-contract.md) define execution, translation, linking, and loading prepare the program to execute. The following example assumes basic familiarity with C functions, arrays, and pointers and reviews the September 3 materials, for which no recording is supplied.
+A program divided among source files must still find its functions and data in one consistent address space when it runs. Separate compilation translates each file independently, but need not determine every final address of a name defined elsewhere. Linking closes that gap. This discussion reviews the instructor material associated with [[courses/computer_architecture/lectures/en/2026-09-03-lecture-02|2026-09-03 lecture notes · materials only]]; it does not reconstruct that day's unrecorded spoken coverage.
 
-In [[page_cache/computer_architecture/lec.02/page-019|CA M008 p.19]], `main.c` defines `int buf[2] = {1, 2};` and calls `swap` from `main`. The other file, `swap.c`, contains:
+In [CA M008 PDF p.19](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-019), `main.c` defines `int buf[2] = {1, 2};` and calls `swap()` from `main`. The accompanying `swap.c` is:
 
 ```c
 extern int buf[];
-
 int *bufp0 = &buf[0];
 static int *bufp1;
 
@@ -38,47 +37,59 @@ void swap()
 }
 ```
 
-`extern int buf[];` declares an array whose definition is supplied elsewhere. `bufp0` points to the first element, and the function makes `bufp1` point to the second. It saves 1 in `temp`, writes 2 into the first element, and writes the saved 1 into the second, producing `{2, 1}`. Without preserving the first value before overwriting it, the final assignment would lose its required input.
+A pointer holds an address; `*bufp0` accesses the value at that address. After `bufp0` points to the first element and `bufp1` to the second, the assignments have these effects:
 
-A symbol identifies a function or object during linking. The arrows in [[page_cache/computer_architecture/lec.02/page-020|CA M008 p.20]] distinguish:
+| Statement completed | `temp` | `buf[0]` | `buf[1]` |
+|---|---:|---:|---:|
+| `temp = *bufp0;` | 1 | 1 | 2 |
+| `*bufp0 = *bufp1;` | 1 | 2 | 2 |
+| `*bufp1 = temp;` | 1 | 2 | 1 |
 
-| Name or use | Role from the linker's perspective |
+The second assignment overwrites the first element, so its old value must first be preserved in `temp`. The final array is `{2, 1}`. This is a trace of the instructor's small example, not a current assignment implementation or a newly executed experiment.
+
+### Global symbols, external references, and local symbols
+
+A symbol is a name through which linking connects definitions and references. The red annotations in [CA M008 PDF p.20](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-020) distinguish a C local variable from a linker-local symbol.
+
+| Example element | Role in linking |
 |---|---|
-| Definitions of `main` and `buf` in `main.c` | Global symbols accessible from other files |
+| Definitions of `main` and `buf` in `main.c` | Global symbols available for cross-file connections |
+| Use of `swap` in `main.c` | External reference requiring a definition elsewhere |
 | Definitions of `swap` and `bufp0` in `swap.c` | Global symbols |
-| Use of `swap` in `main.c` and `buf` in `swap.c` | External references requiring definitions elsewhere |
-| File-scope `static bufp1` | A local symbol confined to this file |
-| `temp` inside the function | An automatic local variable used during execution |
+| `extern int buf[]` and uses of `buf` in `swap.c` | References to an array defined in another file |
+| File-scope `static int *bufp1` | A linker-local symbol restricted to that file |
+| Automatic `temp` inside the function | A run-time local variable, not a cross-file symbol-resolution target in this example |
 
-Both `bufp1` and `temp` may informally sound “local,” but in different senses. The file-scope `static` restricts linkage, and its storage differs from an automatic variable associated with a function invocation. `temp` holds a value needed during one execution of `swap`. The diagram's “Linker knows nothing of temp” means that this variable is not resolved between files; it does not mean the value is unnecessary at runtime.
+In particular, `bufp0` is a pointer defined in this file, while its initialization depends on the address of `buf` defined elsewhere. Defining one name and referencing another within that definition can happen together. Calling both `static bufp1` and automatic `temp` merely “local” hides a distinction the linker needs.
 
-## Translation and relocatable object files
+## From translation to an executable
 
-Assembly code is a human-readable notation for instructions; an assembler translates it into binary machine code. A compiler translates higher-level operations into instructions. A pseudo-instruction can expand into several machine instructions, so counting assembly-source lines does not necessarily count executed instructions. [[page_cache/computer_architecture/lec.02/page-028|CA M008 p.28]]
+Assembly code is human-readable notation for machine instructions, and an assembler translates it into binary machine code. A pseudo-instruction can expand into multiple machine instructions, so assembly source lines need not equal the final instruction count. [CA M008 PDF p.28](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-028)
 
-In [[page_cache/computer_architecture/lec.02/page-021|CA M008 p.21]], `main.c` and `swap.c` each pass through translators labeled `cpp`, `cc1`, and `as` to produce `main.o` and `swap.o`. Preprocessing, compilation, and assembly produce separate outputs; a compiler driver can invoke these stages together.
+In [CA M008 PDF p.21](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-021), `main.c` and `swap.c` independently pass through translators `cpp`, `cc1`, and `as`, yielding `main.o` and `swap.o`. These objects are both separately compiled and relocatable. A compiler driver can coordinate the tool invocations; linker `ld` connects the objects into executable `p`. The driver command printed in the slide illustrates this flow; it is not a command executed here.
 
-These `.o` files are relocatable object files. They may contain machine code while still having unresolved cross-file symbols or unfinished address placement. For example, `main.o` contains a call to `swap`, but the location of `swap`'s code is established when the files are linked. Producing machine code and producing a complete executable are therefore distinct accomplishments.
+Linking remains necessary even after binary instructions exist. **Symbol resolution** determines which definition a name denotes. **Relocation** adjusts address references to match the final placement of code and data. Identifying an object and determining its final address are related but distinct tasks.
 
-## Symbol resolution and relocation
+Reading [CA M008 PDF p.22](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-022) from the separate objects on the left toward the executable on the right reveals these relationships:
 
-The linker connects definitions and references across object files and establishes the final code/data layout. Symbol resolution answers “Which definition does this name identify?” Relocation answers “How must this address reference change to match the final placement?”
+| Content | Location in the objects | Meaning after linking |
+|---|---|---|
+| Code for `main` and `swap` | Each object's `.text` | Included in the executable's code layout |
+| Initialized `buf` and `bufp0` | `.data` | Data placement and referenced addresses are determined |
+| File-scope `bufp1` | `.bss` | Storage is assigned in the combined layout |
+| Headers, `.symtab`, `.debug` | Format, symbol, and debugging information | Not all equivalent to ordinary run-time program data |
 
-![Original diagram of object-file code and data merging into executable sections](https://jhlee1020lee.github.io/2026-fall-study-hub/static/page_cache/computer_architecture/lec.02/page-022.png)
+Thus, simply concatenating object files is an incomplete account. References crossing object boundaries must agree with the final layout. Detailed relocation types and dynamic-linker implementation are beyond this figure.
 
-In [[page_cache/computer_architecture/lec.02/page-022|CA M008 p.22]], the smaller `main.o` and `swap.o` boxes on the left feed the executable on the right. Code for `main` and `swap` appears in `.text`, initialized `buf` and `bufp0` in `.data`, and file-scope `bufp1` in `.bss`. The automatic `temp` does not belong in this list of global/static data.
+## Loading and instruction-driven state changes
 
-`bufp0` contains the address of `buf[0]`, so that reference must agree with the final placement of `buf`. A call target must likewise agree with its final code location. Headers, `.symtab`, and `.debug` appear separately in the diagram, demonstrating that not every byte in an executable file is an instruction or ordinary program data. This is an introductory static-linking model, not an enumeration of all relocation types or dynamic-linker mechanisms.
+A loader prepares an executable's memory image for execution. [CA M008 PDF p.23](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-023) places ELF sections beside a run-time memory layout. It groups `.init`, `.text`, and `.rodata` into a read-only segment, and `.data` and `.bss` into a read/write segment. The runtime also includes a heap, a shared-library mapping region, and a user stack, with a kernel region above. The addresses illustrate a particular 32-bit address space, not a fixed layout for every RV64 program.
 
-## ELF loading and the runtime memory layout
+File information and run-time storage are not identical categories. Symbol and debugging information, for example, should not all be treated as the ordinary data segment containing program variables. Loading prepares the execution environment; the ISA supplies the meaning of the instructions placed there.
 
-Loading prepares the memory image needed to run an executable. The ELF diagram in [[page_cache/computer_architecture/lec.02/page-023|CA M008 p.23]] distinguishes the file layout on the left from runtime memory on the right. It groups `.init`, `.text`, and `.rodata` into a read-only segment and `.data` and `.bss` into a read/write segment. Above them are a runtime heap, a shared-library mapping region, a user stack, and a kernel region.
+### Tracing values and addresses through three instructions
 
-The key distinction is that **the file's section list is not the entire runtime memory layout**. All symbol/debug information should not be treated as ordinary program data, and the heap and stack serve their own runtime purposes. The addresses shown belong to an example 32-bit address space; they are not fixed loading addresses for every OS or RV64 program.
-
-## How loaded instructions change state
-
-After the loader prepares the program, the ISA determines each instruction's effect. [[page_cache/computer_architecture/lec.02/page-024|CA M008 p.24]] starts with `PC=0x1000`, `GPR[x10]=0x2000`, and `MEM[0x2000]=41`. Here `GPR[x10]` denotes the register's value and `MEM[a]` the memory value at address `a`.
+The starting state in [CA M008 PDF p.24](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-024) is `PC = 0x1000`, `GPR[x10] = 0x2000`, and `MEM[0x2000] = 41`. Here `GPR[x10]` denotes the value in a register, while `MEM[a]` denotes the memory value at address `a`.
 
 ```asm
 lw   x5, 0(x10)
@@ -86,115 +97,110 @@ addi x5, x5, 1
 sw   x5, 0(x10)
 ```
 
-| Address of executed instruction | Operation | `x5` afterward | Memory value | Next PC |
-|---|---|---|---|---|
-| `0x1000` | `lw` reads address `0x2000` | 41 | 41 | `0x1004` |
-| `0x1004` | `addi` adds 1 | 42 | 41 | `0x1008` |
-| `0x1008` | `sw` writes the result to that address | 42 | 42 | `0x100C` |
+| Instruction address | Operation | `x5` afterward | `MEM[0x2000]` afterward | Next PC |
+|---|---|---:|---:|---|
+| `0x1000` | Read a word at base `0x2000` plus offset 0 | 41 | 41 | `0x1004` |
+| `0x1004` | Add immediate 1 to the register value | 42 | 41 | `0x1008` |
+| `0x1008` | Store the register's word at the same address | 42 | 42 | `0x100C` |
 
-In the middle row, the register has become 42 while memory remains 41. Register arithmetic does not itself perform a memory store. This example uses basic 32-bit instructions, so the PC advances by 4 bytes each time. The width of a data register and the length of an instruction are separate properties. [Data representation, registers, and memory](data-register-memory.md) develops that distinction further.
+The value 41 read by `lw` is different from its address `0x2000`. After `addi` changes the register to 42, memory still contains 41. Only the final `sw` changes memory to 42. Each instruction in this sequential example is 32 bits, or 4 bytes, so PC advances by 4. This trace connects the instructions produced by translation to the state changed by execution, and leads into the register and load-store explanations in [[courses/computer_architecture/lectures/en/2026-09-08-lecture-03|2026-09-08 lecture notes]].
 
 ## Key Takeaways
 
-- File-local linkage from `static` differs from an automatic variable's local scope.
-- Object files may contain machine code while external symbols and final placement remain unresolved.
-- Symbol resolution connects definitions; relocation adjusts address references to final placement.
-- ELF file sections and runtime heap/stack are different views.
-- A register computation changes memory only through a subsequent store.
+- Symbol resolution chooses definitions; relocation adjusts final address references.
+- File-scope `static` and automatic function locals have different linker roles.
+- Loading prepares a memory image; instruction semantics govern subsequent state changes.
 
 ## Recall and Practice
 
-### Recall and trace
+### Recall the reasoning
 
-#### Recall Q01 · Symbol categories and preserving values
+#### Recall Q01 · Trace the swap
 
-Explain the order that swaps `{1,2}` in the teaching example. Classify `buf`, `swap`, `bufp0`, file-scope `static bufp1`, and function-local `temp` for linking, and explain why `temp` is needed without cross-file resolution.
-
-<details><summary>Show solution</summary>
-
-Save the first value, 1, in `temp`; write 2 into the first element; then write the saved 1 into the second, producing `{2,1}`. Definitions of `buf`, `swap`, and `bufp0` are global symbols; cross-file uses of `buf`/`swap` are external references. `bufp1` has file-local linkage and static storage, whereas `temp` is an automatic variable for an invocation. Its runtime preservation role exists even though the linker does not resolve it across files.
-
-**Checking points:** Show the three assignment stages and distinguish global, external, file-local, and automatic roles.
-
-</details>
-
-#### Recall Q02 · Machine code versus an executable
-
-Describe the stages from `main.c`/`swap.c` to two `.o` files and one executable. Distinguish compiler, assembler, compiler driver, and pseudo-instruction line counts.
+Given `buf={1,2}`, `bufp0=&buf[0]`, `bufp1=&buf[1]`, trace `temp=*bufp0; *bufp0=*bufp1; *bufp1=temp;` one assignment at a time. Why retain `temp`?
 
 <details><summary>Show solution</summary>
 
-Each source passes through preprocessing, compilation, and assembly to a separately compiled relocatable object. A compiler translates high-level operations, an assembler encodes assembly, and a driver can invoke several stages. The linker combines objects. Machine code in `.o` does not settle external references or final placement; a pseudo-instruction may expand, so source-line count is not executed-instruction count.
+First `temp=1` and the array remains `{1,2}`; next it becomes `{2,2}`; finally `{2,1}`. A pointer stores an address, while dereferencing accesses its value. Saving 1 before overwriting the first element preserves the value needed for the last assignment.
 
-**Checking points:** Check stage order, tool roles, relocatability, and the pseudo-instruction counting caveat.
+**Checking points:** Check addresses versus values, all intermediate arrays, and preservation of the old value.
 
 </details>
 
-#### Recall Q03 · Name resolution and address adjustment
+#### Recall Q02 · Three symbol roles
 
-Use the call to `swap` and `bufp0=&buf[0]` to distinguish symbol resolution from relocation. Classify code, initialized data, `bufp1`, and symbol/debug information in the example.
+Classify `main`, `buf`, and the use of `swap` in `main.c`, then `swap`, `bufp0`, `extern int buf[]`, file-scope `static bufp1`, and automatic `temp` in `swap.c`.
 
 <details><summary>Show solution</summary>
 
-Resolution determines which definitions the names `swap` and `buf` denote. Relocation adjusts call and pointer address references to final code/data placement. The diagram puts `main`/`swap` in `.text`, initialized `buf`/`bufp0` in `.data`, and `bufp1` in `.bss`. Headers, `.symtab`, and `.debug` are distinct from ordinary instructions/data; `temp` does not belong in the global/static section list.
+Definitions of `main`, `buf`, `swap`, and `bufp0` are global symbols. The `swap` use in `main.c` and `buf` reference in `swap.c` require definitions elsewhere. Defining `bufp0` can simultaneously reference the external address of `buf`. File-scope `static bufp1` is linker-local; automatic `temp` is a run-time function local, not this example's cross-file symbol-resolution target.
 
-**Checking points:** Distinguish definition selection from address adjustment, including the initialized pointer.
+**Checking points:** Include the simultaneous definition of `bufp0` and reference to `buf`.
 
 </details>
 
-#### Recall Q04 · ELF file and runtime memory
+#### Recall Q03 · Objects into an executable
 
-What is missed by equating the ELF section list with the entire runtime memory layout? Distinguish read-only/read-write content, heap, shared libraries, and stack.
+Connect `cpp`, `cc1`, `as`, and `ld` with symbol resolution, relocation, and `.text`, `.data`, `.bss`, `.symtab`, `.debug`. Why link existing machine code, and why not count assembly lines as machine instructions?
 
 <details><summary>Show solution</summary>
 
-The figure groups `.init`, `.text`, and `.rodata` as read-only, and `.data`/`.bss` as read/write. Runtime also distinguishes heap, shared-library mappings, user stack, and a kernel region. Treating all symbol/debug information as ordinary data confuses tooling information with execution state. The loader prepares the runtime image; the displayed addresses illustrate one 32-bit layout.
+Each C file passes through preprocessing, compilation, and assembly to a separate relocatable object; `ld` links the executable, and a driver can coordinate these tools. Resolution selects a definition; relocation adjusts references to final placement, so concatenation is insufficient. `main`/`swap` code belongs to `.text`, initialized `buf`/`bufp0` to `.data`, and `bufp1` to `.bss`. Headers and symbol/debug information are not ordinary variable data. Pseudo-instructions can expand into several machine instructions, so line count need not equal IC.
 
-**Checking points:** Check both segment groups, additional runtime regions, and the illustrative address scope.
+**Checking points:** Separate name binding from address adjustment and classify all example sections.
 
 </details>
 
-#### Recall Q05 · Register and memory updates
+#### Recall Q04 · Loading and the address space
 
-Initially `PC=0x1000`, `x10=0x2000`, and `MEM[0x2000]=41`. Trace `x5`, memory, and PC after the taught `lw x5,0(x10)` → `addi x5,x5,1` → `sw x5,0(x10)`, distinguishing loader from ISA.
+Explain the ELF figure's read-only/read-write segments and heap, shared-library, stack, and kernel regions. Separate loader and ISA responsibilities; are the illustrated addresses fixed for every RV64 execution?
 
 <details><summary>Show solution</summary>
 
-After the load, `(x5,memory,PC)=(41,41,0x1004)`; after addition, `(42,41,0x1008)`; after the store, `(42,42,0x100C)`. Memory stays 41 until the store. The loader prepares executable content; the ISA defines each state change. PC advances by four because these instructions are 32 bits long.
+The figure groups `.init/.text/.rodata` as read-only and `.data/.bss` as read/write, alongside the run-time heap, shared-library mappings, user stack, and upper kernel region. The loader prepares the image; the ISA defines how loaded instructions transform state. Symbol/debug information is not all ordinary variable data. This particular 32-bit address-space illustration does not fix every RV64 layout.
 
-**Checking points:** Check all three states without confusing data-register width with instruction length.
+**Checking points:** Distinguish file sections from run-time regions and retain the 32-bit-example limit.
 
 </details>
 
-### Apply and diagnose
+#### Recall Q05 · Load, compute, then store
 
-#### Practice P01 · Find confused stages
-
-Newly written materials-based general practice; the supplied 18-question index has no direct linking/loading style evidence. Correct each claim: (a) An address initializer in `bufp0` is valid for every final layout as soon as `.o` is created. (b) Since `temp` is absent from `.bss`, swap cannot preserve the first value. (c) Loading `addi` immediately changes memory's 41 to 42.
+Start with `PC=0x1000`, `x10=0x2000`, and `MEM[0x2000]=41`. Trace `lw x5,0(x10); addi x5,x5,1; sw x5,0(x10)` through `x5`, memory, and PC after each four-byte instruction.
 
 <details><summary>Show solution</summary>
 
-(a) The pointer reference must match `buf`'s final placement; the claim ignores relocation. (b) Automatic `temp` preserves the original value at runtime independently of global/static section classification. (c) Loading differs from execution, and executing `addi` changes only the register here. Memory becomes 42 after the store executes.
+The triples `(x5,memory,PC)` are `(41,41,0x1004)`, `(42,41,0x1008)`, and `(42,42,0x100C)`. Address `0x2000` is distinct from value 41. Arithmetic changes the register; only the store changes memory. PC advances once per four-byte instruction.
 
-**Checking points:** Diagnose the three errors using relocation, storage roles, and execution effects.
+**Checking points:** Check that memory is still 41 immediately after `addi`.
 
 </details>
 
-### Review plan
+### Apply the ideas
 
-Explain symbols, translation, and address linking using Q01–Q03, then redraw the file/memory distinction and state table in Q04–Q05. Diagnose P01 before strengthening address/value/width distinctions in [[courses/computer_architecture/units/en/data-register-memory|registers and memory]].
+#### Practice P01 · What does each stage establish?
+
+Newly written material-based general practice. Someone argues that producing both `.o` files fixes the external `swap` address and has already swapped `buf`, and calls all `.debug` information variable data. Diagnose each claim and identify the steps needed to establish the execution result.
+
+None of the 18 candidates directly tests symbol resolution, relocation, or ELF loading, so no matching exam-style evidence is claimed.
+
+<details><summary>Show solution</summary>
+
+Object generation establishes separate translation. Linking must resolve cross-file names and relocate final references. Loading prepares an image; the swap assignments must execute before `{2,1}` follows. `.debug` is debugging information, distinct from initialized variables in `.data`. Completion of one stage does not establish later execution effects.
+
+**Checking points:** Give the stage order and what each stage does and does not establish.
+
+</details>
+
+### Short review plan
+
+Classify symbols and sections with Q01–Q03, then connect Q04–Q05. Use P01 to identify what each stage proves; redraw Q05's register/memory trace the next day.
 
 ## Sources
 
-- [[courses/computer_architecture/lectures/en/2026-09-03-lecture-02|2026-09-03 · materials-only review]]
+- [[courses/computer_architecture/lectures/en/2026-09-03-lecture-02|2026-09-03 lecture notes · materials only]]
+- [[courses/computer_architecture/lectures/en/2026-09-08-lecture-03|2026-09-08 lecture notes · related prerequisites]]
+- [lec 02.pdf](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.02.pdf) — [p.19](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-019), [p.20](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-020), [p.21](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-021), [p.22](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-022), [p.23](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-023), [p.24](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-024), [p.28](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lec.02/page-028)
 
-- [lec.02.pdf](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/lec.02.pdf): [[page_cache/computer_architecture/lec.02/page-019|p.19]], [[page_cache/computer_architecture/lec.02/page-020|p.20]], [[page_cache/computer_architecture/lec.02/page-028|p.28]], [[page_cache/computer_architecture/lec.02/page-021|p.21]], [[page_cache/computer_architecture/lec.02/page-022|p.22]], [[page_cache/computer_architecture/lec.02/page-023|p.23]], [[page_cache/computer_architecture/lec.02/page-024|p.24]]
+This is September 3 materials-only review, not recorded spoken coverage. The September 8 note supplies related register/load-store explanations. The source code is a reading example, not an executed experiment or current assignment implementation.
 
-- This entire unit reviews September 3 lec.02 materials without a recording or STT; exact spoken progress is unverified.
-- The ELF address diagram is a 32-bit illustration, not a fixed layout for all OS/RV64 systems. Linking uses an introductory static model without all relocation types or dynamic-linker mechanisms.
-- Traces assume basic 32-bit instructions and valid data addresses; they are reasoning exercises, not results from executing source commands or assignment implementations.
-
-
----
-
-[[courses/computer_architecture/units/en/architecture-contract|← Previous: Computer Organization and the ISA Contract]] · [[courses/computer_architecture/units/index|Unit contents]] · [[courses/computer_architecture/units/en/data-register-memory|Next: Data Representation, Registers, and Memory →]]
+Exam connections are limited to a Fall 2025 reconstruction whose official wording and answers are not independently verified. No supplied answer is adopted as verified, and historical grading rules or appearance predictions are not transferred to this term.

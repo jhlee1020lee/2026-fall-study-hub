@@ -353,7 +353,7 @@ const hashLiteralParagraphs: Record<string, ReadonlySet<string>> = {
   "en/dirtree": new Set(["abf45d62a7078ffe049bf63f31827c2b39146b37115f1609ead43e47ff654b0d"]),
 }
 
-/** Rendering-only: retain literal # syntax in six exact SP Q04 paragraphs. */
+/** Rendering-only: retain literal # syntax in exact reviewed SP/CP paragraphs. */
 export function normalizeTextbookHashLiterals(src: string): string {
   const header = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(src)
   if (!header) return src
@@ -367,18 +367,24 @@ export function normalizeTextbookHashLiterals(src: string): string {
     !metadata ||
     metadata.note_layout !== "textbook_unit_v1" ||
     metadata.source_kind !== "unit_chapter" ||
-    metadata.course !== "system_programming" ||
+    !["system_programming", "computer_programming"].includes(String(metadata.course)) ||
     !["ko", "en"].includes(String(metadata.lang)) ||
     typeof metadata.lang !== "string" ||
     typeof metadata.unit_id !== "string"
   )
     return src
-  const paragraphs = hashLiteralParagraphs[`${metadata.lang}/${metadata.unit_id}`]
+  const counterScope = metadata.course === "computer_programming" &&
+    metadata.lang === "ko" && metadata.unit_id === "encapsulation"
+  const paragraphs = counterScope
+    ? new Set(["4e938c941fef2ec7cf63240badf389e4badcbc86164bdb8f90855684f0774b7c"])
+    : metadata.course === "system_programming"
+      ? hashLiteralParagraphs[`${metadata.lang}/${metadata.unit_id}`]
+      : undefined
   if (!paragraphs) return src
 
   const body = src.slice(header[0].length)
   const recall = metadata.lang === "ko" ? "## 확인·연습문제" : "## Recall and Practice"
-  const question = metadata.lang === "ko" ? /^#### 확인 Q04 · / : /^#### Recall Q04 · /
+  const question = counterScope ? /^#### 확인 Q07 · / : metadata.lang === "ko" ? /^#### 확인 Q04 · / : /^#### Recall Q04 · /
   const edits: { start: number; end: number; value: string }[] = []
   let inRecall = false
   let inQuestion = false
@@ -398,7 +404,7 @@ export function normalizeTextbookHashLiterals(src: string): string {
     edits.push({
       start,
       end,
-      value: original.replace(/#(?:depth|t)/g, (literal) => "\\" + literal),
+      value: original.replace(counterScope ? /#[12]/g : /#(?:depth|t)/g, (literal) => "\\" + literal),
     })
   }
   let renderedBody = body
