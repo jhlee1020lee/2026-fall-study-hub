@@ -33,4 +33,4 @@ review_status: approved
 - [`EE209.AssemblyFunctions.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/EE209.AssemblyFunctions.pptx) · 7.1 MiB
 - [`lab.2.input.and.output.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx) · 2.3 MiB
 - [`lab.2.input.and.output_2b90a395.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output_2b90a395.pptx) · 2.3 MiB
-- [`Lab1.Decommenter.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/Lab1.Decommenter.pdf) · 0.2 MiB
+- [`Lab1.Decommenter.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/Lab1.Decommenter.pdf) · 0.2 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/system_programming/lab1.decommenter/manifest.json)
