@@ -11,6 +11,7 @@ COURSES = frozenset({'aging_and_family', 'computer_architecture', 'computer_prog
                     'discrete_mathematics', 'principles_of_programming', 'system_programming', 'exploring_computing'})
 KIND = 'lecture_archive'
 LAYOUT = 'dated_lecture_archive_v1'
+UNDATED_LAYOUT = 'source_lecture_archive_v2'
 INTRO = '날짜별 노트는 수업 당시의 설명과 자료 범위를 확인하는 기록입니다. 단원별 본문과 함께 읽고, 자료 기반 복습은 실제 수업 발언·진도와 구분하세요.'
 STT_LIMIT = '개인정보를 가린 공개용 사본입니다. 불명확한 발화와 각 파일의 출처 제한을 함께 확인하세요.'
 EMPTY_LECTURES = '현재 공개된 날짜별 강의노트가 없습니다.'
@@ -24,7 +25,12 @@ def archive_course(relative: str) -> str | None:
 
 
 def declares_archive(metadata: dict) -> bool:
-    return metadata.get('source_kind') == KIND or metadata.get('archive_layout') == LAYOUT
+    return metadata.get('source_kind') == KIND or metadata.get('archive_layout') in {LAYOUT, UNDATED_LAYOUT}
+
+
+def explicitly_undated(source: dict) -> bool:
+    return (source.get('date') is None and source.get('date_confidence') == 'unknown'
+            and 'lecture_date' in source and source['lecture_date'] is None)
 
 
 def validate_lecture_archive(text: str, relative: str, available: set[str], read_text) -> list[str]:
@@ -37,9 +43,11 @@ def validate_lecture_archive(text: str, relative: str, available: set[str], read
     except ValueError as exc:
         return [str(exc)]
     fields = {'title', 'description', 'cssclasses', 'course', 'source_kind', 'archive_layout'}
+    undated_layout = metadata.get('archive_layout') == UNDATED_LAYOUT
+    classes = ['unit-index', 'plain-document'] if undated_layout else ['unit-index']
     if (set(metadata) != fields or metadata.get('course') != course
-            or metadata.get('source_kind') != KIND or metadata.get('archive_layout') != LAYOUT
-            or metadata.get('cssclasses') != ['unit-index']):
+            or metadata.get('source_kind') != KIND or metadata.get('archive_layout') not in {LAYOUT, UNDATED_LAYOUT}
+            or metadata.get('cssclasses') != classes):
         return ['lecture archive needs exact navigation metadata; lecture approval/layout fields cannot bypass review']
     title = metadata.get('title'); description = metadata.get('description')
     if (not isinstance(title, str) or not title.endswith(' 강의 기록') or not title.removesuffix(' 강의 기록').strip()
@@ -70,7 +78,10 @@ def validate_lecture_archive(text: str, relative: str, available: set[str], read
             parts = line.removeprefix('- ').split(' · ')
             if not line.startswith('- ') or len(parts) < 2:
                 raise ValueError('unexpected lecture archive prose')
-            day = parts.pop(0); date.fromisoformat(day)
+            day = parts.pop(0); undated = day == '날짜 미확인'
+            if undated:
+                if not undated_layout: raise ValueError('undated sources require source archive v2')
+            else: date.fromisoformat(day)
             material_label = parts[0] == '자료 기반 복습'
             if material_label:
                 parts.pop(0)
@@ -79,7 +90,8 @@ def validate_lecture_archive(text: str, relative: str, available: set[str], read
             row_material, languages = False, set()
             row_names = set()
             for link in parts:
-                match = re.fullmatch(r'\[\[(courses/' + re.escape(course) + r'/lectures/(en/)?(' + re.escape(day) + r'-[a-z0-9_-]+))\|(한국어|English)\]\]', link)
+                name_pattern = r'undated-[a-z0-9_-]+' if undated else re.escape(day) + r'-[a-z0-9_-]+'
+                match = re.fullmatch(r'\[\[(courses/' + re.escape(course) + r'/lectures/(en/)?(' + name_pattern + r'))\|(한국어|English)\]\]', link)
                 if not match:
                     raise ValueError('noncanonical, cross-course or mismatched-date lecture link')
                 slug, english, name, label = match.groups(); target = 'content/' + slug + '.md'
@@ -88,24 +100,33 @@ def validate_lecture_archive(text: str, relative: str, available: set[str], read
                     raise ValueError('duplicate, missing or mislabeled lecture archive target')
                 source, _ = parse_frontmatter(read_text(target))
                 if (source.get('review_status') != 'approved' or source.get('draft', False) is not False
-                        or source.get('course') != course or source.get('lang', 'ko') != language or source.get('date') != day):
+                        or source.get('course') != course or source.get('lang', 'ko') != language
+                        or (not explicitly_undated(source) if undated else source.get('date') != day)):
                     raise ValueError('archive lecture target is not the approved dated source in this snapshot')
                 row_material |= (source.get('source_mode') == 'materials_only' or source.get('source_basis') == 'materials_only'
                                  or 'materials-only' in source.get('tags', []) or '-materials-' in name)
                 seen_lectures.add(target); languages.add(language); row_names.add(name)
             if len(row_names) != 1 or row_material != material_label:
                 raise ValueError('archive language grouping or materials-only label differs from sources')
-            lecture_order.append((day, next(iter(row_names))))
+            lecture_order.append(('\uffff' if undated else day, next(iter(row_names))))
         for line in stt_lines:
             match = re.fullmatch(r'- \[\[(courses/' + re.escape(course) + r'/transcripts/(\d{4}-\d{2}-\d{2}))\|\2 보정 STT\]\]', line)
-            if not match:
+            unknown = re.fullmatch(r'- \[\[(courses/' + re.escape(course) + r'/transcripts/(undated-[a-z0-9_-]+))\|([^\]\n|]+)\]\]', line) if undated_layout else None
+            if not match and not unknown:
                 raise ValueError('noncanonical or mislabeled transcript archive target')
-            slug, day = match.groups(); date.fromisoformat(day); target = 'content/' + slug + '.md'
+            if match:
+                slug, day = match.groups(); date.fromisoformat(day)
+            else:
+                slug, name, title = unknown.groups(); day = '\uffff' + name
+            target = 'content/' + slug + '.md'
             if target in seen_stt or target not in available:
                 raise ValueError('duplicate or missing transcript archive target')
             source, _ = parse_frontmatter(read_text(target))
             if source.get('source_kind') != 'corrected_transcript' or source.get('privacy_redacted') is not True:
                 raise ValueError('archive transcript is not a privacy-redacted public derivative')
+            if unknown and (not explicitly_undated(source) or source.get('course') != course
+                            or source.get('title') != title or '날짜 미확인' not in title):
+                raise ValueError('undated transcript needs explicit unknown-date metadata and its exact visible title')
             seen_stt.add(target); stt_order.append(day)
     except (ValueError, KeyError, OSError, TypeError, UnicodeError) as exc:
         errors.append('invalid lecture archive navigation: ' + str(exc))

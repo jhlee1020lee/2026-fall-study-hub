@@ -1,3 +1,7 @@
+---
+cssclasses: [plain-document]
+---
+
 # 전체 강의노트와 보정 STT
 
 노트에는 설명과 연습문제가, 보정 STT에는 교수자의 발화와 강조점이 있습니다. STT의 불명확 표시와 자료 기반 복습 여부를 함께 확인하세요. 링크를 제공했다는 이유만으로 모든 문서를 읽었다고 가정하지 말고, 답변 근거로 실제 읽은 회차와 타임스탬프를 제시하세요.
@@ -44,6 +48,8 @@
 - [[courses/principles_of_programming/transcripts/2026-09-08|2026-09-08 보정 STT]]
 - [[courses/principles_of_programming/transcripts/2026-09-15|2026-09-15 보정 STT]]
 - [[courses/principles_of_programming/transcripts/2026-09-17|2026-09-17 보정 STT]]
+- [[courses/principles_of_programming/transcripts/undated-classes-inheritance-jk9b2ob0objzgyvy|Classes and Inheritance · 보정 STT · 날짜 미확인]]
+- [[courses/principles_of_programming/transcripts/undated-structural-subtyping-6p3wjj22vvvjv0ji|Structural Types and Subtyping · 보정 STT · 날짜 미확인]]
 
 ## Aging and Family
 
@@ -75,6 +81,7 @@
 - [[courses/computer_architecture/transcripts/2026-09-10|2026-09-10 보정 STT]]
 - [[courses/computer_architecture/transcripts/2026-09-15|2026-09-15 보정 STT]]
 - [[courses/computer_architecture/transcripts/2026-09-29|2026-09-29 보정 STT]]
+- [[courses/computer_architecture/transcripts/undated-control-hazards-tskkzbwcgg2lavgo|Control Hazards · 보정 STT · 날짜 미확인]]
 
 ## Computer Programming
 
@@ -96,6 +103,7 @@
 - [[courses/computer_programming/transcripts/2026-09-10|2026-09-10 보정 STT]]
 - [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 보정 STT]]
 - [[courses/computer_programming/transcripts/2026-09-17|2026-09-17 보정 STT]]
+- [[courses/computer_programming/transcripts/undated-inheritance-polymorphism-vemyed7m83v2ejw2|Inheritance and Polymorphism · 보정 STT · 날짜 미확인]]
 
 ## System Programming
 
@@ -125,4 +133,4 @@
 
 ## 컴퓨팅 살펴보기
 
-현재 공개할 강의노트·녹음 STT가 없습니다.
+- [[courses/exploring_computing/transcripts/undated-graph-structure-parameterized-algorithms-peyivfngvqdskjzr|Graph Structure and Parameterized Algorithms · 보정 STT · 날짜 미확인]]

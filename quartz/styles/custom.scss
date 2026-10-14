@@ -397,3 +397,115 @@ article.unit-index {
 article.unit-textbook :not(pre) > code {
   overflow-wrap: anywhere;
 }
+
+// The user's print-style preference applies only to newly authored documents.
+// Opt-in classes leave all historical pages and source images unchanged.
+html:has(article.plain-document),
+body:has(article.plain-document) {
+  color-scheme: light;
+  color: #000000;
+  background: #ffffff;
+  --light: #ffffff;
+  --lightgray: #000000;
+  --gray: #000000;
+  --darkgray: #000000;
+  --dark: #000000;
+  --secondary: #000000;
+  --tertiary: #000000;
+  --highlight: transparent;
+  --textHighlight: transparent;
+}
+
+.page:has(article.plain-document) {
+  .toc a,
+  .explorer a.nav-file-title {
+    opacity: 1;
+  }
+
+  .article-title,
+  .breadcrumb-container,
+  .content-meta,
+  a {
+    color: #000000;
+  }
+
+  .note-properties.metadata-container,
+  .content-meta {
+    display: none;
+  }
+}
+
+article.plain-document {
+  color: #000000;
+  background: #ffffff;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+
+  *,
+  *::before,
+  *::after {
+    color: #000000 !important;
+    text-shadow: none !important;
+  }
+
+  a {
+    background: transparent !important;
+    text-decoration: underline;
+    text-decoration-color: #000000;
+  }
+
+  pre,
+  code,
+  th,
+  td,
+  blockquote,
+  details,
+  .unit-overview,
+  .unit-source-note {
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border-radius: 0;
+  }
+
+  pre,
+  code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  pre > code {
+    display: block !important;
+  }
+
+  pre [data-line]::before {
+    content: none !important;
+    display: none;
+  }
+
+  .table-container {
+    border: 0;
+    border-radius: 0;
+  }
+
+  th,
+  td {
+    border-color: #000000;
+  }
+
+  details,
+  .unit-overview,
+  .unit-source-note {
+    padding: 0;
+    border: 0;
+  }
+
+  details > summary {
+    padding-block: 0.5rem;
+  }
+
+  details[open] > summary,
+  h2,
+  hr {
+    border-color: #000000;
+  }
+}

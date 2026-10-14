@@ -52,7 +52,12 @@
     "content/courses/aging_and_family/transcripts/2026-09-28.md": "6e68842d083b2ab43c4e284eafe33ea2474a071fb4cc26205254440f76ac0b6f",
     "content/courses/computer_architecture/transcripts/2026-09-29.md": "e732d1552ed990474fce829c72d80e086e5960239e2e1b23e6f297087ec165dc",
     "content/courses/system_programming/transcripts/2026-09-28.md": "b0d0356abd6b510eded71a77d4a9d9bf5d53dee9477aa8898173ef8fac1bb179",
-    "content/courses/discrete_mathematics/transcripts/2026-09-28.md": "4d0b5eca53b35cb75e5e5fdd2e22dc57dfb4821f17f51bee4001334434272049"
+    "content/courses/discrete_mathematics/transcripts/2026-09-28.md": "4d0b5eca53b35cb75e5e5fdd2e22dc57dfb4821f17f51bee4001334434272049",
+    "content/courses/computer_architecture/transcripts/undated-control-hazards-tskkzbwcgg2lavgo.md": "70ed1b14a607755fbf543d632edc7669c16f7c766d6c4060a69f5df30d205130",
+    "content/courses/computer_programming/transcripts/undated-inheritance-polymorphism-vemyed7m83v2ejw2.md": "20d8df22a292784bac7833a97a83960e33329625f45780cd0e5f8a6c93ecbfdf",
+    "content/courses/principles_of_programming/transcripts/undated-structural-subtyping-6p3wjj22vvvjv0ji.md": "ec43e3c630b12897c17aea11ac36d683cc4b79c30e90ebec832ea897234c3ba5",
+    "content/courses/principles_of_programming/transcripts/undated-classes-inheritance-jk9b2ob0objzgyvy.md": "9de1bbcdb06e7aa0f1f50db3a7f11864f2cce51980805316b2774bfceb7e8ef2",
+    "content/courses/exploring_computing/transcripts/undated-graph-structure-parameterized-algorithms-peyivfngvqdskjzr.md": "ba7b4b8aed87d7b5624c115e63e0bb18baa2f3505443d95dca32c108acfa404b"
   },
   "reviewed_units": {
     "content/courses/computer_architecture/units/architecture-contract.md": "0b81c538da6a28d7686edaa4bbf2278cf448783c4bddb843c0c738e3283071d9",

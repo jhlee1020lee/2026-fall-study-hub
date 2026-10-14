@@ -17,6 +17,10 @@ CONTENT_FIRST_HEADINGS = {
     "ko": ("강의 내용과 설명", "강의 흐름과 연결", "핵심 요약", "회상·연습문제", "출처와 검증 상태"),
     "en": ("Lecture Content and Explanation", "Lecture Flow and Connections", "Key Takeaways", "Recall and Practice", "Sources and Verification"),
 }
+PLAIN_CONTENT_FIRST_HEADINGS = {
+    "ko": ("강의 내용과 설명", "회상·연습문제", "출처"),
+    "en": ("Lecture Content and Explanation", "Recall and Practice", "Sources"),
+}
 OLD_SPLIT_HEADINGS = {"핵심 개념", "상세 해설", "예시·수식·코드", "오개념과 STT 주의점",
                       "Core Concepts", "Detailed Explanation", "Examples, Equations, and Code", "Misconceptions and STT Notes"}
 
@@ -27,14 +31,20 @@ def markdown_prose(body: str) -> str:
     return re.sub(r"(?s)<!--.*?-->", "", body)
 
 
-def validate_content_first_layout(body: str, language: str = "ko") -> list[str]:
+def validate_content_first_layout(body: str, language: str = "ko", *, reader_layout: str | None = None) -> list[str]:
     """Strict new-generation layout; does not claim semantic integration/completeness."""
     prose = markdown_prose(body)
     actual = re.findall(r"(?m)^## ([^\n]+?)[ \t]*$", prose)
-    expected = CONTENT_FIRST_HEADINGS[language]
+    if reader_layout not in (None, "content_first"):
+        return ["unsupported lecture reader_layout"]
+    expected = PLAIN_CONTENT_FIRST_HEADINGS[language] if reader_layout == "content_first" else CONTENT_FIRST_HEADINGS[language]
     errors = []
     if tuple(actual) != expected:
         errors.append("content_first_v1 H2 headings must appear exactly once in the required order: " + " → ".join(expected))
+    if reader_layout == "content_first":
+        start = re.search(r"(?m)^## ", prose)
+        if start is None or prose[:start.start()].strip():
+            errors.append("content-first lecture must begin with teaching, without an introduction")
     first = re.search(r"(?ms)^## " + re.escape(expected[0]) + r"[ \t]*\n(.*?)(?=^## |\Z)", prose)
     if first:
         for heading in re.findall(r"(?m)^#{3,6} ([^\n]+?)[ \t]*$", first[1]):
@@ -142,12 +152,15 @@ def validate_lecture_note(text: str, language: str = "ko", require_page_links: b
     prose = markdown_prose(body)
     headings = {line.strip() for line in prose.splitlines() if line.startswith("## ")}
     layout = metadata.get("note_layout")
+    reader_layout = metadata.get("reader_layout")
     content_first = layout == CONTENT_FIRST_LAYOUT or any(
         "## " + name in headings for name in CONTENT_FIRST_HEADINGS[language][:4])
     if layout not in {None, CONTENT_FIRST_LAYOUT}:
         errors.append("unsupported note_layout: " + str(layout))
+    if reader_layout not in (None, "content_first") or reader_layout == "content_first" and layout != CONTENT_FIRST_LAYOUT:
+        errors.append("reader_layout requires supported content_first_v1 lecture metadata")
     if content_first:
-        errors.extend(validate_content_first_layout(body, language))
+        errors.extend(validate_content_first_layout(body, language, reader_layout=reader_layout))
     else:
         # Untagged, historical public artifacts keep their historical schema.
         for heading in sorted(REQUIRED_HEADINGS[language] - headings):
@@ -157,7 +170,7 @@ def validate_lecture_note(text: str, language: str = "ko", require_page_links: b
     citations = len(re.findall(r"\[(?:STT|M\d{2})[^\]]*\]", prose))
     if citations < MIN_SOURCE_CITATIONS:
         errors.append(f"근거 표시가 부족합니다: {citations} < {MIN_SOURCE_CITATIONS}")
-    recall_heading = ("## " + CONTENT_FIRST_HEADINGS[language][3]) if content_first else ("## Active Recall" if language == "en" else "## 능동회상 문제")
+    recall_heading = ("## " + PLAIN_CONTENT_FIRST_HEADINGS[language][1] if reader_layout == "content_first" else "## " + CONTENT_FIRST_HEADINGS[language][3]) if content_first else ("## Active Recall" if language == "en" else "## 능동회상 문제")
     recall = re.search(r"(?ms)^" + re.escape(recall_heading) + r"[ \t]*\n(.*?)(?=^## |\Z)", prose)
     answer = r"(?:Answer|Check your answer)" if language == "en" else r"(?:정답|확인 답안)"
     recall_count = sum(bool(body.strip()) for body in re.findall(

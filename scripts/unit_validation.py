@@ -196,23 +196,31 @@ class _Details(HTMLParser):
             self.current = None
 
 
-def validate_unit_layout(body: str, language: str) -> list[str]:
+def validate_unit_layout(body: str, language: str, *, reader_layout: str | None = None) -> list[str]:
     if language not in TAIL_HEADINGS:
         return ["unsupported unit language"]
+    if reader_layout not in (None, "content_first"):
+        return ["unsupported unit reader_layout"]
     errors: list[str] = []
     prose = structural_prose(body)
     headings = list(H2.finditer(prose))
     names = [match[1] for match in headings]
-    tail = TAIL_HEADINGS[language]
-    if len(names) < 4 or tuple(names[-3:]) != tail or any(name in tail for name in names[:-3]):
+    tail = TAIL_HEADINGS[language][1:] if reader_layout == "content_first" else TAIL_HEADINGS[language]
+    count = len(tail)
+    if reader_layout == "content_first":
+        if not headings or body[:headings[0].start()].strip():
+            errors.append("content-first unit must begin with its teaching H2, without an orientation paragraph")
+        if TAIL_HEADINGS[language][0] in names:
+            errors.append("content-first unit cannot add a separate repeated takeaways section")
+    if len(names) < count + 1 or tuple(names[-count:]) != tail or any(name in tail for name in names[:-count]):
         errors.append("textbook_unit_v1 requires concept H2 sections followed exactly by: " + " → ".join(tail))
     else:
-        for index, heading in enumerate(headings[-3:], len(headings) - 3):
+        for index, heading in enumerate(headings[-count:], len(headings) - count):
             stop = headings[index + 1].start() if index + 1 < len(headings) else len(body)
             if not _populated(body[heading.end():stop]):
                 errors.append("unit tail section is empty: " + heading[1])
         generic = {"강의 내용과 설명", "강의 흐름과 연결", "핵심 개념", "상세 해설", "Lecture Content and Explanation", "Lecture Flow and Connections", "Core Concepts", "Detailed Explanation"}
-        for index, heading in enumerate(headings[:-3]):
+        for index, heading in enumerate(headings[:-count]):
             if heading[1] in generic:
                 errors.append("unit teaching H2 must name a concept: " + heading[1])
             if not _populated(body[heading.end():headings[index + 1].start()]):
@@ -468,7 +476,7 @@ def validate_unit_chapter(text: str, relative: str, available_paths: set[str],
                 errors.append("unit source_lectures must name a canonical lecture in the same course: " + slug)
             elif str(PurePosixPath("content") / (slug + ".md")) not in available_paths:
                 errors.append("unit source lecture is missing from publication snapshot: " + slug)
-    errors.extend(validate_unit_layout(body, language))
+    errors.extend(validate_unit_layout(body, language, reader_layout=metadata.get("reader_layout")))
     prose = structural_prose(body)
     public_pdfs = [asset for asset in assets if asset.lower().endswith(".pdf") and asset not in private]
     if public_pdfs and not re.search(r"(?:\]\([^\s)]*page_cache/[^\s)]+\)|\[\[[^\]\n]*page_cache/[^\]\n]+\]\])", prose):

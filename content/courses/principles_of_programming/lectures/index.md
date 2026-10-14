@@ -1,10 +1,10 @@
 ---
 title: "프로그래밍의 원리 강의 기록"
 description: "프로그래밍의 원리 날짜별 강의노트와 보정 STT"
-cssclasses: ["unit-index"]
+cssclasses: ["unit-index", "plain-document"]
 course: "principles_of_programming"
 source_kind: "lecture_archive"
-archive_layout: "dated_lecture_archive_v1"
+archive_layout: "source_lecture_archive_v2"
 ---
 
 날짜별 노트는 수업 당시의 설명과 자료 범위를 확인하는 기록입니다. 단원별 본문과 함께 읽고, 자료 기반 복습은 실제 수업 발언·진도와 구분하세요.
@@ -29,6 +29,8 @@ archive_layout: "dated_lecture_archive_v1"
 - [[courses/principles_of_programming/transcripts/2026-09-08|2026-09-08 보정 STT]]
 - [[courses/principles_of_programming/transcripts/2026-09-15|2026-09-15 보정 STT]]
 - [[courses/principles_of_programming/transcripts/2026-09-17|2026-09-17 보정 STT]]
+- [[courses/principles_of_programming/transcripts/undated-classes-inheritance-jk9b2ob0objzgyvy|Classes and Inheritance · 보정 STT · 날짜 미확인]]
+- [[courses/principles_of_programming/transcripts/undated-structural-subtyping-6p3wjj22vvvjv0ji|Structural Types and Subtyping · 보정 STT · 날짜 미확인]]
 
 ## 원자료
 

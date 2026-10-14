@@ -82,6 +82,34 @@ class ArchiveStructureTests(unittest.TestCase):
         self.assertTrue(validate_lecture_archive(text, 'content/courses/system_programming/lectures/index.md', set(), lambda _: ''))
 
 
+    def test_unknown_date_transcript_needs_v2_and_explicit_source_identity(self):
+        slug = 'courses/system_programming/transcripts/undated-memory-board'
+        title = 'Memory · 날짜 미확인 보정 STT'
+        source = ('---\ncourse: system_programming\ntitle: "' + title + '"\n'
+                  'source_kind: corrected_transcript\nprivacy_redacted: true\n'
+                  'date_confidence: unknown\nlecture_date: null\n---\n00:00 Speech\n')
+        line = f'- [[{slug}|{title}]]'
+        text = archive(stt_lines=[line]).replace('dated_lecture_archive_v1', 'source_lecture_archive_v2').replace('[unit-index]', '[unit-index, plain-document]')
+        sources = {'content/' + slug + '.md': source}
+        self.assertEqual(self.validate(text, sources=sources), [])
+        self.assertTrue(self.validate(archive(stt_lines=[line]), sources=sources))
+        for changed in (source.replace('unknown', 'user_confirmed'), source.replace('lecture_date: null', 'lecture_date: 2026-10-13'),
+                        source.replace('lecture_date: null', 'lecture_date: null\ndate: 2026-10-13'),
+                        source.replace('system_programming', 'computer_programming'), source.replace('privacy_redacted: true', 'privacy_redacted: false')):
+            with self.subTest(changed=changed): self.assertTrue(self.validate(text, sources={next(iter(sources)): changed}))
+        self.assertTrue(self.validate(text.replace(line, line + '\n' + line), sources=sources))
+        self.assertTrue(self.validate(text.replace(title + ']]', 'Guessed date]]'), sources=sources))
+
+    def test_unknown_date_bilingual_notes_still_require_approved_matching_sources(self):
+        ko = 'courses/system_programming/lectures/undated-memory-board'
+        en = 'courses/system_programming/lectures/en/undated-memory-board'
+        note = self.note().replace('date: 2026-09-01', 'date_confidence: unknown\nlecture_date: null')
+        sources = {'content/' + ko + '.md': note, 'content/' + en + '.md': note.replace('lang: ko', 'lang: en')}
+        text = archive(lecture_lines=[f'- 날짜 미확인 · [[{ko}|한국어]] · [[{en}|English]]']).replace('dated_lecture_archive_v1', 'source_lecture_archive_v2').replace('[unit-index]', '[unit-index, plain-document]')
+        self.assertEqual(self.validate(text, sources=sources), [])
+        self.assertTrue(self.validate(text, sources={**sources, 'content/' + en + '.md': sources['content/' + en + '.md'].replace('approved', 'pending')}))
+
+
 class ArchiveSnapshotTests(unittest.TestCase):
     def setUp(self):
         temp = tempfile.TemporaryDirectory(); self.addCleanup(temp.cleanup); self.root = Path(temp.name)
