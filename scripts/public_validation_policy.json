@@ -60,7 +60,17 @@
     "content/courses/exploring_computing/transcripts/undated-graph-structure-parameterized-algorithms-peyivfngvqdskjzr.md": "ba7b4b8aed87d7b5624c115e63e0bb18baa2f3505443d95dca32c108acfa404b",
     "content/courses/system_programming/transcripts/undated-dynamic-memory-allocation-t43j6ewlb6jna6ng.md": "6ed3fdff8ac82ab893101b1917fb25814b9711d7f9cffd3163e187342d3f84d6",
     "content/courses/system_programming/transcripts/undated-virtual-memory-allocation-kosmjetahw6cx93w.md": "b7699280770e37c80e044f6c1e3bb40eeff5be0e055f13b7fb053f9be4eb30e2",
-    "content/courses/aging_and_family/transcripts/undated-socioemotional-selectivity-emotion-i9ekkpgxdvheuc0j.md": "756406e40059490cc5b64a7cf0410f8c571fad68124bce0cb7c70c4dd8cb40b8"
+    "content/courses/aging_and_family/transcripts/undated-socioemotional-selectivity-emotion-i9ekkpgxdvheuc0j.md": "756406e40059490cc5b64a7cf0410f8c571fad68124bce0cb7c70c4dd8cb40b8",
+    "content/courses/discrete_mathematics/transcripts/undated-video-01-introduction-logic-sets-functions.md": "230db916e05ad8225a4970963043a78485173ce02f54b7cb712f7852243b0e0d",
+    "content/courses/discrete_mathematics/transcripts/undated-video-02-vectors-matrices.md": "1205adb4b099c9123108facde7e9de361e0c9e730957686a1062f17d939a96c6",
+    "content/courses/discrete_mathematics/transcripts/undated-video-03-algorithms.md": "e0c25c94cb3e46918e2d445fe7a93736f1501057eb0f9f2471948e5672d74b0a",
+    "content/courses/discrete_mathematics/transcripts/undated-video-04-algorithm-complexity.md": "b71a840df555830a5b0e1d1628be9f6450f9536b981cdf1ddaff4278e08eee2e",
+    "content/courses/discrete_mathematics/transcripts/undated-video-05-number-theory-i.md": "b895f74c7456d12a7c866070111affc19c6f3f17de608a118caf91a26c67ffce",
+    "content/courses/discrete_mathematics/transcripts/undated-video-06-number-theory-ii.md": "1d71939692c6219ab3b95d176b7e05d0d6d99b65eed2ee9b6cff08e785bc9a9f",
+    "content/courses/discrete_mathematics/transcripts/undated-video-07-number-theory-applications.md": "89900e9124b503e3bcf0b12958475cc07c4c9941d35514dffe74a165d8056d39",
+    "content/courses/discrete_mathematics/transcripts/undated-video-08-induction-recursion.md": "67167b96241869e8baf284953e6ca4360a102ee59671c7e2289b1b25a543ef05",
+    "content/courses/discrete_mathematics/transcripts/undated-video-09-recursive-algorithms.md": "5421be0dbcc38708584f21f714ffdd19812e3e15d82e730b0a20f97264ce777a",
+    "content/courses/discrete_mathematics/transcripts/undated-video-10-counting-i.md": "57779d421759473fcefb55798fe7447137ad880f076bbf89e3b303b682f063dd"
   },
   "reviewed_units": {
     "content/courses/computer_architecture/units/architecture-contract.md": "0b81c538da6a28d7686edaa4bbf2278cf448783c4bddb843c0c738e3283071d9",

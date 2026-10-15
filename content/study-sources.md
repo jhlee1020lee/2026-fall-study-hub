@@ -34,6 +34,17 @@ cssclasses: [plain-document]
 - [[courses/discrete_mathematics/transcripts/2026-09-14|2026-09-14 보정 STT]]
 - [[courses/discrete_mathematics/transcripts/2026-09-23|2026-09-23 보정 STT]]
 - [[courses/discrete_mathematics/transcripts/2026-09-28|2026-09-28 보정 STT]]
+- [[courses/discrete_mathematics/transcripts/undated-video-01-introduction-logic-sets-functions|01. Introduction (Logic, Sets, Functions, ...) · 보정 STT · 날짜 미확인]]
+- [[courses/discrete_mathematics/transcripts/undated-video-02-vectors-matrices|02. Vectors and Matrices · 보정 STT · 날짜 미확인]]
+- [[courses/discrete_mathematics/transcripts/undated-video-03-algorithms|03. Algorithms · 보정 STT · 날짜 미확인]]
+- [[courses/discrete_mathematics/transcripts/undated-video-04-algorithm-complexity|04. Complexity of Algorithms · 보정 STT · 날짜 미확인]]
+- [[courses/discrete_mathematics/transcripts/undated-video-05-number-theory-i|05. Number theory I · 보정 STT · 날짜 미확인]]
+- [[courses/discrete_mathematics/transcripts/undated-video-06-number-theory-ii|06. Number theory part II · 보정 STT · 날짜 미확인]]
+- [[courses/discrete_mathematics/transcripts/undated-video-07-number-theory-applications|07. Number theory applications · 보정 STT · 날짜 미확인]]
+- [[courses/discrete_mathematics/transcripts/undated-video-08-induction-recursion|08. Induction and recursion · 보정 STT · 날짜 미확인]]
+- [[courses/discrete_mathematics/transcripts/undated-video-09-recursive-algorithms|09. Recursive algorithms · 보정 STT · 날짜 미확인]]
+- [[courses/discrete_mathematics/transcripts/undated-video-10-counting-i|10. Counting I · 보정 STT · 날짜 미확인]]
+
 
 ## 프로그래밍의 원리
 
