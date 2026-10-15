@@ -13,7 +13,7 @@ archive_layout: "source_lecture_archive_v2"
 
 ## 날짜별 강의 기록
 
-현재 공개된 날짜별 강의노트가 없습니다.
+- 날짜 미확인 · [[courses/exploring_computing/lectures/undated-graph-structure-parameterized-algorithms-peyivfngvqdskjzr|한국어]]
 
 ## 보정 STT
 

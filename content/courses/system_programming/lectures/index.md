@@ -1,10 +1,10 @@
 ---
 title: "시스템프로그래밍 강의 기록"
 description: "시스템프로그래밍 날짜별 강의노트와 보정 STT"
-cssclasses: ["unit-index"]
+cssclasses: ["unit-index", "plain-document"]
 course: "system_programming"
 source_kind: "lecture_archive"
-archive_layout: "dated_lecture_archive_v1"
+archive_layout: "source_lecture_archive_v2"
 ---
 
 날짜별 노트는 수업 당시의 설명과 자료 범위를 확인하는 기록입니다. 단원별 본문과 함께 읽고, 자료 기반 복습은 실제 수업 발언·진도와 구분하세요.
@@ -33,6 +33,7 @@ archive_layout: "dated_lecture_archive_v1"
 - [[courses/system_programming/transcripts/2026-09-21|2026-09-21 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-23|2026-09-23 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-28|2026-09-28 보정 STT]]
+- [[courses/system_programming/transcripts/undated-dynamic-memory-allocation-t43j6ewlb6jna6ng|Dynamic Memory Allocation · 보정 STT · 날짜 미확인]]
 
 ## 원자료
 
