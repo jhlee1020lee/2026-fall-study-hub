@@ -1,7 +1,7 @@
 ---
 title: "과목별 단원 교과서"
 description: "이번 학기 일곱 과목의 단원 목차와 원자료"
-cssclasses: ["unit-index"]
+cssclasses: ["unit-index", "plain-document"]
 ---
 
 현재 수강 중인 일곱 과목의 단원 교과서와 원자료를 찾을 수 있습니다.
@@ -34,7 +34,7 @@ cssclasses: ["unit-index"]
 
 - [[courses/exploring_computing/index|컴퓨팅 살펴보기]]
 
-  단원 교과서 준비 전 · 공개 자료 확인.
+  7개 단원을 순서대로 읽기.
 
 </div>
 

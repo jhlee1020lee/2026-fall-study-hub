@@ -157,7 +157,14 @@
     "content/courses/system_programming/units/cache-hierarchy.md": "d8325d47f680f73cb36d4f10574deadbcfbdfebe542b5314f2591f296a82cc40",
     "content/courses/system_programming/units/en/cache-hierarchy.md": "db3a57ae44ab63f267757464f4fb7792686062fe65a721b57eb284591955eaa8",
     "content/courses/system_programming/units/virtual-memory.md": "33b8bb838677c9934f7ff66be44e52088ace9c9aae30466fd8061a8a4c58899a",
-    "content/courses/system_programming/units/en/virtual-memory.md": "68c350adfe2665a5b16d64909fbbfd785ade1c0c9fbaa74055b1182b1a5b64a2"
+    "content/courses/system_programming/units/en/virtual-memory.md": "68c350adfe2665a5b16d64909fbbfd785ade1c0c9fbaa74055b1182b1a5b64a2",
+    "content/courses/exploring_computing/units/graph-models-and-routing.md": "0102eb1092724a85a56f1894d7a4fec06134d07d708e88370e6cc8afddf49d37",
+    "content/courses/exploring_computing/units/restricted-instances-and-parameters.md": "5abff6b0739ee9434bda8fc39d7b76f6992556ecf2f6c91274dfa00b33bc6d49",
+    "content/courses/exploring_computing/units/clique-interfaces-and-reduction.md": "6dab692fde73f14e526a1a0291825b670d0186b44b57d5e8398e1ab690b2290f",
+    "content/courses/exploring_computing/units/structural-intuition-and-counterexamples.md": "921a6db37743219df89a4afa6dc54917ddb436868fe98e4af41c164f3496cbe1",
+    "content/courses/exploring_computing/units/theory-models-and-applications.md": "746b4ec562a30cfea14974826425dabd6931aac0d038bb1142b3119c26b435d3",
+    "content/courses/exploring_computing/units/research-understanding-and-utility.md": "9d1ebcf9454f3c9e516487ea38e9136216ee924e77986809e6c19ccc2688a10d",
+    "content/courses/exploring_computing/units/ai-hypotheses-and-authorship.md": "d219c9fe581ed1a9d9946b5e8c9448eea474b14f39ad6bce0b134a84aecf7a2f"
   },
   "materials_only_units": {
     "content/courses/computer_programming/units/inheritance.md": "2b0fa32ad105ebe7261ea0996fd4448232d9d3262718ee15fbc4bc193b1dc357",
