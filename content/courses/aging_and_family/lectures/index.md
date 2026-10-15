@@ -1,10 +1,10 @@
 ---
 title: "고령화와 가족 강의 기록"
 description: "고령화와 가족 날짜별 강의노트와 보정 STT"
-cssclasses: ["unit-index"]
+cssclasses: ["unit-index", "plain-document"]
 course: "aging_and_family"
 source_kind: "lecture_archive"
-archive_layout: "dated_lecture_archive_v1"
+archive_layout: "source_lecture_archive_v2"
 ---
 
 날짜별 노트는 수업 당시의 설명과 자료 범위를 확인하는 기록입니다. 단원별 본문과 함께 읽고, 자료 기반 복습은 실제 수업 발언·진도와 구분하세요.
@@ -26,6 +26,7 @@ archive_layout: "dated_lecture_archive_v1"
 - [[courses/aging_and_family/transcripts/2026-09-14|2026-09-14 보정 STT]]
 - [[courses/aging_and_family/transcripts/2026-09-21|2026-09-21 보정 STT]]
 - [[courses/aging_and_family/transcripts/2026-09-28|2026-09-28 보정 STT]]
+- [[courses/aging_and_family/transcripts/undated-socioemotional-selectivity-emotion-i9ekkpgxdvheuc0j|Socio-emotional Aging · 보정 STT · 날짜 미확인]]
 
 ## 원자료
 

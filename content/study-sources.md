@@ -64,6 +64,8 @@ cssclasses: [plain-document]
 - [[courses/aging_and_family/transcripts/2026-09-14|2026-09-14 보정 STT]]
 - [[courses/aging_and_family/transcripts/2026-09-21|2026-09-21 보정 STT]]
 - [[courses/aging_and_family/transcripts/2026-09-28|2026-09-28 보정 STT]]
+- [[courses/aging_and_family/transcripts/undated-socioemotional-selectivity-emotion-i9ekkpgxdvheuc0j|Socio-emotional Aging · 보정 STT · 날짜 미확인]]
+
 
 ## Computer Architecture
 
