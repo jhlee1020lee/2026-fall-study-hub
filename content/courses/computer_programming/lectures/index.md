@@ -19,6 +19,7 @@ archive_layout: "source_lecture_archive_v2"
 - 2026-09-10 · [[courses/computer_programming/lectures/2026-09-10-lecture-04|한국어]] · [[courses/computer_programming/lectures/en/2026-09-10-lecture-04|English]]
 - 2026-09-15 · [[courses/computer_programming/lectures/2026-09-15-lecture-05|한국어]] · [[courses/computer_programming/lectures/en/2026-09-15-lecture-05|English]]
 - 2026-09-17 · [[courses/computer_programming/lectures/2026-09-17-lecture-06|한국어]] · [[courses/computer_programming/lectures/en/2026-09-17-lecture-06|English]]
+- 날짜 미확인 · [[courses/computer_programming/lectures/undated-inheritance-polymorphism-vemyed7m83v2ejw2|한국어]] · [[courses/computer_programming/lectures/en/undated-inheritance-polymorphism-vemyed7m83v2ejw2|English]]
 
 ## 보정 STT
 

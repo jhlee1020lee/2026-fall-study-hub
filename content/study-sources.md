@@ -120,6 +120,9 @@ cssclasses: [plain-document]
 - [[courses/computer_programming/transcripts/2026-09-15|2026-09-15 보정 STT]]
 - [[courses/computer_programming/transcripts/2026-09-17|2026-09-17 보정 STT]]
 - [[courses/computer_programming/transcripts/undated-inheritance-polymorphism-vemyed7m83v2ejw2|Inheritance and Polymorphism · 보정 STT · 날짜 미확인]]
+- [[courses/computer_programming/lectures/undated-inheritance-polymorphism-vemyed7m83v2ejw2|Object 계약·Polymorphism과 Generics 도입 · 강의 정리 · 날짜 미확인]]
+- [[courses/computer_programming/lectures/en/undated-inheritance-polymorphism-vemyed7m83v2ejw2|Object Contracts, Polymorphism, and a Generics Introduction · Lecture Notes · Date Unconfirmed]]
+
 
 ## System Programming
 
