@@ -1,7 +1,7 @@
 ---
 title: "컴퓨터프로그래밍 단원 목차"
 description: "컴퓨터프로그래밍 교과서 읽기 순서"
-cssclasses: ["unit-index"]
+cssclasses: ["unit-index", "plain-document"]
 ---
 
 개념 설명 → 예제 → 강의에서 덧붙인 설명 → 확인·연습문제 순서로 읽으세요. 출처의 날짜·페이지·시각은 각 단원에서 확인할 수 있습니다.
@@ -44,9 +44,17 @@ cssclasses: ["unit-index"]
 
 10. **동적 Binding·Object 계약·Interface와 Abstract Class** · [[courses/computer_programming/units/object-contracts-interfaces|한국어]] · [[courses/computer_programming/units/en/object-contracts-interfaces|English]]
 
-   Binding, Object 계약, List·Comparable와 interface/abstract class 설계를 복습한다.
+   Object의 동등성·순서 계약과 interface·abstract class의 역할을 코드와 설계로 확인한다.
 
-11. **입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습** · [[courses/computer_programming/units/lab-applications|한국어]] · [[courses/computer_programming/units/en/lab-applications|English]]
+11. **메서드 시그니처와 오버로딩 설계** · [[courses/computer_programming/units/method-overloading|한국어]] · [[courses/computer_programming/units/en/method-overloading|English]]
+
+   Signature·overload 선택과 constructor 위임을 추적하고 generic의 재사용 동기를 구별한다.
+
+12. **오버라이딩·디스패치와 형변환** · [[courses/computer_programming/units/polymorphic-dispatch|한국어]] · [[courses/computer_programming/units/en/polymorphic-dispatch|English]]
+
+   Declared type에 따른 선택과 receiver의 override를 분리하여 field·operator·cast를 추적한다.
+
+13. **입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습** · [[courses/computer_programming/units/lab-applications|한국어]] · [[courses/computer_programming/units/en/lab-applications|English]]
 
    입력 검증, board 판정, Player/Fight 계약과 Lab04 게임의 경계를 복습한다.
 
@@ -55,7 +63,7 @@ cssclasses: ["unit-index"]
 원자료 파일에 연결된 단원입니다. 실제로 다룬 페이지·슬라이드와 자료 버전은 각 단원의 출처에서 확인하세요.
 
 - **Lecture 1 Introduction.pdf** — [[courses/computer_programming/units/java-runtime|Programming의 목적과 Java 실행·개발 환경]] ([[courses/computer_programming/units/en/java-runtime|English]]) · [[courses/computer_programming/units/objects-references|Objects·Constructors·Static과 Reference 전달]] ([[courses/computer_programming/units/en/objects-references|English]])
-- **Lecture 2 Java Basics 1.pdf** — [[courses/computer_programming/units/java-runtime|Programming의 목적과 Java 실행·개발 환경]] ([[courses/computer_programming/units/en/java-runtime|English]]) · [[courses/computer_programming/units/types-expressions|Variables·Types·Operators와 String]] ([[courses/computer_programming/units/en/types-expressions|English]]) · [[courses/computer_programming/units/arrays|Array의 생성·참조와 다차원 데이터]] ([[courses/computer_programming/units/en/arrays|English]]) · [[courses/computer_programming/units/control-flow|Boolean 조건·분기·반복과 실행 추적]] ([[courses/computer_programming/units/en/control-flow|English]]) · [[courses/computer_programming/units/objects-references|Objects·Constructors·Static과 Reference 전달]] ([[courses/computer_programming/units/en/objects-references|English]])
+- **Lecture 2 Java Basics 1.pdf** — [[courses/computer_programming/units/java-runtime|Programming의 목적과 Java 실행·개발 환경]] ([[courses/computer_programming/units/en/java-runtime|English]]) · [[courses/computer_programming/units/types-expressions|Variables·Types·Operators와 String]] ([[courses/computer_programming/units/en/types-expressions|English]]) · [[courses/computer_programming/units/arrays|Array의 생성·참조와 다차원 데이터]] ([[courses/computer_programming/units/en/arrays|English]]) · [[courses/computer_programming/units/control-flow|Boolean 조건·분기·반복과 실행 추적]] ([[courses/computer_programming/units/en/control-flow|English]]) · [[courses/computer_programming/units/objects-references|Objects·Constructors·Static과 Reference 전달]] ([[courses/computer_programming/units/en/objects-references|English]]) · [[courses/computer_programming/units/method-overloading|메서드 시그니처와 오버로딩 설계]] ([[courses/computer_programming/units/en/method-overloading|English]]) · [[courses/computer_programming/units/polymorphic-dispatch|오버라이딩·디스패치와 형변환]] ([[courses/computer_programming/units/en/polymorphic-dispatch|English]])
 - **Lab01.pdf** — [[courses/computer_programming/units/java-runtime|Programming의 목적과 Java 실행·개발 환경]] ([[courses/computer_programming/units/en/java-runtime|English]])
 - **Lab02 v4.pdf** — [[courses/computer_programming/units/java-runtime|Programming의 목적과 Java 실행·개발 환경]] ([[courses/computer_programming/units/en/java-runtime|English]]) · [[courses/computer_programming/units/arrays|Array의 생성·참조와 다차원 데이터]] ([[courses/computer_programming/units/en/arrays|English]]) · [[courses/computer_programming/units/control-flow|Boolean 조건·분기·반복과 실행 추적]] ([[courses/computer_programming/units/en/control-flow|English]]) · [[courses/computer_programming/units/lab-applications|입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습]] ([[courses/computer_programming/units/en/lab-applications|English]])
 - **3 java basics 2.pdf** — [[courses/computer_programming/units/types-expressions|Variables·Types·Operators와 String]] ([[courses/computer_programming/units/en/types-expressions|English]]) · [[courses/computer_programming/units/arrays|Array의 생성·참조와 다차원 데이터]] ([[courses/computer_programming/units/en/arrays|English]]) · [[courses/computer_programming/units/control-flow|Boolean 조건·분기·반복과 실행 추적]] ([[courses/computer_programming/units/en/control-flow|English]]) · [[courses/computer_programming/units/methods|Method의 계약·호출·반환과 재사용]] ([[courses/computer_programming/units/en/methods|English]])
@@ -64,8 +72,10 @@ cssclasses: ["unit-index"]
 - **5 encapsulation.pdf** — [[courses/computer_programming/units/encapsulation|Encapsulation과 접근·상태 설계]] ([[courses/computer_programming/units/en/encapsulation|English]]) · [[courses/computer_programming/units/packages|Packages·이름 공간·Java API 활용]] ([[courses/computer_programming/units/en/packages|English]])
 - **Lab04 v2.pdf** — [[courses/computer_programming/units/encapsulation|Encapsulation과 접근·상태 설계]] ([[courses/computer_programming/units/en/encapsulation|English]]) · [[courses/computer_programming/units/packages|Packages·이름 공간·Java API 활용]] ([[courses/computer_programming/units/en/packages|English]]) · [[courses/computer_programming/units/lab-applications|입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습]] ([[courses/computer_programming/units/en/lab-applications|English]])
 - **Lab04 v4.pdf** — [[courses/computer_programming/units/encapsulation|Encapsulation과 접근·상태 설계]] ([[courses/computer_programming/units/en/encapsulation|English]]) · [[courses/computer_programming/units/packages|Packages·이름 공간·Java API 활용]] ([[courses/computer_programming/units/en/packages|English]]) · [[courses/computer_programming/units/lab-applications|입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습]] ([[courses/computer_programming/units/en/lab-applications|English]])
-- **6 inheritance 1.pdf** — [[courses/computer_programming/units/inheritance|Inheritance·형 변환·재정의와 생성 순서]] ([[courses/computer_programming/units/en/inheritance|English]]) · [[courses/computer_programming/units/object-contracts-interfaces|동적 Binding·Object 계약·Interface와 Abstract Class]] ([[courses/computer_programming/units/en/object-contracts-interfaces|English]])
-- **7 inheritance 2.pdf** — [[courses/computer_programming/units/object-contracts-interfaces|동적 Binding·Object 계약·Interface와 Abstract Class]] ([[courses/computer_programming/units/en/object-contracts-interfaces|English]])
+- **6 inheritance 1.pdf** — [[courses/computer_programming/units/inheritance|Inheritance·형 변환·재정의와 생성 순서]] ([[courses/computer_programming/units/en/inheritance|English]]) · [[courses/computer_programming/units/object-contracts-interfaces|동적 Binding·Object 계약·Interface와 Abstract Class]] ([[courses/computer_programming/units/en/object-contracts-interfaces|English]]) · [[courses/computer_programming/units/method-overloading|메서드 시그니처와 오버로딩 설계]] ([[courses/computer_programming/units/en/method-overloading|English]])
+- **7 inheritance 2.pdf** — [[courses/computer_programming/units/object-contracts-interfaces|동적 Binding·Object 계약·Interface와 Abstract Class]] ([[courses/computer_programming/units/en/object-contracts-interfaces|English]]) · [[courses/computer_programming/units/method-overloading|메서드 시그니처와 오버로딩 설계]] ([[courses/computer_programming/units/en/method-overloading|English]]) · [[courses/computer_programming/units/polymorphic-dispatch|오버라이딩·디스패치와 형변환]] ([[courses/computer_programming/units/en/polymorphic-dispatch|English]])
+- **8 polymorphism.pdf** — [[courses/computer_programming/units/object-contracts-interfaces|동적 Binding·Object 계약·Interface와 Abstract Class]] ([[courses/computer_programming/units/en/object-contracts-interfaces|English]]) · [[courses/computer_programming/units/method-overloading|메서드 시그니처와 오버로딩 설계]] ([[courses/computer_programming/units/en/method-overloading|English]]) · [[courses/computer_programming/units/polymorphic-dispatch|오버라이딩·디스패치와 형변환]] ([[courses/computer_programming/units/en/polymorphic-dispatch|English]])
+- **Lab 6 Polymorphism.pdf** — [[courses/computer_programming/units/object-contracts-interfaces|동적 Binding·Object 계약·Interface와 Abstract Class]] ([[courses/computer_programming/units/en/object-contracts-interfaces|English]]) · [[courses/computer_programming/units/method-overloading|메서드 시그니처와 오버로딩 설계]] ([[courses/computer_programming/units/en/method-overloading|English]]) · [[courses/computer_programming/units/polymorphic-dispatch|오버라이딩·디스패치와 형변환]] ([[courses/computer_programming/units/en/polymorphic-dispatch|English]])
 
 ## 원자료와 강의 기록
 

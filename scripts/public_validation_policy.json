@@ -163,8 +163,8 @@
     "content/courses/computer_programming/units/en/packages.md": "385e180445d149274d9da12e0a87eab3485675c1953257c53852bbb4b3663f56",
     "content/courses/computer_programming/units/inheritance.md": "2b0fa32ad105ebe7261ea0996fd4448232d9d3262718ee15fbc4bc193b1dc357",
     "content/courses/computer_programming/units/en/inheritance.md": "73d63808f556fae296b704b386b54d88c0643528a759da2c446c6cce33bc9238",
-    "content/courses/computer_programming/units/object-contracts-interfaces.md": "70c8198b9031ce1c3ae253a82e1697c63f08e39bed1c044346bc1005d62f144d",
-    "content/courses/computer_programming/units/en/object-contracts-interfaces.md": "c0a56bbbe6e3bf86222e3d4802887aa23badec6d15609e02eafcffb64493e836",
+    "content/courses/computer_programming/units/object-contracts-interfaces.md": "fa7b90d2981d7eaa2382d9b742833cc7ef3ed017bc6b4993db500e0870f6b5fa",
+    "content/courses/computer_programming/units/en/object-contracts-interfaces.md": "0db9e73bfae20354a7a4920f8eea305fc4b35cc234603f14235f56536ae0a084",
     "content/courses/system_programming/units/cache-hierarchy.md": "d8325d47f680f73cb36d4f10574deadbcfbdfebe542b5314f2591f296a82cc40",
     "content/courses/system_programming/units/en/cache-hierarchy.md": "db3a57ae44ab63f267757464f4fb7792686062fe65a721b57eb284591955eaa8",
     "content/courses/system_programming/units/virtual-memory.md": "33b8bb838677c9934f7ff66be44e52088ace9c9aae30466fd8061a8a4c58899a",
@@ -180,12 +180,14 @@
     "content/courses/principles_of_programming/units/structural-subtyping.md": "5411f85d081664dcf7ea9e674f3f1ff44b95c5e04c6b0ec29a942428fe768b74",
     "content/courses/principles_of_programming/units/class-construction.md": "02ce2b5b636a2bb0dbdea509ea9a31a44eb0f8eabb3ab647693f162f53083ff7",
     "content/courses/principles_of_programming/units/recursive-classes.md": "7ab861dce62fcf3faf0e9c3974c02a43788d1236090083eb769cb140c82a4d32",
-    "content/courses/principles_of_programming/units/inheritance-overriding.md": "a7f6de236cb9bb2b35ddd778b34c22a9dc95a58c79aa9a1c14cb13ce5d242920"
+    "content/courses/principles_of_programming/units/inheritance-overriding.md": "a7f6de236cb9bb2b35ddd778b34c22a9dc95a58c79aa9a1c14cb13ce5d242920",
+    "content/courses/computer_programming/units/method-overloading.md": "edb50034ee703247958e36b648e8593138b1500abbe80465890797c3c2a09b54",
+    "content/courses/computer_programming/units/en/method-overloading.md": "9becca1fd92a117d2bf87116bb353c1d35fe80e5b9ebf2fe1a4023e76759016b",
+    "content/courses/computer_programming/units/polymorphic-dispatch.md": "74a5902ddaf478d372b6cf081dda27358be12dc02ee8e1f37594ee18898bbcc5",
+    "content/courses/computer_programming/units/en/polymorphic-dispatch.md": "869b08cbbecb80fbe7612376cfc9f6365e7fbe70f55bf485dfae48ef3cb95f49"
   },
   "materials_only_units": {
     "content/courses/computer_programming/units/inheritance.md": "2b0fa32ad105ebe7261ea0996fd4448232d9d3262718ee15fbc4bc193b1dc357",
-    "content/courses/computer_programming/units/en/inheritance.md": "73d63808f556fae296b704b386b54d88c0643528a759da2c446c6cce33bc9238",
-    "content/courses/computer_programming/units/object-contracts-interfaces.md": "70c8198b9031ce1c3ae253a82e1697c63f08e39bed1c044346bc1005d62f144d",
-    "content/courses/computer_programming/units/en/object-contracts-interfaces.md": "c0a56bbbe6e3bf86222e3d4802887aa23badec6d15609e02eafcffb64493e836"
+    "content/courses/computer_programming/units/en/inheritance.md": "73d63808f556fae296b704b386b54d88c0643528a759da2c446c6cce33bc9238"
   }
 }

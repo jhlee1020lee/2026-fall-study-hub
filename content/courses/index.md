@@ -26,7 +26,7 @@ cssclasses: ["unit-index", "plain-document"]
 
 - [[courses/computer_programming/index|컴퓨터프로그래밍]]
 
-  11개 단원을 순서대로 읽기.
+  13개 단원을 순서대로 읽기.
 
 - [[courses/system_programming/index|시스템프로그래밍]]
 

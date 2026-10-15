@@ -1,7 +1,7 @@
 ---
 title: "컴퓨터프로그래밍"
 description: "컴퓨터프로그래밍 단원 교과서와 강의 기록"
-cssclasses: ["unit-index"]
+cssclasses: ["unit-index", "plain-document"]
 ---
 
 아래 순서로 단원을 읽으세요. 각 단원에서 연결된 원자료·수업 기록과 연습문제를 확인할 수 있습니다.
@@ -46,9 +46,17 @@ cssclasses: ["unit-index"]
 
 10. **동적 Binding·Object 계약·Interface와 Abstract Class** · [[courses/computer_programming/units/object-contracts-interfaces|한국어]] · [[courses/computer_programming/units/en/object-contracts-interfaces|English]]
 
-   Binding, Object 계약, List·Comparable와 interface/abstract class 설계를 복습한다.
+   Object의 동등성·순서 계약과 interface·abstract class의 역할을 코드와 설계로 확인한다.
 
-11. **입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습** · [[courses/computer_programming/units/lab-applications|한국어]] · [[courses/computer_programming/units/en/lab-applications|English]]
+11. **메서드 시그니처와 오버로딩 설계** · [[courses/computer_programming/units/method-overloading|한국어]] · [[courses/computer_programming/units/en/method-overloading|English]]
+
+   Signature·overload 선택과 constructor 위임을 추적하고 generic의 재사용 동기를 구별한다.
+
+12. **오버라이딩·디스패치와 형변환** · [[courses/computer_programming/units/polymorphic-dispatch|한국어]] · [[courses/computer_programming/units/en/polymorphic-dispatch|English]]
+
+   Declared type에 따른 선택과 receiver의 override를 분리하여 field·operator·cast를 추적한다.
+
+13. **입력 검증·Board 판정·객체 상호작용과 게임 Platform 실습** · [[courses/computer_programming/units/lab-applications|한국어]] · [[courses/computer_programming/units/en/lab-applications|English]]
 
    입력 검증, board 판정, Player/Fight 계약과 Lab04 게임의 경계를 복습한다.
 
