@@ -1,5 +1,6 @@
 import test from "node:test"
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import type { Element, Root } from "hast"
 import { unified } from "unified"
 import { VFile } from "vfile"
@@ -18,7 +19,68 @@ import {
   normalizeTextbookQuestionLiterals,
   normalizeTextbookMultilineDisplays,
   normalizeTextbookHashLiterals,
+  normalizeSourceNoteScalaLiterals,
 } from "./unitSiblingLinks"
+
+const scalaInputParagraph = "입력은 None, Some(MyNil[Int]()), Some(MyCons[Int](5,MyCons[Int](8,MyNil[Int]())))이다. run의 offset이 step에 영향을 주는가? 함수가 임의의 A에 대해 정당한 이유와 필요한 종료 조건을 설명하고, step의 자리에 (x:A)=>x.name을 아무 제약 없이 넣을 수 있는지도 답하라."
+const scalaNoteHeader = "---\ncourse: principles_of_programming\nlang: ko\nsource_kind: lecture_note\nnote_layout: content_first_v1\nreader_layout: content_first\n---\n\n"
+
+test("reviewed Scala generic input stays literal code rather than an accidental Markdown link", () => {
+  const source = scalaNoteHeader + scalaInputParagraph + "\n"
+  const before = tableParserForScalaTest(source)
+  assert.equal(before.links.length, 2, "Fixture exposes one missing target and one empty generic link")
+  const rendered = normalizeSourceNoteScalaLiterals(source)
+  const after = tableParserForScalaTest(rendered)
+  assert.deepEqual(after.links, [])
+  assert.deepEqual(after.code, ["None", "Some(MyNil[Int]())", "Some(MyCons[Int](5,MyCons[Int](8,MyNil[Int]())))"])
+  assert.equal(after.text, before.text, "Literal source syntax must be fully preserved")
+  assert.equal(source, scalaNoteHeader + scalaInputParagraph + "\n")
+  assert.equal(normalizeSourceNoteScalaLiterals(rendered), rendered)
+})
+
+function tableParserForScalaTest(source: string) {
+  const tree = unified().use(remarkParse).parse(source)
+  const links: string[] = [], code: string[] = [], linkExcerpts: string[] = []
+  visit(tree, "link", (node) => {
+    links.push(node.url)
+    linkExcerpts.push(source.slice(Math.max(0, (node.position?.start.offset ?? 0) - 80), (node.position?.end.offset ?? 0) + 80))
+  })
+  visit(tree, "inlineCode", (node) => { code.push(node.value) })
+  // Compare source characters, not the already-lost link destination text.
+  return { links, code, linkExcerpts, text: source.replaceAll("`", "") }
+}
+
+test("Scala literal repair preserves all other documents, changed paragraphs, links and fenced examples", () => {
+  const source = scalaNoteHeader + scalaInputParagraph + "\n"
+  for (const other of [
+    source.replace("lang: ko", "lang: en"),
+    source.replace("source_kind: lecture_note", "source_kind: corrected_transcript"),
+    source.replace("content_first_v1", "textbook_unit_v1"),
+    source.replace("reader_layout: content_first", "reader_layout: legacy"),
+    source.replace("Some(MyCons[Int](5,", "Some(MyCons[Int](6,"),
+    scalaInputParagraph,
+    scalaNoteHeader + "```text\n" + scalaInputParagraph + "\n```\n",
+    scalaNoteHeader + "[자료](https://example.com/Int)\n",
+  ]) assert.equal(normalizeSourceNoteScalaLiterals(other), other)
+})
+
+test("complete reviewed source note preserves all nine bare generic expressions without false links", () => {
+  const source = readFileSync(new URL("../../../content/courses/principles_of_programming/lectures/undated-structural-subtyping-6p3wjj22vvvjv0ji.md", import.meta.url), "utf8")
+  const rendered = normalizeSourceNoteScalaLiterals(source)
+  const before = tableParserForScalaTest(source)
+  const after = tableParserForScalaTest(rendered)
+  assert.ok(before.links.some((href) => href.startsWith("o:Option")))
+  assert.ok(after.links.length >= 20, "Actual source/page links remain")
+  assert.ok(after.links.every((href) => href.startsWith("https://")), JSON.stringify(after.links.map((href, i) => ({href, source: after.linkExcerpts[i]})).filter((row) => !row.href.startsWith("https://"))))
+  assert.equal(after.text, before.text)
+  for (const expression of [
+    "def id[A](x:A):A=x", "applyn[A](f:A=>A,n:Int,x:A)", "MyNil[A]()",
+    "MyCons[A](hd:A,tl:MyList[A])", "headTwice[A](o:Option[MyList[A]],step:A=>A):Option[A]",
+    "None", "Some(MyNil[Int]())", "Some(MyCons[Int](5,MyCons[Int](8,MyNil[Int]())))",
+    "run(Some(MyNil[Int]()))",
+  ]) assert.ok(after.code.includes(expression), expression)
+  assert.equal(normalizeSourceNoteScalaLiterals(rendered), rendered)
+})
 
 async function renderedKoreanTerm(
   source: string,

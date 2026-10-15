@@ -483,6 +483,55 @@ export function normalizeTextbookHashLiterals(src: string): string {
   return header[0] + renderedBody
 }
 
+/** Rendering-only: exact reviewed Scala signature/input paragraphs otherwise become Markdown links. */
+export function normalizeSourceNoteScalaLiterals(src: string): string {
+  const header = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(src)
+  if (!header) return src
+  let metadata: Record<string, unknown>
+  try {
+    metadata = parseYaml(header[1])
+  } catch {
+    return src
+  }
+  if (
+    !metadata ||
+    metadata.course !== "principles_of_programming" ||
+    metadata.lang !== "ko" ||
+    metadata.source_kind !== "lecture_note" ||
+    metadata.note_layout !== "content_first_v1" ||
+    metadata.reader_layout !== "content_first"
+  ) return src
+  const body = src.slice(header[0].length)
+  const paragraphLiterals: Record<string, readonly string[]> = {
+    "8588f659c120ad53e3457e805096e419188bdc985bf2a4d3d393f2229c78dde7": ["def id[A](x:A):A=x"],
+    "56efc8b61aa6aef28b72813f75eb5949c88f89c9c169c01c4e79d7b23866fa5a": ["applyn[A](f:A=>A,n:Int,x:A)"],
+    "a475bf20c6ae5be122bd74e88e01bcbbf05167b69d5fb4729541d8d938cc3dfc": ["MyNil[A]()", "MyCons[A](hd:A,tl:MyList[A])"],
+    "634abd1705cadd59740fabf915ef6ef6ca5aea2b9e5acc42d753d1f677bc9b1c": ["headTwice[A](o:Option[MyList[A]],step:A=>A):Option[A]"],
+    "e93e7e1d5fb9547573ad48c89a504002a9aed9f5896454a9ea2ac5417c98c902": ["None", "Some(MyNil[Int]())", "Some(MyCons[Int](5,MyCons[Int](8,MyNil[Int]())))"],
+    "c34eea0a94351ec23ac08fbe88b29b263ff9a85e9deb5691ed8f7b4864dc98af": ["run(Some(MyNil[Int]()))"],
+  }
+  const edits: { start: number; end: number; value: string }[] = []
+  visit(tableParser.parse(body), "paragraph", (paragraph) => {
+    const start = paragraph.position?.start.offset
+    const end = paragraph.position?.end.offset
+    if (start === undefined || end === undefined) return
+    const original = body.slice(start, end)
+    const digest = createHash("sha256").update(original.replaceAll("\r\n", "\n")).digest("hex")
+    const literals = paragraphLiterals[digest]
+    if (!literals) return
+    let rendered = original
+    for (const literal of literals) {
+      if (rendered.split(literal).length !== 2) return
+      rendered = rendered.replace(literal, "`" + literal + "`")
+    }
+    edits.push({ start, end, value: rendered })
+  })
+  let rendered = body
+  for (const edit of edits.reverse())
+    rendered = rendered.slice(0, edit.start) + edit.value + rendered.slice(edit.end)
+  return header[0] + rendered
+}
+
 /**
  * Resolve an explicitly relative unit link before CrawlLinks' shortest-name
  * lookup. KO and EN deliberately share basenames; a global shortest-name lookup
@@ -493,7 +542,7 @@ export const UnitSiblingLinks: QuartzTransformerPlugin = () => ({
   textTransform(_ctx, src) {
     return normalizeTextbookHashLiterals(
       normalizeTextbookMultilineDisplays(
-        normalizeTextbookQuestionLiterals(normalizeTextbookTableCodePipes(src)),
+        normalizeTextbookQuestionLiterals(normalizeTextbookTableCodePipes(normalizeSourceNoteScalaLiterals(src))),
       ),
     )
   },

@@ -50,6 +50,9 @@ cssclasses: [plain-document]
 - [[courses/principles_of_programming/transcripts/2026-09-17|2026-09-17 보정 STT]]
 - [[courses/principles_of_programming/transcripts/undated-classes-inheritance-jk9b2ob0objzgyvy|Classes and Inheritance · 보정 STT · 날짜 미확인]]
 - [[courses/principles_of_programming/transcripts/undated-structural-subtyping-6p3wjj22vvvjv0ji|Structural Types and Subtyping · 보정 STT · 날짜 미확인]]
+- [[courses/principles_of_programming/lectures/undated-structural-subtyping-6p3wjj22vvvjv0ji|Data Type 선수 개념과 Structural Subtyping · 강의 정리 · 날짜 미확인]]
+- [[courses/principles_of_programming/lectures/undated-classes-inheritance-jk9b2ob0objzgyvy|Class·재귀 자료·Inheritance와 Overriding · 강의 정리 · 날짜 미확인]]
+
 
 ## Aging and Family
 
@@ -131,10 +134,11 @@ cssclasses: [plain-document]
 - [[courses/system_programming/transcripts/2026-09-23|2026-09-23 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-28|2026-09-28 보정 STT]]
 - [[courses/system_programming/transcripts/undated-dynamic-memory-allocation-t43j6ewlb6jna6ng|Dynamic Memory Allocation · 보정 STT · 날짜 미확인]]
+- [[courses/system_programming/transcripts/undated-virtual-memory-allocation-kosmjetahw6cx93w|Virtual Memory and Allocation · 보정 STT · 날짜 미확인]]
 
 
 ## 컴퓨팅 살펴보기
 
 - [[courses/exploring_computing/transcripts/undated-graph-structure-parameterized-algorithms-peyivfngvqdskjzr|Graph Structure and Parameterized Algorithms · 보정 STT · 날짜 미확인]]
-- [[courses/exploring_computing/lectures/undated-graph-structure-parameterized-algorithms-peyivfngvqdskjzr|Graph 모델·경로 연결과 이론 연구 · 강의 정리 · 날짜 미확인 · 강의노트 · 날짜 미확인]]
+- [[courses/exploring_computing/lectures/undated-graph-structure-parameterized-algorithms-peyivfngvqdskjzr|Graph 모델·경로 연결과 이론 연구 · 강의 정리 · 날짜 미확인]]
 

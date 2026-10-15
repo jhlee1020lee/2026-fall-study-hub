@@ -34,6 +34,7 @@ archive_layout: "source_lecture_archive_v2"
 - [[courses/system_programming/transcripts/2026-09-23|2026-09-23 보정 STT]]
 - [[courses/system_programming/transcripts/2026-09-28|2026-09-28 보정 STT]]
 - [[courses/system_programming/transcripts/undated-dynamic-memory-allocation-t43j6ewlb6jna6ng|Dynamic Memory Allocation · 보정 STT · 날짜 미확인]]
+- [[courses/system_programming/transcripts/undated-virtual-memory-allocation-kosmjetahw6cx93w|Virtual Memory and Allocation · 보정 STT · 날짜 미확인]]
 
 ## 원자료
 

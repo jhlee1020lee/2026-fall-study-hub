@@ -19,6 +19,8 @@ archive_layout: "source_lecture_archive_v2"
 - 2026-09-10 · 자료 기반 복습 · [[courses/principles_of_programming/lectures/2026-09-10-materials-blocks|한국어]]
 - 2026-09-15 · [[courses/principles_of_programming/lectures/2026-09-15-lecture-04|한국어]]
 - 2026-09-17 · [[courses/principles_of_programming/lectures/2026-09-17-lecture-05|한국어]]
+- 날짜 미확인 · [[courses/principles_of_programming/lectures/undated-classes-inheritance-jk9b2ob0objzgyvy|한국어]]
+- 날짜 미확인 · [[courses/principles_of_programming/lectures/undated-structural-subtyping-6p3wjj22vvvjv0ji|한국어]]
 
 ## 보정 STT
 
