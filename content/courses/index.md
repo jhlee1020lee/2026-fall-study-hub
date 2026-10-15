@@ -14,7 +14,7 @@ cssclasses: ["unit-index", "plain-document"]
 
 - [[courses/principles_of_programming/index|프로그래밍의 원리]]
 
-  7개 단원을 순서대로 읽기.
+  12개 단원을 순서대로 읽기.
 
 - [[courses/aging_and_family/index|고령화와 가족]]
 

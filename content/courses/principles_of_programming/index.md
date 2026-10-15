@@ -1,7 +1,7 @@
 ---
 title: "프로그래밍의 원리"
 description: "프로그래밍의 원리 단원 교과서와 강의 기록"
-cssclasses: ["unit-index"]
+cssclasses: ["unit-index", "plain-document"]
 ---
 
 아래 순서로 단원을 읽으세요. 각 단원에서 연결된 원자료·수업 기록과 연습문제를 확인할 수 있습니다.
@@ -35,6 +35,26 @@ cssclasses: ["unit-index"]
 7. **Closures, 환경 보존과 Currying** · [[courses/principles_of_programming/units/closures-currying|한국어]]
 
    Closure의 환경 보존과 by-name을 이해하고 currying·부분 적용의 호출 단계를 추적합니다.
+
+8. **자료로 확인하는 선수 개념: 자료형의 생성·사용과 Polymorphism** · [[courses/principles_of_programming/units/datatype-prerequisites|한국어]]
+
+   자료형의 생성·사용, 정의 환경, 재귀 ADT와 타입 매개변수를 복습한다.
+
+9. **Structural Subtyping과 함수의 대체 가능성** · [[courses/principles_of_programming/units/structural-subtyping|한국어]]
+
+   읽기 전용 레코드·튜플·함수의 부분형 관계와 중첩 함수의 대체 방향을 확인한다.
+
+10. **Class와 생성 통제: 명목 타입·불변조건·계약** · [[courses/principles_of_programming/units/class-construction|한국어]]
+
+   생성 함수와 클래스의 소속 기준, 범위 검사, 불변조건과 행동 계약을 비교한다.
+
+11. **재귀 클래스, Option과 Companion Object** · [[courses/principles_of_programming/units/recursive-classes|한국어]]
+
+   Option으로 빈 경우를 표현하고 리스트·트리 생성식과 재귀 계산을 추적한다.
+
+12. **Inheritance·Overriding과 간접 동작 변화** · [[courses/principles_of_programming/units/inheritance-overriding|한국어]]
+
+   부모 생성자 결합과 동적 메서드 선택을 계산하고 재정의의 계약을 점검한다.
 
 ## 원자료와 강의 기록
 

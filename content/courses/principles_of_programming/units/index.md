@@ -1,7 +1,7 @@
 ---
 title: "프로그래밍의 원리 단원 목차"
 description: "프로그래밍의 원리 교과서 읽기 순서"
-cssclasses: ["unit-index"]
+cssclasses: ["unit-index", "plain-document"]
 ---
 
 개념 설명 → 예제 → 강의에서 덧붙인 설명 → 확인·연습문제 순서로 읽으세요. 출처의 날짜·페이지·시각은 각 단원에서 확인할 수 있습니다.
@@ -34,11 +34,32 @@ cssclasses: ["unit-index"]
 
    Closure의 환경 보존과 by-name을 이해하고 currying·부분 적용의 호출 단계를 추적합니다.
 
+8. **자료로 확인하는 선수 개념: 자료형의 생성·사용과 Polymorphism** · [[courses/principles_of_programming/units/datatype-prerequisites|한국어]]
+
+   자료형의 생성·사용, 정의 환경, 재귀 ADT와 타입 매개변수를 복습한다.
+
+9. **Structural Subtyping과 함수의 대체 가능성** · [[courses/principles_of_programming/units/structural-subtyping|한국어]]
+
+   읽기 전용 레코드·튜플·함수의 부분형 관계와 중첩 함수의 대체 방향을 확인한다.
+
+10. **Class와 생성 통제: 명목 타입·불변조건·계약** · [[courses/principles_of_programming/units/class-construction|한국어]]
+
+   생성 함수와 클래스의 소속 기준, 범위 검사, 불변조건과 행동 계약을 비교한다.
+
+11. **재귀 클래스, Option과 Companion Object** · [[courses/principles_of_programming/units/recursive-classes|한국어]]
+
+   Option으로 빈 경우를 표현하고 리스트·트리 생성식과 재귀 계산을 추적한다.
+
+12. **Inheritance·Overriding과 간접 동작 변화** · [[courses/principles_of_programming/units/inheritance-overriding|한국어]]
+
+   부모 생성자 결합과 동적 메서드 선택을 계산하고 재정의의 계약을 점검한다.
+
 ## 자료별로 단원 찾기
 
 원자료 파일에 연결된 단원입니다. 실제로 다룬 페이지·슬라이드와 자료 버전은 각 단원의 출처에서 확인하세요.
 
-- **lecture-part1.pdf** — [[courses/principles_of_programming/units/principles-specification|프로그래밍 원리, Specification과 Abstraction]] · [[courses/principles_of_programming/units/expressions-functions|Expression·Value·Function과 Evaluation]] · [[courses/principles_of_programming/units/evaluation-strategies|Call-by-value·Call-by-name과 Lazy Evaluation]] · [[courses/principles_of_programming/units/blocks-scope|Blocks, Scope와 Environment]] · [[courses/principles_of_programming/units/recursion|Newton's Method, Recursion과 Tail Call]] · [[courses/principles_of_programming/units/higher-order-functions|Higher-Order Functions와 계산 구조의 재사용]] · [[courses/principles_of_programming/units/closures-currying|Closures, 환경 보존과 Currying]]
+- **lecture-part1.pdf** — [[courses/principles_of_programming/units/principles-specification|프로그래밍 원리, Specification과 Abstraction]] · [[courses/principles_of_programming/units/expressions-functions|Expression·Value·Function과 Evaluation]] · [[courses/principles_of_programming/units/evaluation-strategies|Call-by-value·Call-by-name과 Lazy Evaluation]] · [[courses/principles_of_programming/units/blocks-scope|Blocks, Scope와 Environment]] · [[courses/principles_of_programming/units/recursion|Newton's Method, Recursion과 Tail Call]] · [[courses/principles_of_programming/units/higher-order-functions|Higher-Order Functions와 계산 구조의 재사용]] · [[courses/principles_of_programming/units/closures-currying|Closures, 환경 보존과 Currying]] · [[courses/principles_of_programming/units/datatype-prerequisites|자료로 확인하는 선수 개념: 자료형의 생성·사용과 Polymorphism]] · [[courses/principles_of_programming/units/structural-subtyping|Structural Subtyping과 함수의 대체 가능성]] · [[courses/principles_of_programming/units/class-construction|Class와 생성 통제: 명목 타입·불변조건·계약]] · [[courses/principles_of_programming/units/recursive-classes|재귀 클래스, Option과 Companion Object]] · [[courses/principles_of_programming/units/inheritance-overriding|Inheritance·Overriding과 간접 동작 변화]]
+- **lecture-part2.pdf** — [[courses/principles_of_programming/units/structural-subtyping|Structural Subtyping과 함수의 대체 가능성]] · [[courses/principles_of_programming/units/class-construction|Class와 생성 통제: 명목 타입·불변조건·계약]] · [[courses/principles_of_programming/units/recursive-classes|재귀 클래스, Option과 Companion Object]] · [[courses/principles_of_programming/units/inheritance-overriding|Inheritance·Overriding과 간접 동작 변화]]
 
 ## 원자료와 강의 기록
 

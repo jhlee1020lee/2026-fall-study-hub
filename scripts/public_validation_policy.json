@@ -165,7 +165,12 @@
     "content/courses/exploring_computing/units/structural-intuition-and-counterexamples.md": "921a6db37743219df89a4afa6dc54917ddb436868fe98e4af41c164f3496cbe1",
     "content/courses/exploring_computing/units/theory-models-and-applications.md": "746b4ec562a30cfea14974826425dabd6931aac0d038bb1142b3119c26b435d3",
     "content/courses/exploring_computing/units/research-understanding-and-utility.md": "9d1ebcf9454f3c9e516487ea38e9136216ee924e77986809e6c19ccc2688a10d",
-    "content/courses/exploring_computing/units/ai-hypotheses-and-authorship.md": "d219c9fe581ed1a9d9946b5e8c9448eea474b14f39ad6bce0b134a84aecf7a2f"
+    "content/courses/exploring_computing/units/ai-hypotheses-and-authorship.md": "d219c9fe581ed1a9d9946b5e8c9448eea474b14f39ad6bce0b134a84aecf7a2f",
+    "content/courses/principles_of_programming/units/datatype-prerequisites.md": "dad74f650981ae30f4c81581636b950758e96997e4042c696ec8e3c85eb761b9",
+    "content/courses/principles_of_programming/units/structural-subtyping.md": "5411f85d081664dcf7ea9e674f3f1ff44b95c5e04c6b0ec29a942428fe768b74",
+    "content/courses/principles_of_programming/units/class-construction.md": "02ce2b5b636a2bb0dbdea509ea9a31a44eb0f8eabb3ab647693f162f53083ff7",
+    "content/courses/principles_of_programming/units/recursive-classes.md": "7ab861dce62fcf3faf0e9c3974c02a43788d1236090083eb769cb140c82a4d32",
+    "content/courses/principles_of_programming/units/inheritance-overriding.md": "a7f6de236cb9bb2b35ddd778b34c22a9dc95a58c79aa9a1c14cb13ce5d242920"
   },
   "materials_only_units": {
     "content/courses/computer_programming/units/inheritance.md": "2b0fa32ad105ebe7261ea0996fd4448232d9d3262718ee15fbc4bc193b1dc357",
