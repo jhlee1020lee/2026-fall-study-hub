@@ -5,10 +5,70 @@ import { unified } from "unified"
 import remarkParse from "remark-parse"
 import { GitHubFlavoredMarkdown } from "@quartz-community/github-flavored-markdown"
 import { visit } from "unist-util-visit"
+import type { Root as MarkdownRoot, PhrasingContent } from "mdast"
+import type { VFile } from "vfile"
 import type { QuartzTransformerPlugin } from "../types"
 
 const unitSlug = /^courses\/[a-z][a-z0-9_]*\/units\/(?:en\/)?[a-z0-9]+(?:-[a-z0-9]+)*$/
 const siblingMarkdown = /^(?:\.\/)?([a-z0-9]+(?:-[a-z0-9]+)*)\.md(#[^\s?]*)?$/
+
+/** Render parenthesized term emphasis before a Korean particle without editing source bytes. */
+export function normalizeContentFirstKoreanEmphasis(tree: MarkdownRoot, file: VFile): void {
+  const original = file.toString()
+  let metadata: Record<string, unknown> | undefined = file.data.frontmatter
+  // Built-in Markdown transforms run before the configured frontmatter plugin.
+  // Read the existing header without changing file bytes or assigning metadata.
+  if (!metadata) {
+    const header = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(original)
+    if (!header) return
+    try {
+      const parsed: unknown = parseYaml(header[1])
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return
+      metadata = parsed as Record<string, unknown>
+    } catch {
+      return
+    }
+  }
+  const source = file.data.slug
+  if (
+    metadata?.note_layout !== "textbook_unit_v1" ||
+    metadata.reader_layout !== "content_first" ||
+    metadata.source_kind !== "unit_chapter" ||
+    metadata.lang !== "ko" ||
+    typeof source !== "string" ||
+    !unitSlug.test(source) ||
+    source.endsWith("/index") ||
+    source !== `courses/${metadata.course}/units/${metadata.unit_id}`
+  )
+    return
+
+  visit(tree, "paragraph", (paragraph) => {
+    if (paragraph.children.some((child) => child.type === "html")) return
+    paragraph.children = paragraph.children.flatMap((child): PhrasingContent[] => {
+      if (child.type !== "text") return [child]
+      const start = child.position?.start.offset
+      const end = child.position?.end.offset
+      // Escaped Markdown/entity text is intentionally literal. Code nodes and
+      // paragraphs containing inline HTML never enter this repair.
+      if (start === undefined || end === undefined || original.slice(start, end) !== child.value)
+        return [child]
+
+      const matches = [...child.value.matchAll(/\*\*([^*\n<>]+\))\*\*(?=[가-힣])/g)]
+      if (!matches.length) return [child]
+      const result: PhrasingContent[] = []
+      let cursor = 0
+      for (const match of matches) {
+        if (match.index > cursor)
+          result.push({ type: "text", value: child.value.slice(cursor, match.index) })
+        result.push({ type: "strong", children: [{ type: "text", value: match[1] }] })
+        cursor = match.index + match[0].length
+      }
+      if (cursor < child.value.length)
+        result.push({ type: "text", value: child.value.slice(cursor) })
+      return result
+    })
+  })
+}
 
 /** Keep an existing same-course source page inside the site's link pipeline. */
 function sourcePageLink(href: string, baseUrl: string | undefined, course: string): string | null {
@@ -373,8 +433,10 @@ export function normalizeTextbookHashLiterals(src: string): string {
     typeof metadata.unit_id !== "string"
   )
     return src
-  const counterScope = metadata.course === "computer_programming" &&
-    metadata.lang === "ko" && metadata.unit_id === "encapsulation"
+  const counterScope =
+    metadata.course === "computer_programming" &&
+    metadata.lang === "ko" &&
+    metadata.unit_id === "encapsulation"
   const paragraphs = counterScope
     ? new Set(["4e938c941fef2ec7cf63240badf389e4badcbc86164bdb8f90855684f0774b7c"])
     : metadata.course === "system_programming"
@@ -384,7 +446,11 @@ export function normalizeTextbookHashLiterals(src: string): string {
 
   const body = src.slice(header[0].length)
   const recall = metadata.lang === "ko" ? "## 확인·연습문제" : "## Recall and Practice"
-  const question = counterScope ? /^#### 확인 Q07 · / : metadata.lang === "ko" ? /^#### 확인 Q04 · / : /^#### Recall Q04 · /
+  const question = counterScope
+    ? /^#### 확인 Q07 · /
+    : metadata.lang === "ko"
+      ? /^#### 확인 Q04 · /
+      : /^#### Recall Q04 · /
   const edits: { start: number; end: number; value: string }[] = []
   let inRecall = false
   let inQuestion = false
@@ -404,7 +470,10 @@ export function normalizeTextbookHashLiterals(src: string): string {
     edits.push({
       start,
       end,
-      value: original.replace(counterScope ? /#[12]/g : /#(?:depth|t)/g, (literal) => "\\" + literal),
+      value: original.replace(
+        counterScope ? /#[12]/g : /#(?:depth|t)/g,
+        (literal) => "\\" + literal,
+      ),
     })
   }
   let renderedBody = body
@@ -427,6 +496,9 @@ export const UnitSiblingLinks: QuartzTransformerPlugin = () => ({
         normalizeTextbookQuestionLiterals(normalizeTextbookTableCodePipes(src)),
       ),
     )
+  },
+  markdownPlugins() {
+    return [() => (tree, file) => normalizeContentFirstKoreanEmphasis(tree, file)]
   },
   htmlPlugins(ctx) {
     return [

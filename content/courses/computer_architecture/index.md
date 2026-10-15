@@ -48,13 +48,13 @@ cssclasses: ["unit-index"]
 
    50 ps microcycle의 FSM·MasterEn·성능 계산을 연결한다.
 
-11. **Microcode controller와 하드웨어 자원 공유** · [[courses/computer_architecture/units/microcode-resource-reuse|한국어]] · [[courses/computer_architecture/units/en/microcode-resource-reuse|English]]
+11. **Microcode·자원 공유·Pipelining과 Hazard** · [[courses/computer_architecture/units/microcode-resource-reuse|한국어]] · [[courses/computer_architecture/units/en/microcode-resource-reuse|English]]
 
-   μPC·dispatch·공유 ALU·IR의 역할과 설계 절충을 연결한다.
+   Microcode의 자원 공유부터 pipeline의 시간 계산, data·control hazard와 분기 정책까지 확인하는 문제와 해설입니다.
 
 12. **Docker 실습 환경과 CPU 과제 사양 읽기** · [[courses/computer_architecture/units/lab-environment-specification|한국어]] · [[courses/computer_architecture/units/en/lab-environment-specification|English]]
 
-   Docker 준비와 Lab1 사양·worksheet를 경계에 맞게 읽는다.
+   Docker 실습 환경의 확인 범위와 CPU 과제의 명령·port·bit width 사양을 구별하는 문제와 해설입니다.
 
 ## 원자료와 강의 기록
 

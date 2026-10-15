@@ -20,6 +20,129 @@ import {
   normalizeTextbookHashLiterals,
 } from "./unitSiblingLinks"
 
+async function renderedKoreanTerm(
+  source: string,
+  overrides: Record<string, unknown> = {},
+  slug = "courses/computer_architecture/units/microcode-resource-reuse",
+  populateMetadata = true,
+) {
+  const file = new VFile(source)
+  file.data.slug = slug as FullSlug
+  if (populateMetadata)
+    file.data.frontmatter = {
+      title: "Unit",
+      tags: [],
+      note_layout: "textbook_unit_v1",
+      reader_layout: "content_first",
+      source_kind: "unit_chapter",
+      course: "computer_architecture",
+      unit_id: "microcode-resource-reuse",
+      lang: "ko",
+      ...overrides,
+    }
+  const processor = unified()
+    .use(remarkParse)
+    .use(GitHubFlavoredMarkdown({ enableSmartyPants: false }).markdownPlugins!({} as never)!)
+    .use(UnitSiblingLinks().markdownPlugins!({} as BuildCtx)!)
+    .use(remarkRehype, { allowDangerousHtml: true })
+  const tree = await processor.run(processor.parse(file), file)
+  const strong: string[] = []
+  const code: string[] = []
+  const paragraphs: string[] = []
+  function text(node: any): string {
+    return node.type === "text" ? node.value : (node.children ?? []).map(text).join("")
+  }
+  visit(tree, "element", (node) => {
+    if (node.tagName === "strong") strong.push(text(node))
+    if (node.tagName === "code") code.push(text(node))
+    if (node.tagName === "p") paragraphs.push(text(node))
+  })
+  assert.equal(file.toString(), source, "Reviewed Markdown bytes must remain unchanged")
+  return { strong, code, paragraphs }
+}
+
+test("actual GFM renders parenthesized English/Korean terms before particles without literal markers", async () => {
+  const source =
+    "**Microprogram(마이크로프로그램)**은 control이고 **μPC(microprogram counter)**는 주소다.\n"
+  const plain = await renderedKoreanTerm(source, { reader_layout: "legacy" })
+  assert.deepEqual(plain.strong, [], "The fixture must expose the original GFM delimiter issue")
+  assert.ok(plain.paragraphs[0].includes("**"))
+  assert.deepEqual(await renderedKoreanTerm(source), {
+    strong: ["Microprogram(마이크로프로그램)", "μPC(microprogram counter)"],
+    code: [],
+    paragraphs: [
+      "Microprogram(마이크로프로그램)은 control이고 μPC(microprogram counter)는 주소다.",
+    ],
+  })
+})
+
+test("built-in transform reads the exact YAML header before frontmatter metadata exists", async () => {
+  const header = `---
+note_layout: textbook_unit_v1
+reader_layout: content_first
+source_kind: unit_chapter
+course: computer_architecture
+unit_id: microcode-resource-reuse
+lang: ko
+---
+
+`
+  const source = header + "**Microprogram(마이크로프로그램)**은 control이다.\n"
+  assert.deepEqual((await renderedKoreanTerm(source, {}, undefined, false)).strong, [
+    "Microprogram(마이크로프로그램)",
+  ])
+  for (const invalid of [
+    source.replace("lang: ko", "lang: en"),
+    source.replace("reader_layout: content_first", "reader_layout: legacy"),
+    source.replace("unit_id: microcode-resource-reuse", "unit_id: other"),
+    "**Microprogram(마이크로프로그램)**은 control이다.\n",
+    "---\n[invalid: yaml\n---\n\n**IR(register)**는 값이다.\n",
+  ]) {
+    assert.deepEqual((await renderedKoreanTerm(invalid, {}, undefined, false)).strong, [])
+  }
+})
+
+test("term emphasis preserves escaped/code/HTML examples and legacy, source, language and path boundaries", async () => {
+  const source =
+    "`**IR(register)**는`\n\n```text\n**IR(register)**는\n```\n\n\\*\\*IR(register)\\*\\*는\n\n<code>**IR(register)**는</code>\n"
+  const result = await renderedKoreanTerm(source)
+  assert.deepEqual(result.strong, [])
+  assert.deepEqual(result.code, ["**IR(register)**는", "**IR(register)**는\n"])
+  assert.ok(result.paragraphs.some((value) => value.includes("**IR(register)**는")))
+  for (const override of [
+    { reader_layout: undefined },
+    { source_kind: "corrected_transcript" },
+    { note_layout: "content_first_v1" },
+    { lang: "en" },
+    { unit_id: "another-unit" },
+  ]) {
+    assert.deepEqual(
+      (await renderedKoreanTerm("**IR(register)**는 값이다.\n", override)).strong,
+      [],
+    )
+  }
+  assert.deepEqual(
+    (
+      await renderedKoreanTerm(
+        "**IR(register)**는 값이다.\n",
+        {},
+        "courses/another/units/microcode-resource-reuse",
+      )
+    ).strong,
+    [],
+  )
+  assert.deepEqual(
+    (
+      await renderedKoreanTerm(
+        "**IR(register)**는 값이다.\n",
+        { unit_id: "index" },
+        "courses/computer_architecture/units/index",
+      )
+    ).strong,
+    [],
+  )
+})
+
 const base = "courses/computer_architecture/units/"
 const graph: Record<string, string[]> = {
   "architecture-contract": ["performance-model"],
@@ -795,20 +918,39 @@ test("the same hash paragraph inside code, raw HTML or a nested example stays un
   }
 })
 
-const counterParagraph = "첫 읽기는 값 0/history 1, 두 설정은 change #1과 #2, 둘째 읽기는 값 53/history 2다. Getter도 `readHistory`를 바꾸므로 부작용이 있다. Setter는 값 비교 없이 호출마다 증가하므로 같은 값 두 번도 두 번 센다. 이는 실제 값 변경 횟수와 다르다. P.23에서 쓰는 `getReadHistory()`가 p.22에 정의되어 있지 않으므로 의도된 trace이지 완성 코드의 실행 입증은 아니다. 녹음도 긴 trace는 생략했다."
+const counterParagraph =
+  "첫 읽기는 값 0/history 1, 두 설정은 change #1과 #2, 둘째 읽기는 값 53/history 2다. Getter도 `readHistory`를 바꾸므로 부작용이 있다. Setter는 값 비교 없이 호출마다 증가하므로 같은 값 두 번도 두 번 센다. 이는 실제 값 변경 횟수와 다르다. P.23에서 쓰는 `getReadHistory()`가 p.22에 정의되어 있지 않으므로 의도된 trace이지 완성 코드의 실행 입증은 아니다. 녹음도 긴 trace는 생략했다."
 
 test("reviewed CP counter paragraph preserves numeric hashes through actual OFM", async () => {
-  const source = questionSource("ko", "encapsulation", "Q07", `<details><summary>Solution</summary>\n\n${counterParagraph}\n\n</details>`).replace("system_programming", "computer_programming")
+  const source = questionSource(
+    "ko",
+    "encapsulation",
+    "Q07",
+    `<details><summary>Solution</summary>\n\n${counterParagraph}\n\n</details>`,
+  ).replace("system_programming", "computer_programming")
   assert.ok((await renderedHashParagraph(source)).tagLinks.length > 0)
   const rendered = UnitSiblingLinks().textTransform!({} as BuildCtx, source)
-  assert.equal(rendered, source.replace(/#[12]/g, x => "\\" + x))
-  assert.deepEqual(await renderedHashParagraph(rendered), { paragraphs: [counterParagraph.replace(/`([^`]+)`/g, "$1")], tagLinks: [], tags: [] })
+  assert.equal(
+    rendered,
+    source.replace(/#[12]/g, (x) => "\\" + x),
+  )
+  assert.deepEqual(await renderedHashParagraph(rendered), {
+    paragraphs: [counterParagraph.replace(/`([^`]+)`/g, "$1")],
+    tagLinks: [],
+    tags: [],
+  })
   assert.equal(normalizeTextbookHashLiterals(rendered), rendered)
-  assert.equal(normalizeTextbookHashLiterals(source.replaceAll("\n", "\r\n")), rendered.replaceAll("\n", "\r\n"))
+  assert.equal(
+    normalizeTextbookHashLiterals(source.replaceAll("\n", "\r\n")),
+    rendered.replaceAll("\n", "\r\n"),
+  )
 })
 
 test("CP counter normalization requires exact course, language, unit, Q07 and paragraph", () => {
-  const source = questionSource("ko", "encapsulation", "Q07", counterParagraph).replace("system_programming", "computer_programming")
+  const source = questionSource("ko", "encapsulation", "Q07", counterParagraph).replace(
+    "system_programming",
+    "computer_programming",
+  )
   for (const other of [
     source.replace("computer_programming", "system_programming"),
     source.replace("encapsulation", "packages"),
@@ -819,5 +961,6 @@ test("CP counter normalization requires exact course, language, unit, Q07 and pa
     source.replace(counterParagraph, "This is an intentional #1tag."),
     source.replace(counterParagraph, "```text\n" + counterParagraph + "\n```"),
     source.replace(counterParagraph, "> " + counterParagraph),
-  ]) assert.equal(normalizeTextbookHashLiterals(other), other)
+  ])
+    assert.equal(normalizeTextbookHashLiterals(other), other)
 })

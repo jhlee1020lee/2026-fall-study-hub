@@ -1,218 +1,300 @@
 ---
 title: "Docker Lab Environment and CPU Assignment Specifications"
-description: "Interpret Docker preparation and Lab1 specifications without filling missing implementation details."
+description: "Questions and worked answers distinguish environment checks from CPU assignment scope, port roles, and bit-width specifications."
 course: "computer_architecture"
 unit_id: "lab-environment-specification"
 lang: "en"
 note_layout: "textbook_unit_v1"
+reader_layout: "content_first"
 source_kind: "unit_chapter"
 review_status: "approved"
 draft: false
-cssclasses: ["unit-textbook"]
-source_assets: ["Docker Install.pdf", "Lab 0 1.pdf"]
-private_source_assets: []
+cssclasses: ["unit-textbook", "plain-document"]
+source_assets: ["Docker Install.pdf", "Lab 0 1.pdf", "lab2-slides.pdf"]
+private_source_assets: ["lab2-slides.pdf"]
 source_lectures: ["courses/computer_architecture/lectures/en/2026-09-29-lecture-05"]
 ---
 
-Read environment preparation, instruction implementation, and submission requirements separately. Identify the setup stages and the information the worksheet asks you to express.
+## Docker containers and the lab project
 
-## Docker containers and the lab-environment boundary
+CPU design work first requires distinguishing the files being edited from the environment in which the tools run. A **Docker container** provides the lab execution environment. The **dinocpu project** is the collection of design files used in that environment. **VSCode Dev Containers** helps connect the editor to the container. Opening a folder, preparing and connecting to a container, and implementing the CPU are separate steps.
 
-Preparing the lab environment differs from implementing CPU instructions. Lab0 prepares tools and the project environment; Lab1 implements instruction behavior according to a specification. The September 29 briefing says all labs use Docker containers and recommends VSCode with the Dev Containers extension. A CLI route is also available for users familiar with Docker, with details referred to `assignment-0.md`. [[courses/computer_architecture/transcripts/2026-09-29|2026-09-29 STT 56:40]] [[courses/computer_architecture/transcripts/2026-09-29|2026-09-29 STT 57:31]] [CA NM004 PDF p.2](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-002) [CA NM004 PDF p.3](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-003) [[courses/computer_architecture/lectures/en/2026-09-29-lecture-05|2026-09-29 lecture notes]]
+The [[courses/computer_architecture/transcripts/2026-09-29|2026-09-29 lecture (computer_architecture:NT001)]] at 56:40–58:36 describes using Docker containers for the labs, recommends the VSCode path, and allows a CLI path for those familiar with Docker. The preparation and single-cycle discussion connect to the [[courses/computer_architecture/lectures/en/2026-09-29-lecture-05|2026-09-29 Computer Architecture lecture notes]]. The detailed sequence below explains the supplied installation and Lab0 materials; it does not certify current product procedures or a successful installation.
 
-Opening files in an editor does not itself establish a connection to the container environment. The material's progression is Docker preparation → archive extraction → opening the resulting folder → container build and connection.
-
-The archive in [CA NM004 PDF p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-004) is named `dinocpu-lab1.tar.gz`, with this extraction example. Commands below are examples read from instructor documentation, not commands executed while producing this text.
+The material proceeds from Docker installation to archive extraction, opening the resulting `dinocpu/` folder, and connecting to the container. Its archive-extraction example is: [computer_architecture:NM004 p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-004).
 
 ```sh
 tar -xzf dinocpu-lab1.tar.gz
 ```
 
-The material says extraction creates `dinocpu/`. The screenshot in [CA NM004 PDF p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-005) highlights **Reopen in Container** in VSCode's lower-right corner. After opening the `dinocpu` folder, that choice lets VSCode build and connect to the container. Distinguish opening a folder, building a container, and connecting to its environment when interpreting setup state.
+This command extracts project files. It does not itself install Docker or run the CPU. After opening `dinocpu/` in VSCode, the next step is **Reopen in Container**, shown at the bottom right of the screenshot in [computer_architecture:NM004 p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-005). The material explains that VSCode then builds the container and connects to it. Merely seeing files in the editor is therefore not evidence that the container connection has been established.
 
-Lab0 is described as introducing Chisel and linking to the `first-hardware.md` tutorial. Following the tutorial is optional preparation for students unfamiliar with Chisel, and Assignment0 requires no submission. [CA NM004 PDF p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-006) The supplied material does not include the archive contents, `assignment-0.md`, or `first-hardware.md`. It therefore does not establish specific Chisel syntax, build/test commands, or successful installation. Archive names and “Chisel” use the document's spelling rather than silently reconstructing unclear spoken names.
+The CLI details are delegated to `assignment-0.md`. Lab0 covers environment preparation and an introduction to **Chisel**, the language used in the lab. The `first-hardware.md` tutorial is optional preparation for students unfamiliar with Chisel, and the Lab0 tutorial requires no submission. This does not make the subsequent CPU implementation optional. [computer_architecture:NM004 p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-006). The bodies of those two Markdown documents are not supplied here, so their filenames do not establish build/test commands or particular Chisel syntax.
 
-## Reading the operating-system routes separately
+## Operating-system paths and verification steps
 
-The detailed sequences below are **materials-based review of Docker Install**. They are not a claim that every OS-specific command was explained orally on September 29, nor newly verified instructions for current product UI, the latest version, or the reader's installed state. The different OS routes are alternatives, not one sequence to execute in full.
+### From Windows through WSL into Ubuntu
 
-### Moving from Windows through WSL to Ubuntu
-
-[CA NM003 PDF p.1](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-001)–[CA NM003 PDF p.3](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-003) first enable **Windows Subsystem for Linux** through Windows features, then reboot and use administrator PowerShell for:
+The Windows path in the installation material enables **WSL**, Windows Subsystem for Linux, to enter a Linux environment. It first enables Windows Subsystem for Linux in Windows Features and restarts the machine, then uses the following commands in administrator PowerShell. The installation step and the default-WSL-version setting are distinct. [computer_architecture:NM003 p.2](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-002).
 
 ```powershell
 wsl --install
 wsl --set-default-version 2
 ```
 
-The first installs WSL; the second selects version 2 as the default. The material next enables **Dev › Containers: Execute In WSL** in the VSCode Dev Containers extension's Settings. The following PowerShell command enters an Ubuntu shell, where the document's Ubuntu steps continue:
+The material then enables **Dev › Containers: Execute In WSL** in the VSCode Dev Containers extension settings. Running `wsl` from PowerShell enters the Ubuntu shell, where the Ubuntu procedure continues. [computer_architecture:NM003 p.3](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-003). PowerShell and the Ubuntu shell are different command contexts; the presence of a terminal window alone does not identify where a command belongs.
 
-```powershell
-wsl
-```
+### Ubuntu Engine installation and group membership
 
-The subsequent context is an Ubuntu shell. Beginning in Windows PowerShell does not make every later Linux command part of the same shell syntax.
-
-### Docker Engine and execution checking on Ubuntu
-
-[CA NM003 PDF p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-004) places a Docker Engine installation-script pipeline beside a command adding the current user to the docker group.
+The Ubuntu material gives these commands for installing Docker Engine and adding the current user to the docker group. [computer_architecture:NM003 p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-004).
 
 ```sh
 curl -fsSL https://get.docker.com | sudo sh
 sudo usermod -aG docker $USER
 ```
 
-The first is the source document's download-and-install pipeline; the second changes user-group membership. The document says the script can print a warning and wait about twenty seconds under WSL. After the group change, close and reopen the shell; on the WSL route, enter again with `wsl`, then check container execution:
+The first receives a script and passes it to `sudo sh` for installation. The second changes the current user's group membership rather than repeating the installation. The material notes that the script may show a warning and wait approximately 20 seconds under WSL. It then closes and reopens the shell to use the changed environment; the WSL path enters again with `wsl`.
+
+The supplied verification example is:
 
 ```sh
 docker run hello-world
 ```
 
-This final command checks whether a container can run in the environment. Here, only the source sequence and command roles have been read; no download, installation, execution, or successful result is claimed.
+This runs an example container. It checks a different step from simply displaying a version string, but it does not establish that dinocpu builds or that all assignment tests pass.
 
-### Two Mac alternatives and version output
+### Two Mac alternatives and the version example
 
-Option 1 in [CA NM003 PDF p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-005)–[CA NM003 PDF p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-006) selects Docker Desktop for the appropriate Apple or Intel chip, moves `Docker.app` from the `.dmg` into Applications, launches it, and checks the menu-bar whale icon. It then reads the version with:
+The first Mac path selects Docker Desktop for Apple or Intel hardware, moves `Docker.app` from the `.dmg` into Applications, and starts the app. It checks the Docker menu-bar icon and then displays version information using the following command. [computer_architecture:NM003 p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-005); [computer_architecture:NM003 p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-006).
 
 ```sh
 docker --version
 ```
 
-The example output, `Docker version 28.0.1, build xxxxxxx`, illustrates output form. It does not designate the current latest or required lab version.
-
-Option 2 is an alternative Homebrew installation route, followed by launching the app, checking the icon, and checking the version. [CA NM003 PDF p.7](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-007)
+The second path is a Homebrew alternative, not an additional installation step to perform after the first path:
 
 ```sh
 brew install --cask docker
 ```
 
-Page 7 visibly uses an em dash in `docker —version`, whereas page 6 uses two ASCII hyphens in `docker --version`. Distinguish these characters. The command block above uses page 6's spelling rather than silently rewriting page 7 as a quotation.
+Starting the app and checking the icon and version follow this alternative as well. The displayed `Docker version 28.0.1, build xxxxxxx` illustrates the output format; it does not designate a required or latest version. Page 7 prints `docker —version` with an em dash, whereas page 6 prints `docker --version` with two hyphens. The code above follows page 6. Visually similar characters are not identical command-line option bytes. [computer_architecture:NM003 p.7](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-007).
 
-## R/I arithmetic and the assignment specification
+Keeping the OS paths separate also clarifies what each check establishes. The version command displays version information, `hello-world` runs that example, and Reopen in Container builds and connects to the project container. None of those observations alone establishes a correct CPU implementation or a successful complete test suite.
 
-The actual Lab1 notice specifies **only R-type and I-type arithmetic/logic instructions**. This is more specific than the R-type description in the September 1 plan. It does not require every instruction with an I-type encoding, such as all loads. [CA NM004 PDF p.7](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-007) [CA NM004 PDF p.8](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-008) [[courses/computer_architecture/transcripts/2026-09-29|2026-09-29 STT 58:36]]
+## Lab1 instruction scope and the control contract
 
-Some CPU control signals are defined differently from the classroom examples, so the specification in `assignment-1.md` governs the implementation. Understanding the concept of selecting an ALU input differs from choosing the assignment's exact control bit pattern. Copying a classroom truth table can produce the wrong behavior even when names look familiar. [[courses/computer_architecture/transcripts/2026-09-29|2026-09-29 STT 59:36]]
+### Instruction format versus the implemented instruction set
 
-The supplied bundle lacks `assignment-1.md`, the starter archive, and tests. Exact signal encodings, TODOs, permitted implementation-file changes, and a completed implementation cannot be inferred from this briefing. The original worksheet does, however, establish the kinds of information the drawing must express.
+The detailed Lab1 briefing specifies **R-type and I-type arithmetic/logic instructions**, refining the earlier R-type-centered introduction. Read the [[courses/computer_architecture/transcripts/2026-09-29|2026-09-29 lecture (computer_architecture:NT001)]] at 58:36 together with [computer_architecture:NM004 p.8](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-008). Sharing an I-type instruction format does not put every such instruction in the assignment's arithmetic/logic scope. For example, the fact that a load has an I-type format does not include all loads in Lab1.
 
-### Classifying worksheet ports as indices, data, and control
+A **contract** is a concrete agreement the implementation must satisfy: supported instructions, module interfaces, and control meanings. The material explicitly directs students to `assignment-1.md` because some control definitions differ from those in class. The lecture at 59:36 likewise emphasizes implementing to that specification. Remembering that a select value was zero in a lecture diagram does not establish the assignment's encoding. This separates ISA operation semantics from the particular control representation used by the assignment datapath.
 
-[CA NM004 PDF p.9](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-009) is an unwired worksheet, not a completed circuit. It places PC, Next PC, Control Unit, ALU Control, Instruction Memory, Register File, ALU, and Immediate Generator separately, with a supplied `select 32 bits` block.
+### Reading the blank worksheet
 
-| Port or block in the figure | Information to distinguish |
+[computer_architecture:NM004 p.9](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-009) is a worksheet for drawing required connections, not a finished datapath. It separately shows PC, Next PC, Control Unit, ALU Control, Instruction Memory, Register File, ALU, and Immediate Generator, as well as a supplied `select 32 bits` block. Before connecting names, identify whether each port represents an **index, a value, or an operation selection**.
+
+| Port or module | Meaning to identify |
 |---|---|
-| Register File `readreg1/readreg2`, `writereg` | Indices identifying registers |
-| `readdata1/readdata2`, `writedata` | Values produced or accepted by selected registers |
-| `wen` | Control permitting a register update |
-| ALU `inputx/inputy`, `operation`, `result` | Two operands, operation selection, and result |
-| Immediate Generator `instruction → sextImm` | Extended immediate derived from instruction fields |
-| Next PC `pc`, `imm`, `inputx/inputy`, `funct3`, `branch`, `jumptype` | Address, condition, and selection information |
+| `readreg1`, `readreg2`, `writereg` | Indices selecting registers to read or write |
+| `readdata1`, `readdata2`, `writedata` | Values moving into or out of registers |
+| `wen` | Permission to perform a register write |
+| ALU `inputx`, `inputy`, `operation`, `result` | Operands, operation selection, and result |
+| Immediate Generator `instruction→sextImm` | The immediate interpreted from the instruction |
+| Next PC | Selection of the next address using current PC and control-flow information |
 
-Control Unit receives the opcode and exposes `itype`, `aluop`, `src1/src2`, `branch`, `jumptype`, `resultselect`, `memop`, `toreg`, `regwrite`, `validinst`, and `wordinst`. ALU Control receives `aluop/itype/funct7/funct3/wordinst` and selects `operation`. These names help identify information roles; they do not by themselves specify encodings or truth tables.
+The Control Unit exposes names including `itype`, `aluop`, `src1`, `src2`, `branch`, `jumptype`, `resultselect`, `memop`, `toreg`, `regwrite`, `validinst`, and `wordinst`. ALU Control receives `aluop`, `itype`, `funct7`, `funct3`, and `wordinst` and produces `operation`. Next PC lists `pc`, `imm`, `inputx`, `inputy`, `funct3`, `branch`, and `jumptype`. These names identify meanings that need checking; they are not themselves bit encodings or truth tables.
 
-The worksheet requires drawing the wires and any muxes needed for R/I execution, labeling every wire's width and any partial bit slice. For example, `instruction[19:15]` contains $19-15+1=5$ bits. It differs from the full 32-bit instruction and from the data width of the register selected by that index. A slice label communicates **which information and how many bits flow**, beyond merely showing a connection. The worksheet also says not every module or port may be needed. This explains how to read the diagram without supplying the completed wiring or mux solution.
+### Label both width and meaning
 
-[CA NM004 PDF p.8](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-008) and September 29 59:36 require submitting the completed worksheet. [CA NM004 PDF p.10](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-010) records the then-issued deadline as 10/12 23:59 at eTL and describes one compressed file, code-only submission, and exclusion of debugging/test files from grading. This is the source-dated notice, not a live schedule check. The exact packaging relationship between the mandatory worksheet and code-only archive is not supplied, so it should not be invented. [[courses/computer_architecture/transcripts/2026-09-29|2026-09-29 STT 01:00:30]] Distinguishing concepts, environment preparation, and submission specifications prevents a working tool setup from being mistaken for a finished implementation or completed submission.
+The worksheet asks for necessary wires and muxes, a width on every wire, and a bit slice where only part of a value is carried. For example, `instruction[19:15]` includes both endpoints, so its width is 19−15+1=5 bits. A five-bit index represents 2^5=32 register numbers. It is neither the entire 32-bit instruction word nor the entire 64-bit value held in an RV64 datapath register.
 
-## Key Takeaways
+Even if two ports both concern registers, a five-bit register-number wire differs in width and meaning from a register-data wire. A width mismatch requires determining from the specification whether to select, truncate, or extend; it does not justify arbitrarily making 32 and 64 match. Conversely, equal widths do not make an address and an arithmetic operand interchangeable.
 
-- Opening a folder, building a container, and connecting to it are different states.
-- Windows/WSL, Ubuntu, and Mac routes are alternatives, not one combined installation sequence.
-- Lab1 covers R/I arithmetic/logic; exact control encodings come from its specification.
-- Read register indices, data, control, and bit slices as distinct information.
+The worksheet also says that not every module or port may be needed. The task is to provide the connections required by supported instructions, not to fill every empty port. Since the actual `assignment-1.md`, starter code, and tests are absent, the worksheet alone cannot determine exact control encodings, completed wiring, or a Chisel implementation.
+
+## Lab2 data memory, control flow, and specification reading
+
+### Architectural effects beyond an arithmetic result
+
+The Lab2 briefing extends Lab1's single-cycle CPU to RV64I integer instructions including loads, stores, branches, `lui`, `auipc`, `jal`, and `jalr`. Read the introduction at 42:57 in the [[courses/computer_architecture/transcripts/undated-control-hazards-tskkzbwcgg2lavgo|undated lecture (computer_architecture:NT002)]] alongside computer_architecture:NM008 p.2. The explanation here is bounded to general instruction concepts and reading the specification.
+
+This undated transcript is text compared with the materials without verified original audio, not a complete verbatim recovery. Missing speech, the actual class date, and speaker identities have not been recovered.
+
+Arithmetic/logic work centers on obtaining operands and writing a result to a register. A load separates **which address is read** from **where the returned data goes**. A store separates **the address**, **the value**, and **permission to write**. A conditional branch combines a condition and target to select next PC. `lui` forms an upper-immediate value; `auipc` forms a PC-relative value; `jal` and `jalr` combine control transfer with a link value. Reusing an ALU or mux does not make these architectural effects equivalent.
+
+The briefing's statement that the template includes a Lab1 R/I solution describes what is to be provided. It is not a finding from examining that code or checking its correctness. Lab2 again warns of control definitions that can differ from the class model, so its `assignment-2.md` contract must govern. The undated lecture's discussion at 43:54 reinforces the need to consult that document.
+
+### Data Memory ports and the boundary of a wiring solution
+
+The blank worksheet in private lab source computer_architecture:NM008 p.3 adds Data Memory with ports named `address`, `writedata`, `valid`, `memread`, `memwrite`, `maskmode`, `sext`, and `readdata`. These names support distinguishing the questions to ask, without reproducing the original diagram or supplying its connections.
+
+`address` denotes the location, `writedata` the value to store, and `readdata` the returned value. `valid` and the read/write controls distinguish whether an access is valid and which operation is requested. `maskmode` and `sext` identify where access width and extension behavior need to be checked, but their names do not supply exact encodings or a width table. The fundamental requirement is that the memory control and transferred data belong to the same instruction.
+
+The worksheet calls for necessary control wires as well as data wires, muxes, widths, and partial-bit slices. The five-bit calculation for `instruction[19:15]` still applies; it remains distinct from a 32-bit instruction word and 64-bit register data. The width discussion at 44:10 in the undated lecture, computer_architecture:NT002, connects to this requirement. Uncertain wording such as “full/four” at 45:07 must not be converted into an exact quotation of submission rules.
+
+The material directs students through Parts I–IX in order, with tests for each part, and lists a worksheet and four code files as submission items. This encourages checking successive parts against their contracts. Without `assignment-2.md`, the template, and the tests themselves, the individual part contents, permitted I/O changes, test commands, and pass conditions cannot be reconstructed. Instruction scope, control definitions, interface widths, and submission items each need confirmation in the actual specification; a lecture diagram does not replace a complete wiring or implementation solution.
 
 ## Recall and Practice
 
-### Recall the reasoning
+### Review sequence
 
-#### Recall Q01 · Lab0 preparation stages
+After Q01–Q03, use P01 to state exactly what each observation establishes. In Q04–Q07, distinguish instruction effects from port roles and check the five/32/64-bit calculation; then correct the specification-reading mistakes in P02.
 
-Explain Docker, Dev Containers, `dinocpu-lab1.tar.gz`, `dinocpu/`, Reopen in Container, and the Chisel tutorial in sequence. Does Lab0 require submission?
+### Environment and the scope of checks
 
-<details><summary>Show solution</summary>
+#### Recall Q01 · Files, environment, and preparation
 
-The material prepares Docker, extracts `dinocpu-lab1.tar.gz` with the documented `tar -xzf` example, opens resulting `dinocpu/` in VSCode, then uses Dev Containers' Reopen in Container to build/connect. Opening the folder alone does not prove connection. Experienced Docker users have a CLI alternative referenced in `assignment-0.md`. Lab0 introduces Chisel and optional `first-hardware.md`, with no submission. Those documents/archive contents are absent, so specific syntax, build/test commands, and actual success are not established. This explains documented command roles.
-
-**Checking points:** Check optional tutorial/no submission and distinguish folder, build, connection.
-
-</details>
-
-#### Recall Q02 · From Windows to Ubuntu
-
-Explain the WSL feature, reboot, administrator PowerShell, VSCode setting, and `wsl` in the Windows route. What roles do Ubuntu installation, group changes, reopening the shell, and the execution check serve? Interpret the document; do not execute commands.
+Distinguish Docker containers, dinocpu, VSCode Dev Containers, and Lab0/Chisel preparation. Give the material’s sequence from extraction to container connection. Does an optional tutorial make Lab1 optional?
 
 <details><summary>Show solution</summary>
 
-The sequence is enable Windows Subsystem for Linux→reboot→administrator PowerShell `wsl --install` and `wsl --set-default-version 2`→Dev Containers setting Dev › Containers: Execute In WSL→enter Ubuntu with `wsl`. The Docker Engine script pipeline installs; `sudo usermod -aG docker $USER` changes group membership; reopening the shell uses the updated environment; `docker run hello-world` checks container execution. A warning/~20-second wait under WSL is documented behavior in the material. Subsequent Linux commands are not all PowerShell commands, and reading this sequence proves no installation success.
+A container is the tool-execution environment; dinocpu is the design-file project; Dev Containers connects the editor to that environment. The material’s sequence is Docker preparation→extract with `tar -xzf dinocpu-lab1.tar.gz`→open `dinocpu/`→Reopen in Container to build/connect. Extracting or opening files alone neither establishes connection nor runs the CPU. Lab0 introduces setup and Chisel; `first-hardware.md` is optional preparation and Lab0 has no submission. This does not make CPU implementation optional. CLI details are delegated to `assignment-0.md`, whose absent body cannot establish build/test commands.
 
-**Checking points:** Check the shell transition and distinct roles of all four Ubuntu stages.
+Checking points: Check distinct roles, sequence, and optional preparation versus the implementation assignment.
+
+Sources: [Lab0·Lab1 p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-004) · [Lab0·Lab1 p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-005) · [Lab0·Lab1 p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-006)
 
 </details>
 
-#### Recall Q03 · Mac alternatives and version examples
+#### Recall Q02 · Reading the Windows-to-Ubuntu path
 
-Compare Mac options 1 and 2 through installation, launch, and checks. Interpret example version 28.0.1 and `docker —version` versus `docker --version`.
+Explain the material’s Windows→WSL→Ubuntu sequence with shell context. What do `wsl --install`, `wsl --set-default-version 2`, the Docker installation script, group change, shell reopening, and `hello-world` each do? Do not execute them.
 
 <details><summary>Show solution</summary>
 
-Option1 selects Docker Desktop for Apple/Intel, moves `Docker.app` from `.dmg` to Applications, launches it, checks the whale icon, then version output. Option2 uses `brew install --cask docker` as an alternative, followed by app/icon/version checks. They are not consecutive required installations. Version 28.0.1 illustrates output form, not a latest/required version. The p.7 em dash differs from p.6's two ASCII hyphens; distinguish the source spellings.
+After enabling WSL in Windows Features and restarting, administrator PowerShell runs `wsl --install` for installation and `wsl --set-default-version 2` to set the default WSL version. Enable Execute In WSL in Dev Containers, then run `wsl` in PowerShell to enter Ubuntu and continue the Ubuntu steps. The supplied `curl -fsSL https://get.docker.com | sudo sh` example executes a downloaded installation script; `sudo usermod -aG docker $USER` changes current-user group membership. The described WSL warning and approximately 20-second pause are not CPU tests. Close/reopen the shell, entering `wsl` again on that path. `docker run hello-world` checks that example’s container execution, not a dinocpu build or assignment pass.
 
-**Checking points:** Include alternative routes, example-version status, and the dash discrepancy.
+Checking points: Check PowerShell versus Ubuntu and the distinct installation, setting, group, and example-execution steps.
+
+Sources: [Docker Install p.1](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-001) · [Docker Install p.2](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-002) · [Docker Install p.3](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-003) · [Docker Install p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-004)
 
 </details>
 
-#### Recall Q04 · Lab1 scope and specification
+#### Recall Q03 · Mac alternatives and what checks establish
 
-Does R/I arithmetic/logic mean every I-type instruction? Explain the roles of classroom control tables, `assignment-1.md`, and the required worksheet, including missing information.
+Distinguish the two Mac paths and their follow-up checks. How should `Docker version 28.0.1` and `docker —version` versus `docker --version` be interpreted? What do version output, `hello-world`, and Reopen in Container fail to establish?
 
 <details><summary>Show solution</summary>
 
-Loads can be I-type, so format alone cannot expand assignment scope. The notice specifies R/I arithmetic/logic and warns that some controls differ; the assignment specification governs implementation. The worksheet is required, but absent `assignment-1.md`, starter, and tests leave exact control bits, TODOs, allowed files, and implementation unspecified. Page10's 10/12 23:59, one archive, code-only submission, and exclusion of debug/test files are source-dated notices. The worksheet/archive packaging relationship is not resolved by the supplied material.
+The first path selects chip-appropriate Docker Desktop, moves `Docker.app` from its `.dmg` into Applications, starts it, then checks the menu-bar icon and version. The second uses `brew install --cask docker` as an alternative, followed by app startup and the same checks. They are not consecutive mandatory installations. Version 28.0.1 is an output example, not a required/latest release. Page 7’s em dash `—` differs from page 6’s two hyphens `--`; code follows page 6’s `docker --version`. Version output reports information; `hello-world` runs that example; Reopen in Container handles the project container’s build/connection. None alone certifies CPU implementation or full-test correctness.
 
-**Checking points:** Respect the scope and worksheet requirement without inventing missing specifications.
+Checking points: Check alternatives, app startup/checks, example version and literal dash difference, and the limits of each observation.
+
+Sources: [Docker Install p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-005) · [Docker Install p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-006) · [Docker Install p.7](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-007)
 
 </details>
 
-#### Recall Q05 · Port information and bit slices
+### Assignment scope and specification reading
 
-Classify Register File, ALU, Immediate Generator, and Next PC ports by information role. Explain Control Unit/ALU Control, the width of `instruction[19:15]`, and worksheet wire/mux requirements.
+#### Recall Q04 · Format versus implementation scope
+
+Why can remembering Lab1 merely as an I-type assignment incorrectly include loads? If a lecture mux-select value differs from the assignment document, which governs and why?
 
 <details><summary>Show solution</summary>
 
-`readreg1/readreg2/writereg` are indices; `readdata1/readdata2/writedata` are data; `wen` enables writing. ALU `inputx/inputy` are operands, `operation` a selection, `result` the computed value. The generator maps instruction→`sextImm`; Next PC's `pc/imm/inputx/inputy/funct3/branch/jumptype` distinguish addresses, conditions, and selection. Control Unit maps opcode to `itype/aluop/src1/src2/branch/jumptype/resultselect/memop/toreg/regwrite/validinst/wordinst`; ALU Control uses `aluop/itype/funct7/funct3/wordinst` to choose operation. Names alone do not specify encodings. `[19:15]` has five bits, distinct from the full 32-bit instruction or selected data width. The worksheet requires necessary wires/muxes and all widths/partial slices, not mandatory use of every port. Its `select 32 bits` block is part of the blank diagram.
+The detailed briefing specifies R-type and I-type arithmetic/logic instructions. I-type describes encoding format; not every I-type instruction is arithmetic/logic, so format alone cannot add loads. Implementation must follow `assignment-1.md` control definitions. ISA operation meaning and a particular datapath’s select encoding are different contracts; zero in a lecture diagram does not establish zero in the assignment. The absent document, starter, and tests prevent deriving its exact truth table or completed code here.
 
-**Checking points:** Check 5=19−15+1 and distinguish information roles from a completed wiring solution.
+Checking points: Check format versus R/I arithmetic/logic scope and the reason assignment-specific control definitions govern.
+
+Sources: [Lab0·Lab1 p.8](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-008)
 
 </details>
 
-### Apply the ideas
+#### Recall Q05 · Port meaning and width
 
-#### Practice P01 · Evidence needed for completion claims
-
-Newly written lecture/material-based general practice. A student claims: 'The folder opens and a version string appears, so Lab1 inside the container is finished. I can copy classroom control bits and connect every port.' Evaluate environment and specification claims separately and identify the evidence still needed.
-
-None of the 18 exam candidates tests Docker/WSL, Dev Containers, current lab scope, or worksheet reading. Q14's hypothetical ISA extension provides no authority for a current-lab implementation.
+Classify `readreg1`/`writereg`, `readdata1`/`writedata`, `wen`, ALU `operation`, and `instruction→sextImm` on the blank worksheet. Calculate the width of `instruction[19:15]` and register count, contrasting instruction-word and RV64-data widths. Can Control Unit, ALU Control, and Next PC names determine all wiring?
 
 <details><summary>Show solution</summary>
 
-An open folder and version output establish file access and version information, not container build/connection, implementation, validation, or submission. Assignment controls may differ, and the worksheet explicitly permits unused ports. The actual specification, starter, and tests are needed to establish scope, encoding, and validation criteria; the present material cannot fill those gaps. Keep the required worksheet distinct from the unresolved archive-packaging detail.
+`readreg1`/`writereg` are indices; `readdata1`/`writedata` are data; `wen` is write enable; `operation` selects the ALU function. Immediate Generator interprets instruction immediate fields into `sextImm`. The inclusive slice is 19−15+1=5 bits, selecting 2^5=32 registers; it is distinct from a 32-bit instruction and 64-bit register data. Control Unit outputs include `itype`, `aluop`, `src1`, `src2`, `branch`, `jumptype`, `resultselect`, `memop`, `toreg`, `regwrite`, `validinst`, `wordinst`. ALU Control uses `aluop`, `itype`, `funct7`, `funct3`, `wordinst` to determine `operation`. Next PC’s `pc`, `imm`, `inputx`, `inputy`, `funct3`, `branch`, `jumptype` indicate roles to inspect. Names do not provide encoding tables: necessary wires, muxes, widths, and slices follow the specification. The given `select 32 bits` block is not an arbitrary 64-bit data wire, and every port need not be used. Equal widths also do not equate an address with an operand.
 
-**Checking points:** Separate environment, implementation, validation, and submission, naming the missing specification evidence.
+Checking points: Distinguish the five/32/64-bit levels, indices/data/enables/selections, required width/slice labels, and the specification boundary.
+
+Sources: [Lab0·Lab1 p.9](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-009)
 
 </details>
 
-### Short review plan
+#### Recall Q06 · Lab2 architectural effects
 
-Explain the documented route relevant to your OS using Q01–Q03, then check specification scope with Q04–Q05. In P01, separate established state from evidence still needed.
+List the newly introduced instruction classes and distinguish the effects of loads, stores, branches, `lui`, `auipc`, `jal`, and `jalr`. How should the statement that the template contains a Lab1 solution be interpreted?
+
+<details><summary>Show solution</summary>
+
+The briefing extends Lab1 to RV64I integer instructions including loads, stores, branches, `lui`, `auipc`, `jal`, and `jalr`. A load distinguishes read address from returned-data destination; a store distinguishes address, data, and write permission. A branch selects next PC using condition and target. `lui` forms an upper-immediate value, `auipc` a PC-relative value, and `jal`/`jalr` combine transfer with a link. Sharing an ALU does not equate these effects. The included Lab1 R/I solution is a statement about provision, not an inspection or correctness finding. Control follows `assignment-2.md`, but its body, template, and tests are absent, so complete implementation cannot be determined.
+
+Checking points: Check every listed class, distinct effects, and promised provision versus actual verification.
+
+Sources: computer_architecture:NM008 p.2
+
+</details>
+
+#### Recall Q07 · Memory ports and missing specifications
+
+What distinctions are required for Data Memory’s `address`, `writedata`, `readdata`, `valid`, `memread`, `memwrite`, `maskmode`, and `sext`? Explain what worksheet labels, Parts I–IX, per-part tests, and submission guidance establish and what they do not.
+
+<details><summary>Show solution</summary>
+
+`address` is a location, `writedata` a stored value, and `readdata` a returned value. `valid` and read/write signals distinguish access validity and operation; `maskmode` and `sext` identify access-width/extension meanings to check in the specification. Names do not define bit encodings. Data and control must describe the same instruction’s effects; label required data/control wires, muxes, widths, and partial-bit slices. Keep five-bit indices, 32-bit instructions, and 64-bit data separate. The briefing gives Parts I–IX in order, per-part tests, and four code files plus a worksheet, but not each part’s implementation, test commands/pass criteria, or permitted I/O changes. Undated 45:07’s uncertain full/four wording does not become exact speech merely by comparison with the material.
+
+Checking points: Check location/value/control roles, widths/slices, and workflow guidance versus the missing implementation contract.
+
+Sources: computer_architecture:NM008 p.2 · computer_architecture:NM008 p.3 · computer_architecture:NM008 p.4
+
+</details>
+
+### Newly written general practice
+
+#### Practice P01 · Avoid overstating verification
+
+Newly written lecture/material-based general practice. No indexed candidate directly tests Docker/Dev Containers preparation status. Prerequisites: Q01–Q03.
+
+A student (1) sees a version string, (2) sees `hello-world` run, and (3) opens extracted project files in the editor, then reports that the CPU assignment tests are finished. State what each observation supports and what still needs checking. Do not invent installation or test commands.
+
+<details><summary>Show solution</summary>
+
+Observation (1) establishes version information, (2) the example container’s execution, and (3) open project files. None establishes this project’s Reopen in Container connection, dinocpu build, or assignment test results. Check the project-container connection separately and consult the actual assignment for build/test procedures and success criteria. Since that document is absent here, neither guessed commands nor a pass claim are justified.
+
+Checking points: Match each claim to its observation and distinguish container connection, project build, and assignment success.
+
+Sources: [Docker Install p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-004) · [Docker Install p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-006) · [Lab0·Lab1 p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-005)
+
+</details>
+
+#### Practice P02 · Three errors in a design note
+
+Newly written material-based general practice. No candidate in the complete recalled-exam index directly assesses this Lab worksheet’s specification-reading contract, so this is not labeled an exam variation. Prerequisites: Q04–Q07.
+
+A note says: “Every I-type instruction belongs in Lab1. `instruction[19:15]` concerns registers, so it is 64 bits. Lab2 names `maskmode`, so its encoding may be chosen arbitrarily.” Correct each statement, then provide a specification-reading checklist that can be written now without supplying completed wiring.
+
+<details><summary>Show solution</summary>
+
+First, Lab1 is limited to R/I arithmetic/logic; format alone does not include loads. Second, the inclusive slice is 19−15+1=5 bits of register index, distinct from 64-bit register data. Third, `maskmode` identifies width-related behavior to inspect; its encoding follows `assignment-2.md`. A justified checklist records supported instruction effects, each port’s index/data/control role, required wire/mux widths and slices, authoritative control definitions, and the supplied part/test/submission guidance versus matters still requiring the actual specification. Do not fill missing truth tables, TODOs, or complete connections.
+
+Checking points: Correct all three with reasons and separate specification questions from implementation answers.
+
+Sources: [Lab0·Lab1 p.8](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-008) · [Lab0·Lab1 p.9](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-009) · computer_architecture:NM008 p.2 · computer_architecture:NM008 p.3
+
+</details>
 
 ## Sources
 
-- [[courses/computer_architecture/lectures/en/2026-09-29-lecture-05|2026-09-29 lecture notes]]
-- [Docker Install.pdf](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/Docker.Install.pdf) — [p.1](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-001), [p.2](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-002), [p.3](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-003), [p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-004), [p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-005), [p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-006), [p.7](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-007)
-- [Lab 0 1.pdf](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/Lab.0.1.pdf) — [p.2](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-002), [p.3](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-003), [p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-004), [p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-005), [p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-006), [p.7](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-007), [p.8](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-008), [p.9](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-009), [p.10](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-010)
-- [[courses/computer_architecture/transcripts/2026-09-29|2026-09-29 corrected transcript]] — 56:40, 57:31, 58:36, 59:36, 01:00:30 (plain timestamps within the page)
+### Lectures and materials
 
-September 29 confirms Docker, VSCode/CLI options, and lab scope. OS-specific installation details are materials-only, not current UI or installation-success verification. `assignment-0.md`, `first-hardware.md`, `assignment-1.md`, the starter archive, and tests are absent. Exact TODOs, control encodings, completed wiring, and implementations therefore remain unspecified. The deadline is source-dated; the packaging relationship between the required worksheet and code-only archive is unresolved.
+[[courses/computer_architecture/lectures/en/2026-09-29-lecture-05|2026-09-29 · Microcode, resource reuse, and lab briefing]]
 
-Exam connections are limited to a Fall 2025 reconstruction whose official wording and answers are not independently verified. No supplied answer is adopted as verified, and historical grading rules or appearance predictions are not transferred to this term.
+- [[courses/computer_architecture/transcripts/2026-09-29|2026-09-29 (computer_architecture:NT001)]] 56:40, 57:31, 58:36, 59:36 — Transcript of the dated lecture.
+
+- [[courses/computer_architecture/transcripts/undated-control-hazards-tskkzbwcgg2lavgo|Undated lecture (computer_architecture:NT002)]] 42:57, 43:54, 44:10, 45:07 — Lecture date unknown; uncertain speech remains distinct from material-based explanation. This TXT transcript was compared with the materials; original audio is unverified. It is not a complete verbatim transcript and does not recover missing speech, the actual class date, or speaker identities.
+
+- [Lab0·Lab1 PDF](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/Lab.0.1.pdf): [Lab0·Lab1 p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-004), [Lab0·Lab1 p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-005), [Lab0·Lab1 p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-006), [Lab0·Lab1 p.8](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-008), [Lab0·Lab1 p.9](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/lab.0.1/page-009). Lab0/Lab1 briefing and blank worksheet, not a replacement for detailed assignment documents.
+
+- [Docker Install PDF](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_architecture/Docker.Install.pdf): [Docker Install p.1](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-001), [Docker Install p.2](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-002), [Docker Install p.3](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-003), [Docker Install p.4](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-004), [Docker Install p.5](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-005), [Docker Install p.6](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-006), [Docker Install p.7](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_architecture/docker.install/page-007). Installation examples from the material, not verification of current products or execution.
+
+- Lab2 briefing, pp.2–4: private material with no public original or page link. Used only for its stated scope and port meanings; assignment2, templates, and tests are not supplied.
+
+No candidate in the complete recalled-exam index directly tests these Docker/WSL/container checks or the particular Lab1/Lab2 worksheet-reading contract. Related CPU-design questions do not authenticate this lab’s exam style; P01–P02 are general practice.
+
+
+---
+
+[[courses/computer_architecture/units/en/microcode-resource-reuse|← Previous: Microcode, Resource Reuse, Pipelining, and Hazards]] · [[courses/computer_architecture/units/index|Unit contents]]
