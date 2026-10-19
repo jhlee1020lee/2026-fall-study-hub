@@ -14,6 +14,7 @@ review_status: approved
 ## 파일
 
 - [`1.intro.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/1.intro.pdf) · 0.8 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/1.intro/manifest.json)
+- [`10.io.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/10.io.pdf) · 2.0 MiB
 - [`2.java.basics.1.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/2.java.basics.1.pdf) · 2.0 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/2.java.basics.1/manifest.json)
 - [`3.java.basics.2.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/3.java.basics.2.pdf) · 0.6 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/3.java.basics.2/manifest.json)
 - [`4.oop.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/4.oop.pdf) · 3.0 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/4.oop/manifest.json)
@@ -22,6 +23,7 @@ review_status: approved
 - [`7.inheritance.2.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/7.inheritance.2.pdf) · 0.2 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/7.inheritance.2/manifest.json)
 - [`8.polymorphism.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/8.polymorphism.pdf) · 2.9 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/8.polymorphism/manifest.json)
 - [`9.collections.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/9.collections.pdf) · 1.5 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/9.collections/manifest.json)
+- [`9.collections.v1.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/9.collections.v1.pdf) · 2.1 MiB
 - [`Lab.6.Polymorphism.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab.6.Polymorphism.pdf) · 0.7 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab.6.polymorphism/manifest.json)
 - [`Lab01.pdf`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab01.pdf) · 4.1 MiB · [페이지 캐시 manifest](https://jhlee1020lee.github.io/2026-fall-study-hub/page_cache/computer_programming/lab01/manifest.json)
 - [`Lab01.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/computer_programming/Lab01.pptx) · 8.5 MiB
