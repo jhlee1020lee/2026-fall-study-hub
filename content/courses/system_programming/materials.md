@@ -31,6 +31,7 @@ review_status: approved
 - [`10.RE.Life.Cycle.of.a.Program.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/10.RE.Life.Cycle.of.a.Program.pptx) · 0.2 MiB
 - [`11.RE.Linking.and.Loading.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/11.RE.Linking.and.Loading.pptx) · 0.5 MiB
 - [`12.RE.Libraries.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/12.RE.Libraries.pptx) · 0.2 MiB
+- [`13.PM.Processes.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/13.PM.Processes.pptx) · 0.4 MiB
 - [`EE209.AssemblyFunctions.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/EE209.AssemblyFunctions.pptx) · 7.1 MiB
 - [`lab.2.input.and.output.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output.pptx) · 2.3 MiB
 - [`lab.2.input.and.output_2b90a395.pptx`](https://jhlee1020lee.github.io/2026-fall-study-hub/materials/system_programming/lab.2.input.and.output_2b90a395.pptx) · 2.3 MiB
